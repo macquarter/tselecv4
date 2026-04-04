@@ -1,5 +1,3 @@
-import { motion } from 'motion/react';
-
 const clients = [
   'SAMSUNG',
   'LG Electronics',
@@ -11,31 +9,40 @@ const clients = [
 ];
 
 export default function Clients() {
-  return (
-    <section className="py-20 bg-black border-t border-white/5">
-      <div className="max-w-7xl mx-auto px-6">
-        <motion.p
-          className="text-center text-sm font-medium tracking-widest text-gray-500 uppercase mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        >
-          Trusted by Innovative Companies
-        </motion.p>
+  // Triple the list for seamless infinite scroll
+  const tripled = [...clients, ...clients, ...clients];
 
-        <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-8 md:gap-x-16">
-          {clients.map((name, i) => (
-            <motion.div
-              key={name}
-              className="text-lg md:text-xl font-semibold tracking-tight text-gray-600 hover:text-white transition-colors duration-500 cursor-default"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: i * 0.05, ease: [0.16, 1, 0.3, 1] }}
+  return (
+    <section className="relative py-20 bg-black border-t border-white/5 overflow-hidden">
+      {/* Keyframes */}
+      <style>{`
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-33.333%); }
+        }
+      `}</style>
+
+      {/* Left fade */}
+      <div className="absolute top-0 bottom-0 left-0 w-48 z-10 pointer-events-none bg-gradient-to-r from-black to-transparent" />
+      {/* Right fade */}
+      <div className="absolute top-0 bottom-0 right-0 w-48 z-10 pointer-events-none bg-gradient-to-l from-black to-transparent" />
+
+      <p className="text-center text-[11px] font-semibold tracking-[0.3em] text-gray-500 uppercase mb-10">
+        Trusted by Innovative Companies
+      </p>
+
+      <div className="overflow-hidden">
+        <div
+          className="flex items-center gap-24 whitespace-nowrap"
+          style={{ animation: 'marquee 30s linear infinite' }}
+        >
+          {tripled.map((name, i) => (
+            <span
+              key={`${name}-${i}`}
+              className="text-[28px] font-bold tracking-tight text-white/25 hover:text-white transition-colors duration-500 cursor-default shrink-0"
             >
               {name}
-            </motion.div>
+            </span>
           ))}
         </div>
       </div>
