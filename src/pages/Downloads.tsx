@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Search, ChevronLeft, Download, FileText, Paperclip } from 'lucide-react';
+import { useBoardOpt } from '../contexts/SiteContentContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
@@ -27,6 +28,7 @@ const downloadItems: DownloadItem[] = [
 const categories = ['전체', '카탈로그', '데이터시트', '인증서', '매뉴얼', '소프트웨어'];
 
 export default function Downloads() {
+  const boardOpt = useBoardOpt('dl');
   const [filter, setFilter] = useState('전체');
   const [search, setSearch] = useState('');
   const [openItem, setOpenItem] = useState<DownloadItem | null>(null);
@@ -93,8 +95,8 @@ export default function Downloads() {
                   <div className="p-8 border-b border-white/5">
                     <div className="flex items-center gap-3 mb-4">
                       <span className="text-xs font-semibold px-3 py-1 rounded-full bg-sky-400/10 text-sky-400">{openItem.cat}</span>
-                      <span className="text-xs text-gray-500 font-mono">{openItem.date}</span>
-                      <span className="text-xs text-gray-500">조회 {openItem.views}</span>
+                      {boardOpt.showDate && <span className="text-xs text-gray-500 font-mono">{openItem.date}</span>}
+                      {boardOpt.showViews && <span className="text-xs text-gray-500">조회 {openItem.views}</span>}
                     </div>
                     <h2 className="text-2xl font-bold tracking-tight">{openItem.title}</h2>
                   </div>
@@ -191,8 +193,8 @@ export default function Downloads() {
                                 {item.file.split('.').pop()?.toUpperCase()}
                               </span>
                             )}
-                            <span className="font-mono">{item.date}</span>
-                            <span>조회 {item.views}</span>
+                            {boardOpt.showDate && <span className="font-mono">{item.date}</span>}
+                            {boardOpt.showViews && <span>조회 {item.views}</span>}
                           </div>
                         </motion.div>
                       ))}

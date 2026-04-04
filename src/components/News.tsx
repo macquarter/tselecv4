@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import { useText } from '../contexts/SiteContentContext';
+import { useText, useBoardOpt } from '../contexts/SiteContentContext';
 
 interface NewsItem {
   id: string;
@@ -22,6 +22,7 @@ const staticItems: NewsItem[] = [
 
 export default function News() {
   const [newsItems, setNewsItems] = useState<NewsItem[]>(staticItems);
+  const boardOpt = useBoardOpt('news');
   const nwT = useText('nw-t', '뉴스 & 공지사항.');
   const nwS = useText('nw-s', '태승전자의 최신 소식을 전해드립니다.');
 
@@ -110,7 +111,7 @@ export default function News() {
                   )}
                 </h3>
               </Link>
-              <span className="text-sm text-gray-500 font-mono">{item.date}</span>
+              {boardOpt.showDate && <span className="text-sm text-gray-500 font-mono">{item.date}</span>}
             </motion.div>
           ))}
         </div>
