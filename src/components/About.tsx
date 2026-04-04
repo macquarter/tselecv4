@@ -17,9 +17,9 @@ export default function About() {
   ];
 
   return (
-    <section id="about" className="py-32 bg-black relative">
+    <section id="about" className="py-16 md:py-32 bg-black relative">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center">
           <div className="order-2 lg:order-1">
             <motion.h2 
               className="text-4xl md:text-6xl font-bold tracking-tighter mb-8 leading-tight text-white"
@@ -32,8 +32,8 @@ export default function About() {
               <span className="text-gray-500">{abtT2}</span>
             </motion.h2>
             
-            <motion.p 
-              className="text-xl text-gray-400 leading-relaxed font-light mb-12"
+            <motion.p
+              className="text-base md:text-xl text-gray-400 leading-relaxed font-light mb-8 md:mb-12"
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
@@ -59,7 +59,7 @@ export default function About() {
           </div>
 
           <motion.div 
-            className="order-1 lg:order-2 relative h-[400px] md:h-[600px] rounded-3xl overflow-hidden"
+            className="order-1 lg:order-2 relative h-[250px] md:h-[600px] rounded-2xl md:rounded-3xl overflow-hidden"
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
@@ -75,7 +75,7 @@ export default function About() {
               ></iframe>
             </div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-            <div className="absolute bottom-10 left-10">
+            <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10">
               <div className="text-gray-400 text-sm font-semibold tracking-widest uppercase mb-2">{avLb}</div>
               <div className="text-2xl font-bold text-white">{avTl}</div>
             </div>

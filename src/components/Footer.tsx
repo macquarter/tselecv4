@@ -14,10 +14,10 @@ export default function Footer() {
   const ftB3 = useText('ft-b3', 'KC');
 
   return (
-    <footer className="bg-black border-t border-white/10 pt-20 pb-10">
+    <footer className="bg-black border-t border-white/10 pt-12 md:pt-20 pb-10">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-          <div className="md:col-span-1">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12 mb-12 md:mb-16">
+          <div className="col-span-2 md:col-span-1">
             <Link to="/" className="inline-block mb-6">
               <div className="flex flex-col leading-[0.85] font-black text-[20px] tracking-[-0.12em] uppercase text-white">
                 <span>{logo1}</span>

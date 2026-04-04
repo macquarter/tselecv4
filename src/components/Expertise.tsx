@@ -57,34 +57,34 @@ export default function Expertise() {
   );
 
   return (
-    <section ref={containerRef} className="h-[300vh] relative bg-[#0a0a0a] border-t border-white/5 shadow-[0_-30px_50px_rgba(0,0,0,0.8)]">
-      <div className="sticky top-0 h-screen overflow-hidden flex flex-col items-center justify-center py-20">
+    <section ref={containerRef} className="h-[250vh] md:h-[300vh] relative bg-[#0a0a0a] border-t border-white/5 shadow-[0_-30px_50px_rgba(0,0,0,0.8)]">
+      <div className="sticky top-0 h-screen overflow-hidden flex flex-col items-center justify-center py-10 md:py-20">
         
-        <div className="text-center mb-10 z-50">
-          <div className="text-[11px] font-bold tracking-widest text-gray-400 uppercase mb-3">{badge}</div>
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-white leading-tight">
+        <div className="text-center mb-6 md:mb-10 z-50 px-4">
+          <div className="text-[10px] md:text-[11px] font-bold tracking-widest text-gray-400 uppercase mb-3">{badge}</div>
+          <h2 className="text-2xl md:text-5xl font-bold tracking-tighter text-white leading-tight">
             {expT1}<br />
             {expT2}
           </h2>
         </div>
 
-        <div className="relative w-[calc(100%-3rem)] max-w-5xl h-[60vh] md:h-[50vh]">
+        <div className="relative w-[calc(100%-2rem)] md:w-[calc(100%-3rem)] max-w-5xl h-[55vh] md:h-[50vh]">
           <motion.div
-            className="absolute inset-0 w-full h-full rounded-[2rem] overflow-hidden shadow-2xl bg-[#0a0a0a] border border-white/5 flex flex-col md:flex-row"
+            className="absolute inset-0 w-full h-full rounded-2xl md:rounded-[2rem] overflow-hidden shadow-2xl bg-[#0a0a0a] border border-white/5 flex flex-col md:flex-row"
             style={{ scale: card1Scale, opacity: card1Opacity, y: card1Y, transformOrigin: "top center" }}
           >
             {renderCard(expertiseData[0])}
           </motion.div>
 
           <motion.div
-            className="absolute inset-0 w-full h-full rounded-[2rem] overflow-hidden shadow-2xl bg-[#0a0a0a] border border-white/5 flex flex-col md:flex-row"
+            className="absolute inset-0 w-full h-full rounded-2xl md:rounded-[2rem] overflow-hidden shadow-2xl bg-[#0a0a0a] border border-white/5 flex flex-col md:flex-row"
             style={{ y: card2Y, scale: card2Scale, opacity: card2Opacity, transformOrigin: "top center" }}
           >
             {renderCard(expertiseData[1])}
           </motion.div>
 
           <motion.div
-            className="absolute inset-0 w-full h-full rounded-[2rem] overflow-hidden shadow-2xl bg-[#0a0a0a] border border-white/5 flex flex-col md:flex-row"
+            className="absolute inset-0 w-full h-full rounded-2xl md:rounded-[2rem] overflow-hidden shadow-2xl bg-[#0a0a0a] border border-white/5 flex flex-col md:flex-row"
             style={{ y: card3Y, transformOrigin: "top center" }}
           >
             {renderCard(expertiseData[2])}

@@ -59,9 +59,9 @@ export default function Products({ onSelectProduct }: ProductsProps) {
   ];
 
   return (
-    <section id="products" className="py-32 bg-black">
+    <section id="products" className="py-16 md:py-32 bg-black">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="mb-20">
+        <div className="mb-10 md:mb-20">
           <motion.h2 
             className="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-white"
             initial={{ opacity: 0, y: 20 }}
@@ -74,7 +74,7 @@ export default function Products({ onSelectProduct }: ProductsProps) {
           </motion.h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 auto-rows-[200px] md:auto-rows-[300px]">
           {products.map((product, i) => (
             <motion.div
               key={product.id}
@@ -102,9 +102,9 @@ export default function Products({ onSelectProduct }: ProductsProps) {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none"></div>
                 <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="absolute bottom-0 left-0 p-8 z-20 pointer-events-none">
-                  <motion.h3 layoutId={`title-${product.id}`} className="text-2xl font-bold mb-2 text-white tracking-tight">{product.name}</motion.h3>
-                  <motion.p layoutId={`desc-${product.id}`} className="text-gray-400 font-light">{product.desc}</motion.p>
+                <div className="absolute bottom-0 left-0 p-5 md:p-8 z-20 pointer-events-none">
+                  <motion.h3 layoutId={`title-${product.id}`} className="text-lg md:text-2xl font-bold mb-1 md:mb-2 text-white tracking-tight">{product.name}</motion.h3>
+                  <motion.p layoutId={`desc-${product.id}`} className="text-sm md:text-base text-gray-400 font-light">{product.desc}</motion.p>
                 </div>
               </motion.div>
             </motion.div>

@@ -8,6 +8,7 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const location = useLocation();
 
   const logo1 = useText('logo-1', 'TSE');
@@ -168,57 +169,111 @@ export default function Navbar() {
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            className="fixed inset-0 z-[60] bg-[#0a0a0a]/95 backdrop-blur-xl flex flex-col items-center justify-center"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-0 z-[60] bg-[#0a0a0a]/98 backdrop-blur-xl flex flex-col"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
           >
-            <button
-              className="absolute top-5 right-6 text-gray-400 hover:text-white"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <X size={32} />
-            </button>
-            <div className="flex flex-col items-center gap-8 text-2xl font-semibold tracking-tight w-full px-8">
-              {navLinks.map((link) => (
-                <div key={link.name} className="flex flex-col items-center w-full">
-                  <Link
-                    to={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="text-white hover:text-gray-300 transition-colors mb-4"
-                  >
-                    {link.name}
-                  </Link>
-                  
-                  {link.dropdown && (
-                    <div className="flex flex-col items-center gap-4 w-full bg-white/5 rounded-2xl py-6">
-                      {link.dropdown.map((dropLink) => (
-                        <Link
-                          key={dropLink.name}
-                          to={dropLink.href}
-                          onClick={(e) => {
-                            setMobileMenuOpen(false);
-                            if (dropLink.href.includes('#')) {
-                              const hash = dropLink.href.split('#')[1];
-                              if (location.pathname === '/') {
-                                e.preventDefault();
-                                setTimeout(() => {
-                                  document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' });
-                                }, 100);
-                              }
-                            }
-                          }}
-                          className={`text-lg transition-colors ${
-                            location.pathname === dropLink.href ? 'text-white font-bold' : 'text-gray-400 hover:text-white'
-                          }`}
-                        >
-                          {dropLink.name}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 h-16 shrink-0">
+              <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2">
+                <div className="flex flex-col leading-[0.85] font-black text-[22px] tracking-[-0.12em] uppercase text-white">
+                  <span>{logo1}</span>
+                  <span>{logo2}</span>
                 </div>
-              ))}
+              </Link>
+              <button
+                className="text-gray-400 hover:text-white p-1"
+                onClick={() => { setMobileMenuOpen(false); setMobileExpanded(null); }}
+              >
+                <X size={28} />
+              </button>
+            </div>
+
+            {/* Menu Items */}
+            <div className="flex-1 overflow-y-auto px-6 pt-6 pb-8">
+              <div className="flex flex-col gap-1">
+                {navLinks.map((link) => (
+                  <div key={link.name} className="w-full">
+                    {/* Category Header - Toggle Accordion */}
+                    <button
+                      onClick={() => setMobileExpanded(prev => prev === link.name ? null : link.name)}
+                      className="w-full flex items-center justify-between py-4 border-b border-white/5"
+                    >
+                      <span className="text-xl font-bold text-white tracking-tight">{link.name}</span>
+                      <motion.div
+                        animate={{ rotate: mobileExpanded === link.name ? 180 : 0 }}
+                        transition={{ duration: 0.25 }}
+                      >
+                        <ChevronDown size={20} className="text-gray-500" />
+                      </motion.div>
+                    </button>
+
+                    {/* Dropdown Items - Animated Accordion */}
+                    <AnimatePresence>
+                      {link.dropdown && mobileExpanded === link.name && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.25, ease: 'easeInOut' }}
+                          className="overflow-hidden"
+                        >
+                          <div className="py-2 pl-4">
+                            {link.dropdown.map((dropLink) => (
+                              <Link
+                                key={dropLink.name}
+                                to={dropLink.href}
+                                onClick={(e) => {
+                                  setMobileMenuOpen(false);
+                                  setMobileExpanded(null);
+                                  if (dropLink.href.includes('#')) {
+                                    const hash = dropLink.href.split('#')[1];
+                                    if (location.pathname === '/') {
+                                      e.preventDefault();
+                                      setTimeout(() => {
+                                        document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' });
+                                      }, 100);
+                                    }
+                                  }
+                                }}
+                                className={`block py-3 text-base transition-colors ${
+                                  location.pathname === dropLink.href
+                                    ? 'text-white font-semibold'
+                                    : 'text-gray-400 active:text-white'
+                                }`}
+                              >
+                                {dropLink.name}
+                              </Link>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                ))}
+              </div>
+
+              {/* Contact Button */}
+              <div className="mt-8">
+                <Link
+                  to="/#contact"
+                  onClick={(e) => {
+                    setMobileMenuOpen(false);
+                    setMobileExpanded(null);
+                    if (location.pathname === '/') {
+                      e.preventDefault();
+                      setTimeout(() => {
+                        document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+                      }, 100);
+                    }
+                  }}
+                  className="block w-full text-center bg-white text-black font-semibold py-4 rounded-xl text-base"
+                >
+                  {navBtn}
+                </Link>
+              </div>
             </div>
           </motion.div>
         )}

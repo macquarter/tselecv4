@@ -49,9 +49,9 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="py-32 bg-black">
+    <section id="contact" className="py-16 md:py-32 bg-black">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20">
           <div>
             <motion.h2 
               className="text-4xl md:text-6xl font-bold tracking-tighter mb-8 text-white"
@@ -62,8 +62,8 @@ export default function Contact() {
               {ctT1} <br />
               {ctT2}
             </motion.h2>
-            <motion.p 
-              className="text-xl text-gray-400 font-light mb-12"
+            <motion.p
+              className="text-base md:text-xl text-gray-400 font-light mb-8 md:mb-12"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -95,7 +95,7 @@ export default function Contact() {
           </div>
 
           <motion.div 
-            className="bg-[#0a0a0a] p-10 rounded-[2rem] border border-white/5 relative overflow-hidden group"
+            className="bg-[#0a0a0a] p-6 md:p-10 rounded-2xl md:rounded-[2rem] border border-white/5 relative overflow-hidden group"
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

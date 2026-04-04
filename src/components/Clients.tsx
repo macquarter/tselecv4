@@ -16,7 +16,7 @@ export default function Clients() {
   const tripled = [...clients, ...clients, ...clients];
 
   return (
-    <section className="relative py-20 bg-black border-t border-white/5 overflow-hidden">
+    <section className="relative py-12 md:py-20 bg-black border-t border-white/5 overflow-hidden">
       <style>{`
         @keyframes marquee {
           0% { transform: translateX(0); }
@@ -24,22 +24,22 @@ export default function Clients() {
         }
       `}</style>
 
-      <div className="absolute top-0 bottom-0 left-0 w-48 z-10 pointer-events-none bg-gradient-to-r from-black to-transparent" />
-      <div className="absolute top-0 bottom-0 right-0 w-48 z-10 pointer-events-none bg-gradient-to-l from-black to-transparent" />
+      <div className="absolute top-0 bottom-0 left-0 w-16 md:w-48 z-10 pointer-events-none bg-gradient-to-r from-black to-transparent" />
+      <div className="absolute top-0 bottom-0 right-0 w-16 md:w-48 z-10 pointer-events-none bg-gradient-to-l from-black to-transparent" />
 
-      <p className="text-center text-[11px] font-semibold tracking-[0.3em] text-gray-500 uppercase mb-10">
+      <p className="text-center text-[10px] md:text-[11px] font-semibold tracking-[0.3em] text-gray-500 uppercase mb-6 md:mb-10">
         {label}
       </p>
 
       <div className="overflow-hidden">
         <div
-          className="flex items-center gap-24 whitespace-nowrap"
-          style={{ animation: 'marquee 30s linear infinite' }}
+          className="flex items-center gap-10 md:gap-24 whitespace-nowrap"
+          style={{ animation: 'marquee 20s linear infinite' }}
         >
           {tripled.map((name, i) => (
             <span
               key={`${name}-${i}`}
-              className="text-[28px] font-bold tracking-tight text-white/25 hover:text-white transition-colors duration-500 cursor-default shrink-0"
+              className="text-lg md:text-[28px] font-bold tracking-tight text-white/25 hover:text-white transition-colors duration-500 cursor-default shrink-0"
             >
               {name}
             </span>
