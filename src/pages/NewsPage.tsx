@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Search, ChevronLeft } from 'lucide-react';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { useBoardOpt } from '../contexts/SiteContentContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
@@ -29,6 +30,7 @@ const staticNews: NewsItem[] = [
 const categories = ['전체', '공지사항', '보도자료', '이벤트'];
 
 export default function NewsPage() {
+  const boardOpt = useBoardOpt('news');
   const [newsItems, setNewsItems] = useState<NewsItem[]>(staticNews);
   const [filter, setFilter] = useState('전체');
   const [search, setSearch] = useState('');
@@ -116,8 +118,8 @@ export default function NewsPage() {
                   <div className="p-8 border-b border-white/5">
                     <div className="flex items-center gap-3 mb-4">
                       <span className="text-xs font-semibold px-3 py-1 rounded-full bg-sky-400/10 text-sky-400">{openItem.cat}</span>
-                      <span className="text-xs text-gray-500 font-mono">{openItem.date}</span>
-                      <span className="text-xs text-gray-500">조회 {openItem.views}</span>
+                      {boardOpt.showDate && <span className="text-xs text-gray-500 font-mono">{openItem.date}</span>}
+                      {boardOpt.showViews && <span className="text-xs text-gray-500">조회 {openItem.views}</span>}
                     </div>
                     <h2 className="text-2xl font-bold tracking-tight">{openItem.title}</h2>
                     <p className="text-xs text-gray-500 mt-2">작성자: {openItem.author}</p>
@@ -153,8 +155,8 @@ export default function NewsPage() {
                             </h3>
                           </div>
                           <div className="flex items-center gap-4 mt-2 sm:mt-0 text-xs text-gray-500 shrink-0">
-                            <span className="font-mono">{item.date}</span>
-                            <span>조회 {item.views}</span>
+                            {boardOpt.showDate && <span className="font-mono">{item.date}</span>}
+                            {boardOpt.showViews && <span>조회 {item.views}</span>}
                           </div>
                         </motion.div>
                       ))}

@@ -2,11 +2,17 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
+interface BoardOpt {
+  showDate: boolean;
+  showViews: boolean;
+}
+
 interface SiteContent {
   text: Record<string, string>;
   images: Record<string, string>;
   videos: Record<string, string>;
   clients: string[];
+  boardOpt: { news: BoardOpt; dl: BoardOpt };
   loaded: boolean;
 }
 
@@ -15,6 +21,7 @@ const defaultContent: SiteContent = {
   images: {},
   videos: {},
   clients: [],
+  boardOpt: { news: { showDate: true, showViews: true }, dl: { showDate: true, showViews: true } },
   loaded: false,
 };
 
@@ -52,16 +59,23 @@ export function useClients(fallback: string[]): string[] {
   return clients;
 }
 
+/** Helper: get board display options */
+export function useBoardOpt(type: 'news' | 'dl') {
+  const { boardOpt } = useSiteContent();
+  return boardOpt[type];
+}
+
 export function SiteContentProvider({ children }: { children: ReactNode }) {
   const [content, setContent] = useState<SiteContent>(defaultContent);
 
   useEffect(() => {
     async function load() {
       try {
-        const [textSnap, mediaSnap, clientSnap] = await Promise.all([
+        const [textSnap, mediaSnap, clientSnap, settSnap] = await Promise.all([
           getDoc(doc(db, 'siteContent', 'text')),
           getDoc(doc(db, 'siteContent', 'media')),
           getDoc(doc(db, 'siteContent', 'clients')),
+          getDoc(doc(db, 'siteContent', 'settings')),
         ]);
 
         const text = textSnap.exists() ? (textSnap.data() as Record<string, string>) : {};
@@ -71,8 +85,14 @@ export function SiteContentProvider({ children }: { children: ReactNode }) {
         const clients = clientSnap.exists() && Array.isArray(clientSnap.data().list)
           ? (clientSnap.data().list as string[])
           : [];
+        const boardOpt = defaultContent.boardOpt;
+        if (settSnap.exists()) {
+          const sd = settSnap.data() as { boardOpt?: { news?: BoardOpt; dl?: BoardOpt } };
+          if (sd.boardOpt?.news) Object.assign(boardOpt.news, sd.boardOpt.news);
+          if (sd.boardOpt?.dl) Object.assign(boardOpt.dl, sd.boardOpt.dl);
+        }
 
-        setContent({ text, images, videos, clients, loaded: true });
+        setContent({ text, images, videos, clients, boardOpt, loaded: true });
         console.log('✅ SiteContent loaded from Firestore');
       } catch (err) {
         console.warn('Firestore load failed, using defaults:', err);
