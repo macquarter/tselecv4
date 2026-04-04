@@ -40,6 +40,7 @@ export default function Footer() {
           <div>
             <h4 className="text-sm font-bold tracking-widest uppercase text-white mb-6">고객센터</h4>
             <ul className="space-y-4 text-sm text-gray-500">
+              <li><Link to="/news" className="hover:text-white transition-colors">뉴스 & 공지사항</Link></li>
               <li><Link to="/downloads" className="hover:text-white transition-colors">자료실</Link></li>
               <li><Link to="/#contact" className="hover:text-white transition-colors">문의하기</Link></li>
             </ul>

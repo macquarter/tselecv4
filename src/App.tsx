@@ -17,6 +17,7 @@ import Display from './pages/Display';
 import Others from './pages/Others';
 import Process from './pages/Process';
 import Downloads from './pages/Downloads';
+import NewsPage from './pages/NewsPage';
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
 
@@ -37,6 +38,7 @@ export default function App() {
         <Route path="/others" element={<Others />} />
         <Route path="/process" element={<Process />} />
         <Route path="/downloads" element={<Downloads />} />
+        <Route path="/news" element={<NewsPage />} />
         <Route path="/admin" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
       </Routes>

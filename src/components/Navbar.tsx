@@ -17,7 +17,6 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setMobileMenuOpen(false);
     window.scrollTo(0, 0);
@@ -49,8 +48,9 @@ export default function Navbar() {
     },
     {
       name: '고객센터',
-      href: '/downloads',
+      href: '/news',
       dropdown: [
+        { name: '뉴스 & 공지사항', href: '/news' },
         { name: '자료실', href: '/downloads' },
         { name: '문의하기', href: '/#contact' },
       ]
@@ -91,7 +91,6 @@ export default function Navbar() {
                   {link.dropdown && <ChevronDown size={14} className="opacity-50" />}
                 </Link>
 
-                {/* Dropdown */}
                 {link.dropdown && (
                   <AnimatePresence>
                     {activeDropdown === link.name && (
@@ -114,7 +113,7 @@ export default function Navbar() {
                                   document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' });
                                 }
                               }}
-                              className={`block px-4 py-2.5 text-sm rounded-lg transition-all text-gray-400 hover:bg-white/5 hover:text-white hover:pl-5`}
+                              className="block px-4 py-2.5 text-sm rounded-lg transition-all text-gray-400 hover:bg-white/5 hover:text-white hover:pl-5"
                             >
                               {dropLink.name}
                             </Link>
