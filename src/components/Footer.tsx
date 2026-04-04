@@ -1,13 +1,17 @@
+import { Link } from 'react-router-dom';
+
 export default function Footer() {
   return (
     <footer className="bg-black border-t border-white/10 pt-20 pb-10">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="md:col-span-1">
-            <div className="text-2xl font-bold tracking-tighter flex items-center gap-2 mb-6">
-              <div className="w-6 h-6 bg-white rounded-sm flex items-center justify-center text-xs text-black">T</div>
-              <span className="text-white">TSELEC</span>
-            </div>
+            <Link to="/" className="inline-block mb-6">
+              <div className="flex flex-col leading-[0.85] font-black text-[20px] tracking-[-0.12em] uppercase text-white">
+                <span>TSE</span>
+                <span>LEC</span>
+              </div>
+            </Link>
             <p className="text-sm text-gray-500 leading-relaxed">
               1989년 설립 이래 마이크로컨트롤러 설계·제조 전문 기업으로 가전, 의료, 태양광 분야의 신뢰할 수 있는 전자부품 파트너입니다.
             </p>
@@ -16,29 +20,28 @@ export default function Footer() {
           <div>
             <h4 className="text-sm font-bold tracking-widest uppercase text-white mb-6">회사소개</h4>
             <ul className="space-y-4 text-sm text-gray-500">
-              <li><a href="#" className="hover:text-white transition-colors">인사말</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">회사연혁</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">인증현황</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">오시는 길</a></li>
+              <li><Link to="/greeting" className="hover:text-white transition-colors">인사말</Link></li>
+              <li><Link to="/history" className="hover:text-white transition-colors">회사연혁</Link></li>
+              <li><Link to="/certifications" className="hover:text-white transition-colors">인증현황</Link></li>
+              <li><Link to="/directions" className="hover:text-white transition-colors">오시는 길</Link></li>
             </ul>
           </div>
 
           <div>
             <h4 className="text-sm font-bold tracking-widest uppercase text-white mb-6">제품소개</h4>
             <ul className="space-y-4 text-sm text-gray-500">
-              <li><a href="#" className="hover:text-white transition-colors">메인 컨트롤러</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">디스플레이</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">기타</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">공정도</a></li>
+              <li><Link to="/main-controller" className="hover:text-white transition-colors">메인 컨트롤러</Link></li>
+              <li><Link to="/display" className="hover:text-white transition-colors">디스플레이</Link></li>
+              <li><Link to="/others" className="hover:text-white transition-colors">기타</Link></li>
+              <li><Link to="/process" className="hover:text-white transition-colors">공정도</Link></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-sm font-bold tracking-widest uppercase text-white mb-6">고객지원</h4>
+            <h4 className="text-sm font-bold tracking-widest uppercase text-white mb-6">고객센터</h4>
             <ul className="space-y-4 text-sm text-gray-500">
-              <li><a href="#" className="hover:text-white transition-colors">자주 묻는 질문</a></li>
-              <li><a href="#contact" className="hover:text-white transition-colors">문의하기</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">뉴스</a></li>
+              <li><Link to="/downloads" className="hover:text-white transition-colors">자료실</Link></li>
+              <li><Link to="/#contact" className="hover:text-white transition-colors">문의하기</Link></li>
             </ul>
           </div>
         </div>
