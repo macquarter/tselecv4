@@ -1,0 +1,112 @@
+import { motion } from 'motion/react';
+import { Product } from '../types';
+
+const products: Product[] = [
+  { 
+    id: 'fridge', 
+    name: '냉장고 제어기판', 
+    desc: '인버터 압축기 제어 및 온도 관리 MCU 모듈', 
+    img: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=1200&q=80', 
+    colSpan: 'md:col-span-2', 
+    rowSpan: 'md:row-span-2',
+    details: ['인버터 압축기 BLDC 모터 구동 제어', '멀티 존 독립 온도 제어', '자동 제상 알고리즘 내장', '이상 과열·전류 초과 시 자동 안전 차단']
+  },
+  { 
+    id: 'dish', 
+    name: '식기건조기 제어기', 
+    desc: '건조 온도·습도 자동 제어', 
+    img: 'https://images.unsplash.com/photo-1585659722983-3a675dabf23d?auto=format&fit=crop&w=800&q=80', 
+    colSpan: 'md:col-span-1', 
+    rowSpan: 'md:row-span-1',
+    details: ['PTC 히터 PWM 정밀 온도 제어', '다중 건조 모드 (쾌속/표준/절전)', '차일드락 안전 기능', '도어 스위치 인터록 안전장치']
+  },
+  { 
+    id: 'vent', 
+    name: '환기시스템 제어기', 
+    desc: '팬 속도 제어 및 필터 상태 감지', 
+    img: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=800&q=80', 
+    colSpan: 'md:col-span-1', 
+    rowSpan: 'md:row-span-1',
+    details: ['BLDC 팬 정밀 속도 제어', 'CO2/습도 센서 자동 연동', '필터 상태 경고 알림', 'IoT 연동 (Wi-Fi/BLE)']
+  },
+  { 
+    id: 'med', 
+    name: '의료기기 MCU 보드', 
+    desc: '정밀 센서 인터페이스 및 신뢰성 설계', 
+    img: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=800&q=80', 
+    colSpan: 'md:col-span-1', 
+    rowSpan: 'md:row-span-1',
+    details: ['고정밀 ADC 16bit+ 센서 인터페이스', '이중 안전 회로 (Fail-safe)', 'IEC 60601 의료등급 설계', 'EMC 인증 완료']
+  },
+  { 
+    id: 'solar', 
+    name: '태양광 인버터 제어기', 
+    desc: 'MPPT 알고리즘 기반 최대 전력 추적', 
+    img: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80', 
+    colSpan: 'md:col-span-1', 
+    rowSpan: 'md:row-span-1',
+    details: ['MPPT 효율 99% 이상', '계통연계 / 독립형 모드 전환', '역전력 방지 (Anti-islanding)', '원격 모니터링 연동']
+  },
+];
+
+interface ProductsProps {
+  onSelectProduct: (product: Product) => void;
+}
+
+export default function Products({ onSelectProduct }: ProductsProps) {
+  return (
+    <section id="products" className="py-32 bg-black">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="mb-20">
+          <motion.h2 
+            className="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-white"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          >
+            다양한 산업을 위한 <br />
+            전자부품 솔루션.
+          </motion.h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px]">
+          {products.map((product, i) => (
+            <motion.div
+              key={product.id}
+              className={`${product.colSpan} ${product.rowSpan}`}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <motion.div
+                layoutId={`card-${product.id}`}
+                onClick={() => onSelectProduct(product)}
+                whileHover="hover"
+                className="relative w-full h-full rounded-[2rem] overflow-hidden bg-[#0a0a0a] border border-white/5 cursor-pointer group"
+              >
+                <motion.img 
+                  layoutId={`img-${product.id}`}
+                  src={product.img} 
+                  alt={product.name} 
+                  className="absolute inset-0 w-full h-full object-cover opacity-60"
+                  variants={{
+                    hover: { scale: 1.05, opacity: 0.8 }
+                  }}
+                  transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none"></div>
+                <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute bottom-0 left-0 p-8 z-20 pointer-events-none">
+                  <motion.h3 layoutId={`title-${product.id}`} className="text-2xl font-bold mb-2 text-white tracking-tight">{product.name}</motion.h3>
+                  <motion.p layoutId={`desc-${product.id}`} className="text-gray-400 font-light">{product.desc}</motion.p>
+                </div>
+              </motion.div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
