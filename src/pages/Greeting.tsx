@@ -96,9 +96,6 @@ export default function Greeting() {
                 <p className="text-white font-medium text-xl pt-6 tracking-tight">
                   {msg4}
                 </p>
-                <div className="pt-12 flex justify-end">
-                  <img src="/images/8.png" alt="유태호 서명" className="h-16 invert opacity-60" />
-                </div>
               </div>
             </motion.div>
           </div>
