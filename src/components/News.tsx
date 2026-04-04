@@ -4,6 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { useText } from '../contexts/SiteContentContext';
 
 interface NewsItem {
   id: string;
@@ -21,6 +22,8 @@ const staticItems: NewsItem[] = [
 
 export default function News() {
   const [newsItems, setNewsItems] = useState<NewsItem[]>(staticItems);
+  const nwT = useText('nw-t', '뉴스 & 공지사항.');
+  const nwS = useText('nw-s', '태승전자의 최신 소식을 전해드립니다.');
 
   useEffect(() => {
     async function fetchNews() {
@@ -60,7 +63,7 @@ export default function News() {
               viewport={{ once: true }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
-              뉴스 & 공지사항.
+              {nwT}
             </motion.h2>
             <motion.p 
               className="text-gray-400 font-light"
@@ -69,7 +72,7 @@ export default function News() {
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             >
-              태승전자의 최신 소식을 전해드립니다.
+              {nwS}
             </motion.p>
           </div>
           <motion.div

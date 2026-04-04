@@ -1,4 +1,6 @@
-const clients = [
+import { useClients, useText } from '../contexts/SiteContentContext';
+
+const defaultClients = [
   'SAMSUNG',
   'LG Electronics',
   'SK hynix',
@@ -9,12 +11,12 @@ const clients = [
 ];
 
 export default function Clients() {
-  // Triple the list for seamless infinite scroll
+  const clients = useClients(defaultClients);
+  const label = useText('cl-title', 'Trusted by Innovative Companies');
   const tripled = [...clients, ...clients, ...clients];
 
   return (
     <section className="relative py-20 bg-black border-t border-white/5 overflow-hidden">
-      {/* Keyframes */}
       <style>{`
         @keyframes marquee {
           0% { transform: translateX(0); }
@@ -22,13 +24,11 @@ export default function Clients() {
         }
       `}</style>
 
-      {/* Left fade */}
       <div className="absolute top-0 bottom-0 left-0 w-48 z-10 pointer-events-none bg-gradient-to-r from-black to-transparent" />
-      {/* Right fade */}
       <div className="absolute top-0 bottom-0 right-0 w-48 z-10 pointer-events-none bg-gradient-to-l from-black to-transparent" />
 
       <p className="text-center text-[11px] font-semibold tracking-[0.3em] text-gray-500 uppercase mb-10">
-        Trusted by Innovative Companies
+        {label}
       </p>
 
       <div className="overflow-hidden">

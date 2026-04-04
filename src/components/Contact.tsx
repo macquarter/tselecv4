@@ -1,13 +1,27 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { MapPin, Phone, Printer, Clock, CheckCircle } from 'lucide-react';
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { useText } from '../contexts/SiteContentContext';
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', phone: '', email: '', company: '', message: '' });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  const ctT1 = useText('ct-t1', '언제든지');
+  const ctT2 = useText('ct-t2', '연락주세요.');
+  const ctS = useText('ct-s', '제품 문의, 기술 상담, 납품 가격 문의 등 모든 문의에 신속하게 답변드립니다.');
+  const cfT = useText('cf-t', '문의 남기기');
+  const cfS = useText('cf-s', '빠른 시일 내 담당자가 연락드립니다.');
+
+  const contactInfo = [
+    { icon: MapPin, label: 'Address', value: useText('ci-ad', '인천광역시 서구 로봇랜드로 249번길 62-8') },
+    { icon: Phone, label: 'Telephone', value: useText('ci-ph', '032-329-7600 ~ 7603') },
+    { icon: Printer, label: 'Fax', value: useText('ci-fx', '032-329-7604') },
+    { icon: Clock, label: 'Business Hours', value: useText('ci-hr', '평일 09:00 – 18:00 (주말·공휴일 휴무)') },
+  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,8 +59,8 @@ export default function Contact() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              언제든지 <br />
-              연락주세요.
+              {ctT1} <br />
+              {ctT2}
             </motion.h2>
             <motion.p 
               className="text-xl text-gray-400 font-light mb-12"
@@ -55,16 +69,11 @@ export default function Contact() {
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
             >
-              제품 문의, 기술 상담, 납품 가격 문의 등 모든 문의에 신속하게 답변드립니다.
+              {ctS}
             </motion.p>
 
             <div className="space-y-8">
-              {[
-                { icon: MapPin, label: 'Address', value: '인천광역시 서구 로봇랜드로 249번길 62-8' },
-                { icon: Phone, label: 'Telephone', value: '032-329-7600 ~ 7603' },
-                { icon: Printer, label: 'Fax', value: '032-329-7604' },
-                { icon: Clock, label: 'Business Hours', value: '평일 09:00 – 18:00 (주말·공휴일 휴무)' },
-              ].map((info, i) => (
+              {contactInfo.map((info, i) => (
                 <motion.div 
                   key={info.label}
                   className="flex items-start gap-6"
@@ -108,8 +117,8 @@ export default function Contact() {
               </div>
             ) : (
               <>
-                <h3 className="text-2xl font-bold mb-2 text-white relative z-10 tracking-tight">문의 남기기</h3>
-                <p className="text-gray-400 mb-8 font-light relative z-10">빠른 시일 내 담당자가 연락드립니다.</p>
+                <h3 className="text-2xl font-bold mb-2 text-white relative z-10 tracking-tight">{cfT}</h3>
+                <p className="text-gray-400 mb-8 font-light relative z-10">{cfS}</p>
                 
                 <form className="space-y-6 relative z-10" onSubmit={handleSubmit}>
                   <div>

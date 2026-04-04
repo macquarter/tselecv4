@@ -1,14 +1,18 @@
 import { motion } from 'motion/react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { useText } from '../contexts/SiteContentContext';
 
 export default function Directions() {
+  const ciAd = useText('ci-ad', '인천광역시 서구 로봇랜드로 249번길 62-8');
+  const ciPh = useText('ci-ph', '032-329-7600 ~ 7603');
+  const ciFx = useText('ci-fx', '032-329-7604');
+
   return (
     <div className="bg-black min-h-screen text-white selection:bg-white/30 selection:text-white">
       <Navbar />
       
       <main className="pt-32 pb-20">
-        {/* Hero Section */}
         <section className="relative flex flex-col items-center justify-center text-center px-6 mb-32">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -40,10 +44,8 @@ export default function Directions() {
           </motion.p>
         </section>
 
-        {/* Content Section */}
         <section className="max-w-7xl mx-auto px-6 mb-32">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-            {/* Info Cards */}
             <div className="space-y-8">
               <motion.div 
                 className="bg-[#0a0a0a] border border-white/5 rounded-[2rem] p-12 hover:bg-[#111] transition-colors duration-500 group relative overflow-hidden"
@@ -55,7 +57,7 @@ export default function Directions() {
                 <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <h3 className="text-gray-400 font-medium tracking-widest mb-4 uppercase text-sm relative z-10">회사주소</h3>
                 <p className="text-2xl font-bold leading-relaxed tracking-tight relative z-10">
-                  인천광역시 서구 로봇랜드로 249번길 62-8<br/>
+                  {ciAd}<br/>
                   <span className="text-gray-500 text-lg font-normal">(경서동 673-76)</span>
                 </p>
               </motion.div>
@@ -70,7 +72,7 @@ export default function Directions() {
                 >
                   <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   <h3 className="text-gray-400 font-medium tracking-widest mb-4 uppercase text-sm relative z-10">전화</h3>
-                  <p className="text-2xl font-bold mb-2 tracking-tight relative z-10">032) 329-7600~3</p>
+                  <p className="text-2xl font-bold mb-2 tracking-tight relative z-10">{ciPh}</p>
                   <p className="text-gray-500 text-sm font-light relative z-10">영업·기술문의</p>
                 </motion.div>
 
@@ -83,7 +85,7 @@ export default function Directions() {
                 >
                   <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   <h3 className="text-gray-400 font-medium tracking-widest mb-4 uppercase text-sm relative z-10">팩스</h3>
-                  <p className="text-2xl font-bold mb-2 tracking-tight relative z-10">032) 329-7604</p>
+                  <p className="text-2xl font-bold mb-2 tracking-tight relative z-10">{ciFx}</p>
                   <p className="text-gray-500 text-sm font-light relative z-10">문의 접수</p>
                 </motion.div>
               </div>
@@ -114,7 +116,6 @@ export default function Directions() {
               </motion.div>
             </div>
 
-            {/* Map */}
             <motion.div 
               className="h-[500px] lg:h-auto rounded-3xl overflow-hidden border border-white/10 shadow-2xl"
               initial={{ opacity: 0, x: 30 }}

@@ -4,6 +4,7 @@
  */
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { SiteContentProvider } from './contexts/SiteContentContext';
 import Home from './pages/Home';
 import Greeting from './pages/Greeting';
 import HistoryPage from './pages/HistoryPage';
@@ -23,25 +24,27 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 
 export default function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/greeting" element={<Greeting />} />
-        <Route path="/history" element={<HistoryPage />} />
-        <Route path="/facility" element={<Facility />} />
-        <Route path="/certifications" element={<Certifications />} />
-        <Route path="/organization" element={<Organization />} />
-        <Route path="/directions" element={<Directions />} />
-        <Route path="/products" element={<ProductsPage />} />
-        <Route path="/main-controller" element={<MainController />} />
-        <Route path="/display" element={<Display />} />
-        <Route path="/others" element={<Others />} />
-        <Route path="/process" element={<Process />} />
-        <Route path="/downloads" element={<Downloads />} />
-        <Route path="/news" element={<NewsPage />} />
-        <Route path="/admin" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-      </Routes>
-    </Router>
+    <SiteContentProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/greeting" element={<Greeting />} />
+          <Route path="/history" element={<HistoryPage />} />
+          <Route path="/facility" element={<Facility />} />
+          <Route path="/certifications" element={<Certifications />} />
+          <Route path="/organization" element={<Organization />} />
+          <Route path="/directions" element={<Directions />} />
+          <Route path="/products" element={<ProductsPage />} />
+          <Route path="/main-controller" element={<MainController />} />
+          <Route path="/display" element={<Display />} />
+          <Route path="/others" element={<Others />} />
+          <Route path="/process" element={<Process />} />
+          <Route path="/downloads" element={<Downloads />} />
+          <Route path="/news" element={<NewsPage />} />
+          <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        </Routes>
+      </Router>
+    </SiteContentProvider>
   );
 }
