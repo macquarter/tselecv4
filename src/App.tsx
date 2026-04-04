@@ -21,11 +21,13 @@ import Downloads from './pages/Downloads';
 import NewsPage from './pages/NewsPage';
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import ChatBot from './components/ChatBot';
 
 export default function App() {
   return (
     <SiteContentProvider>
       <Router>
+        <ChatBot />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/greeting" element={<Greeting />} />
