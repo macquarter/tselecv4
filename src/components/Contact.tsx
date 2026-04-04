@@ -1,7 +1,39 @@
+import { useState } from 'react';
 import { motion } from 'motion/react';
-import { MapPin, Phone, Printer, Clock } from 'lucide-react';
+import { MapPin, Phone, Printer, Clock, CheckCircle } from 'lucide-react';
+import { collection, addDoc, Timestamp } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 
 export default function Contact() {
+  const [form, setForm] = useState({ name: '', phone: '', email: '', company: '', message: '' });
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.name || !form.email || !form.message) return;
+
+    setSubmitting(true);
+    try {
+      await addDoc(collection(db, 'inquiries'), {
+        name: form.name,
+        email: form.email,
+        phone: form.phone || null,
+        company: form.company || null,
+        message: form.message,
+        status: 'pending',
+        createdAt: Timestamp.now(),
+      });
+      setSubmitted(true);
+      setForm({ name: '', phone: '', email: '', company: '', message: '' });
+    } catch (err) {
+      console.error('문의 전송 실패:', err);
+      alert('문의 전송에 실패했습니다. 잠시 후 다시 시도해주세요.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <section id="contact" className="py-32 bg-black">
       <div className="max-w-7xl mx-auto px-6">
@@ -61,30 +93,78 @@ export default function Contact() {
             transition={{ delay: 0.3 }}
           >
             <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <h3 className="text-2xl font-bold mb-2 text-white relative z-10 tracking-tight">문의 남기기</h3>
-            <p className="text-gray-400 mb-8 font-light relative z-10">빠른 시일 내 담당자가 연락드립니다.</p>
             
-            <form className="space-y-6 relative z-10" onSubmit={(e) => e.preventDefault()}>
-              <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">회사명 / 성함</label>
-                <input type="text" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-colors" placeholder="(주)태승전자 홍길동" />
+            {submitted ? (
+              <div className="relative z-10 flex flex-col items-center justify-center py-16 text-center">
+                <CheckCircle size={48} className="text-green-400 mb-6" />
+                <h3 className="text-2xl font-bold mb-2 text-white">문의가 접수되었습니다</h3>
+                <p className="text-gray-400 mb-8">빠른 시일 내 담당자가 연락드리겠습니다.</p>
+                <button 
+                  onClick={() => setSubmitted(false)}
+                  className="px-6 py-3 bg-white/10 border border-white/10 rounded-xl text-white text-sm hover:bg-white/20 transition-colors"
+                >
+                  새 문의 작성
+                </button>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">연락처</label>
-                <input type="tel" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-colors" placeholder="010-0000-0000" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">이메일</label>
-                <input type="email" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-colors" placeholder="example@company.com" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">문의 내용</label>
-                <textarea rows={4} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-colors resize-none" placeholder="제품명 및 문의 내용을 입력해주세요."></textarea>
-              </div>
-              <button className="w-full bg-white text-black font-medium rounded-xl px-4 py-4 hover:bg-gray-200 transition-colors">
-                문의 보내기
-              </button>
-            </form>
+            ) : (
+              <>
+                <h3 className="text-2xl font-bold mb-2 text-white relative z-10 tracking-tight">문의 남기기</h3>
+                <p className="text-gray-400 mb-8 font-light relative z-10">빠른 시일 내 담당자가 연락드립니다.</p>
+                
+                <form className="space-y-6 relative z-10" onSubmit={handleSubmit}>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-400 mb-2">회사명 / 성함 *</label>
+                    <input 
+                      type="text" 
+                      required
+                      value={form.name}
+                      onChange={(e) => setForm(prev => ({ ...prev, name: e.target.value }))}
+                      className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-colors" 
+                      placeholder="(주)태승전자 홍길동" 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-400 mb-2">연락처</label>
+                    <input 
+                      type="tel" 
+                      value={form.phone}
+                      onChange={(e) => setForm(prev => ({ ...prev, phone: e.target.value }))}
+                      className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-colors" 
+                      placeholder="010-0000-0000" 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-400 mb-2">이메일 *</label>
+                    <input 
+                      type="email" 
+                      required
+                      value={form.email}
+                      onChange={(e) => setForm(prev => ({ ...prev, email: e.target.value }))}
+                      className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-colors" 
+                      placeholder="example@company.com" 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-400 mb-2">문의 내용 *</label>
+                    <textarea 
+                      rows={4} 
+                      required
+                      value={form.message}
+                      onChange={(e) => setForm(prev => ({ ...prev, message: e.target.value }))}
+                      className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-colors resize-none" 
+                      placeholder="제품명 및 문의 내용을 입력해주세요."
+                    ></textarea>
+                  </div>
+                  <button 
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full bg-white text-black font-medium rounded-xl px-4 py-4 hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {submitting ? '전송 중...' : '문의 보내기'}
+                  </button>
+                </form>
+              </>
+            )}
           </motion.div>
         </div>
       </div>
