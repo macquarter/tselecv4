@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
+import { getAuth, signInAnonymously } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDmgOBu3kPUGzff_CyR647kIbN4F91seJE",
@@ -11,6 +12,10 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
+// Anonymous auth for Firestore write access (chatbot inquiries)
+const auth = getAuth(app);
+signInAnonymously(auth).catch(e => console.warn('Anonymous auth failed:', e));
 
 // Use the existing Firestore database
 export const db = getFirestore(app, 'ai-studio-e97c649f-c50c-4cd5-8952-6640d34f2444');

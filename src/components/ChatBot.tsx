@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { MessageCircle, X, Send, Bot, User, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 
 interface Message {
   role: 'bot' | 'user';
@@ -142,6 +144,27 @@ const KB: KBEntry[] = [
     followUp: '거래 관련 상담을 원하시면 연락처를 남겨주시거나 032-329-7600 영업팀으로 문의해 주세요!' },
 ];
 
+// ── Firestore 문의 저장 ──
+async function saveInquiryToFirestore(data: {
+  contact: string;
+  contactType: 'phone' | 'email';
+  topic: string;
+  category: string;
+  conversation: { role: string; text: string }[];
+  userName: string;
+}) {
+  try {
+    await addDoc(collection(db, 'chatInquiries'), {
+      ...data,
+      status: 'new',
+      createdAt: serverTimestamp(),
+    });
+    console.log('✅ 챗봇 문의 Firestore 저장 완료');
+  } catch (e) {
+    console.warn('챗봇 문의 저장 실패:', e);
+  }
+}
+
 // ── 상담 문맥 ──
 interface ConversationContext {
   lastTopic: string;          // 마지막 대화 주제 (KB entry id)
@@ -167,7 +190,13 @@ const NAME_PATTERNS = /(?:저는|제\s?이름은?|이름이?)\s*([가-힣]{2,4})
 const SHORT_INPUT_THRESHOLD = 2;
 
 // ── 응답 생성 엔진 ──
-function generateResponse(input: string, ctx: ConversationContext): { text: string; newCtx: ConversationContext } {
+interface ResponseResult {
+  text: string;
+  newCtx: ConversationContext;
+  saveInquiry?: { contact: string; contactType: 'phone' | 'email'; topic: string; category: string };
+}
+
+function generateResponse(input: string, ctx: ConversationContext): ResponseResult {
   const q = input.trim();
   const qLower = q.toLowerCase().replace(/[?.,!~\s]+/g, ' ').trim();
   const newCtx = { ...ctx, turnCount: ctx.turnCount + 1 };
@@ -179,7 +208,7 @@ function generateResponse(input: string, ctx: ConversationContext): { text: stri
     newCtx.awaitingContact = false;
     const topic = ctx.inquiryTopic || ctx.lastCategory || '제품';
     const text = `감사합니다! 연락처(${phoneMatch[0]})를 확인했습니다.\n\n${topic} 관련 문의로 접수하겠습니다. 담당자가 영업시간(평일 09:00~18:00) 내에 연락드리겠습니다.\n\n다른 궁금하신 점이 있으시면 편하게 말씀해 주세요!`;
-    return { text, newCtx };
+    return { text, newCtx, saveInquiry: { contact: phoneMatch[0], contactType: 'phone', topic, category: ctx.lastCategory || '일반' } };
   }
 
   // 2) 이메일 감지
@@ -189,7 +218,7 @@ function generateResponse(input: string, ctx: ConversationContext): { text: stri
     newCtx.awaitingContact = false;
     const topic = ctx.inquiryTopic || ctx.lastCategory || '제품';
     const text = `감사합니다! 이메일(${emailMatch[0]})로 접수하겠습니다.\n\n${topic} 관련 문의 내용을 담당자에게 전달드리겠습니다. 빠른 시일 내에 회신드리겠습니다.\n\n추가 문의사항이 있으시면 말씀해 주세요!`;
-    return { text, newCtx };
+    return { text, newCtx, saveInquiry: { contact: emailMatch[0], contactType: 'email', topic, category: ctx.lastCategory || '일반' } };
   }
 
   // 3) 이름 감지
@@ -334,7 +363,8 @@ function generateResponse(input: string, ctx: ConversationContext): { text: stri
       const topic = ctx.inquiryTopic || '제품';
       return {
         text: `감사합니다! 연락처를 확인했습니다.\n\n${topic} 관련 문의로 접수하겠습니다. 담당자가 영업시간 내에 연락드리겠습니다.\n\n다른 궁금하신 점이 있으시면 말씀해 주세요!`,
-        newCtx
+        newCtx,
+        saveInquiry: { contact: q, contactType: 'phone', topic, category: ctx.lastCategory || '일반' }
       };
     }
     return {
@@ -377,15 +407,26 @@ export default function ChatBot() {
     if (!q) return;
 
     const userMsg: Message = { role: 'user', text: q, time: getTime() };
-    setMessages(prev => [...prev, userMsg]);
+    const updatedMessages = [...messages, userMsg];
+    setMessages(updatedMessages);
     setInput('');
 
     setTimeout(() => {
-      const { text, newCtx } = generateResponse(q, ctx);
+      const { text, newCtx, saveInquiry } = generateResponse(q, ctx);
       setCtx(newCtx);
       setMessages(prev => [...prev, { role: 'bot', text, time: getTime() }]);
+
+      // Firestore에 문의 저장
+      if (saveInquiry) {
+        const convo = updatedMessages.map(m => ({ role: m.role, text: m.text }));
+        saveInquiryToFirestore({
+          ...saveInquiry,
+          conversation: convo,
+          userName: newCtx.userName || '',
+        });
+      }
     }, 300 + Math.random() * 500);
-  }, [input, ctx]);
+  }, [input, ctx, messages]);
 
   return (
     <>
