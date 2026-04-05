@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Search, ChevronLeft, Download, FileText, Paperclip } from 'lucide-react';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useBoardOpt } from '../contexts/SiteContentContext';
 import Navbar from '../components/Navbar';
@@ -43,12 +43,11 @@ export default function Downloads() {
   useEffect(() => {
     async function fetchDownloads() {
       try {
-        const q = query(collection(db, 'downloads'), orderBy('createdAt', 'desc'));
-        const snapshot = await getDocs(q);
+        const snapshot = await getDocs(collection(db, 'downloads'));
         if (!snapshot.empty) {
           const items: DownloadItem[] = snapshot.docs.map(doc => {
             const data = doc.data();
-            const createdAt = data.createdAt?.toDate?.();
+            const createdAt = data.createdAt?.toDate?.() || (typeof data.createdAt === 'string' ? new Date(data.createdAt) : null);
             return {
               id: doc.id,
               cat: data.category || '카탈로그',
@@ -58,8 +57,10 @@ export default function Downloads() {
               views: data.views || 0,
               file: data.fileName || '',
               fileData: data.fileData || null,
+              _ts: createdAt ? createdAt.getTime() : 0,
             };
           });
+          items.sort((a, b) => (b as any)._ts - (a as any)._ts);
           setDownloadItems(items);
         }
       } catch (err) {

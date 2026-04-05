@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Search, ChevronLeft } from 'lucide-react';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useBoardOpt } from '../contexts/SiteContentContext';
 import Navbar from '../components/Navbar';
@@ -41,12 +41,11 @@ export default function NewsPage() {
   useEffect(() => {
     async function fetchNews() {
       try {
-        const q = query(collection(db, 'news'), orderBy('createdAt', 'desc'));
-        const snapshot = await getDocs(q);
+        const snapshot = await getDocs(collection(db, 'news'));
         if (!snapshot.empty) {
           const items: NewsItem[] = snapshot.docs.map(doc => {
             const data = doc.data();
-            const createdAt = data.createdAt?.toDate?.();
+            const createdAt = data.createdAt?.toDate?.() || (typeof data.createdAt === 'string' ? new Date(data.createdAt) : null);
             return {
               id: doc.id,
               cat: data.category || '공지사항',
@@ -55,8 +54,10 @@ export default function NewsPage() {
               date: createdAt ? `${createdAt.getFullYear()}.${String(createdAt.getMonth()+1).padStart(2,'0')}.${String(createdAt.getDate()).padStart(2,'0')}` : '',
               views: data.views || 0,
               author: data.author || '관리자',
+              _ts: createdAt ? createdAt.getTime() : 0,
             };
           });
+          items.sort((a, b) => (b as any)._ts - (a as any)._ts);
           setNewsItems(items);
         }
       } catch (err) {
