@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Search, ChevronLeft, Download, FileText, Paperclip } from 'lucide-react';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 import { useBoardOpt } from '../contexts/SiteContentContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -13,9 +15,11 @@ interface DownloadItem {
   date: string;
   views: number;
   file: string;
+  fileData?: string | null;
 }
 
-const downloadItems: DownloadItem[] = [
+// Static fallback data
+const staticDownloads: DownloadItem[] = [
   { id: 'd1', cat: '카탈로그', title: '2026 종합 카탈로그', content: '태승전자 2026년 종합 카탈로그입니다.\n\n제품 라인업, 사양, 적용 분야 등 상세 정보를 확인하실 수 있습니다.', date: '2026.03.01', views: 340, file: '카탈로그_2026.pdf' },
   { id: 'd2', cat: '데이터시트', title: 'MC-200 메인 컨트롤러 데이터시트', content: 'MC-200 메인 컨트롤러의 전기적 사양, 핀 배치, 동작 조건 등 기술 데이터시트입니다.', date: '2026.02.15', views: 178, file: 'MC-200_Datasheet.pdf' },
   { id: 'd3', cat: '인증서', title: 'ISO 9001:2015 품질경영시스템 인증서', content: 'ISO 9001:2015 국제 품질경영시스템 인증서 사본입니다.', date: '2025.12.20', views: 95, file: 'ISO9001_Certificate.pdf' },
@@ -29,9 +33,43 @@ const categories = ['전체', '카탈로그', '데이터시트', '인증서', '�
 
 export default function Downloads() {
   const boardOpt = useBoardOpt('dl');
+  const [downloadItems, setDownloadItems] = useState<DownloadItem[]>(staticDownloads);
   const [filter, setFilter] = useState('전체');
   const [search, setSearch] = useState('');
   const [openItem, setOpenItem] = useState<DownloadItem | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch downloads from Firestore
+  useEffect(() => {
+    async function fetchDownloads() {
+      try {
+        const q = query(collection(db, 'downloads'), orderBy('createdAt', 'desc'));
+        const snapshot = await getDocs(q);
+        if (!snapshot.empty) {
+          const items: DownloadItem[] = snapshot.docs.map(doc => {
+            const data = doc.data();
+            const createdAt = data.createdAt?.toDate?.();
+            return {
+              id: doc.id,
+              cat: data.category || '카탈로그',
+              title: data.title || '',
+              content: data.content || '',
+              date: createdAt ? `${createdAt.getFullYear()}.${String(createdAt.getMonth()+1).padStart(2,'0')}.${String(createdAt.getDate()).padStart(2,'0')}` : '',
+              views: data.views || 0,
+              file: data.fileName || '',
+              fileData: data.fileData || null,
+            };
+          });
+          setDownloadItems(items);
+        }
+      } catch (err) {
+        console.log('Firestore 연결 실패, 정적 데이터 사용:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchDownloads();
+  }, []);
 
   const filtered = downloadItems
     .filter(item => filter === '전체' || item.cat === filter)
@@ -73,6 +111,9 @@ export default function Downloads() {
 
         {/* Board Section */}
         <section className="max-w-4xl mx-auto px-6">
+          {loading ? (
+            <div className="py-20 text-center text-gray-500">불러오는 중...</div>
+          ) : (
           <AnimatePresence mode="wait">
             {openItem ? (
               /* Detail View */
@@ -111,7 +152,18 @@ export default function Downloads() {
                         <Paperclip size={16} />
                         <span className="text-sm">{openItem.file}</span>
                       </div>
-                      <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-400/10 border border-sky-400/20 text-sky-400 text-sm font-semibold hover:bg-sky-400/20 transition-colors">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (openItem.fileData) {
+                            const a = document.createElement('a');
+                            a.href = openItem.fileData;
+                            a.download = openItem.file || 'download';
+                            a.click();
+                          }
+                        }}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-400/10 border border-sky-400/20 text-sky-400 text-sm font-semibold hover:bg-sky-400/20 transition-colors"
+                      >
                         <Download size={14} />
                         다운로드
                       </button>
@@ -181,7 +233,7 @@ export default function Downloads() {
                             <span className="text-xs font-medium px-2.5 py-1 rounded-md bg-white/5 text-gray-400 w-fit">{item.cat}</span>
                             <h3 className="text-sm sm:text-base font-medium text-gray-200 group-hover:text-white transition-colors flex items-center gap-2">
                               {item.title}
-                              {item === downloadItems[0] && (
+                              {i === 0 && (
                                 <span className="px-2 py-0.5 rounded-full bg-white/10 text-white text-[10px] font-bold tracking-wider">NEW</span>
                               )}
                             </h3>
@@ -210,6 +262,7 @@ export default function Downloads() {
               </motion.div>
             )}
           </AnimatePresence>
+          )}
         </section>
       </main>
 

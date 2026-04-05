@@ -70,13 +70,20 @@ export function SiteContentProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     async function load() {
+      // Timeout: if Firestore takes over 5s, show site with defaults
+      const timeout = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('Firestore timeout')), 5000)
+      );
       try {
-        const [textSnap, mediaSnap, clientSnap, settSnap] = await Promise.all([
-          getDoc(doc(db, 'siteContent', 'text')),
-          getDoc(doc(db, 'siteContent', 'media')),
-          getDoc(doc(db, 'siteContent', 'clients')),
-          getDoc(doc(db, 'siteContent', 'settings')),
-        ]);
+        const [textSnap, mediaSnap, clientSnap, settSnap] = await Promise.race([
+          Promise.all([
+            getDoc(doc(db, 'siteContent', 'text')),
+            getDoc(doc(db, 'siteContent', 'media')),
+            getDoc(doc(db, 'siteContent', 'clients')),
+            getDoc(doc(db, 'siteContent', 'settings')),
+          ]),
+          timeout,
+        ]) as [any, any, any, any];
 
         const text = textSnap.exists() ? (textSnap.data() as Record<string, string>) : {};
         const mediaData = mediaSnap.exists() ? mediaSnap.data() : {};
