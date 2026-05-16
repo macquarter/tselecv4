@@ -9,6 +9,7 @@ export default function ProductNav() {
     { name: '임베디드 컨트롤러', path: '/main-controller' },
     { name: 'HMI 솔루션', path: '/display' },
     { name: '주변기기 및 커스텀', path: '/others' },
+    { name: '제조공정', path: '/process' },
   ];
 
   return (
