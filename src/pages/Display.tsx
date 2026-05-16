@@ -56,9 +56,9 @@ export default function Display() {
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             className="inline-block mb-6 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-sm font-medium text-gray-300"
           >
-            Display Solutions
+            HMI Solutions
           </motion.div>
-          <motion.h1 
+          <motion.h1
             className="text-5xl md:text-7xl font-bold mb-8 tracking-tighter"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -66,7 +66,7 @@ export default function Display() {
           >
             선명함의 기준.<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-600">
-              디스플레이 제어.
+              HMI 솔루션.
             </span>
           </motion.h1>
           <motion.p 
