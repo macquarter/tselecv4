@@ -6,9 +6,9 @@ export default function ProductNav() {
   
   const links = [
     { name: '전체보기', path: '/products' },
-    { name: '가전 디스플레이', path: '/display' },
-    { name: '메인 컨트롤러', path: '/main-controller' },
-    { name: '기타 솔루션', path: '/others' },
+    { name: '임베디드 컨트롤러', path: '/main-controller' },
+    { name: 'HMI 솔루션', path: '/display' },
+    { name: '주변기기 �� 커스텀', path: '/others' },
   ];
 
   return (
