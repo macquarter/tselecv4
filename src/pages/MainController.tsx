@@ -5,7 +5,7 @@ import ProductNav from '../components/ProductNav';
 
 export default function MainController() {
   const specs = [
-    { label: '프로세서', value: '32/16/8-bit MCU', desc: '다양한 응용에 맞��� 프로세서 옵션' },
+    { label: '프로세서', value: '32/16/8-bit MCU', desc: '다양한 응용에 맞는 프로세서 옵션' },
     { label: '전원 입력', value: '5V ~ 24V DC', desc: '전압 범위 자동 조정' },
     { label: '통신 인터페이스', value: 'UART, SPI, I2C', desc: '산업 표준 통신 프로토콜' },
     { label: '아날로그 입력', value: '8 ~ 16 채널', desc: '정밀 측정 및 제어' },
@@ -47,8 +47,8 @@ export default function MainController() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
-            가전제품부터 산업용 장비까지,<br className="hidden md:block" />
-            최고의 성능과 안정성을 위한 핵심 제어 솔��션.
+            가전제품부터 산���용 장비까지,<br className="hidden md:block" />
+            최고의 성능과 안정성을 위한 핵심 제어 솔루션.
           </motion.p>
         </section>
 
@@ -79,7 +79,7 @@ export default function MainController() {
             >
               <h2 className="text-3xl md:text-4xl font-bold mb-6 tracking-tight">고성능 임베디드 제어의 중심.</h2>
               <p className="text-gray-400 text-lg leading-relaxed mb-12 font-light">
-                다양한 산업 분야에서 요구하는 복잡한 제어 로직을 안정적으로 수행하는 임베��드 컨트롤러입니다.
+                다양한 산업 분야에서 요구하는 복잡한 제어 로직을 안정적으로 수행하는 임베디드 컨트롤러입니다.
                 최신 MCU 기술을 적용하여 빠른 처리 속도와 높은 신뢰성을 보장하며, 고객의 요구사항에 맞춘 커스터마이징이 가능합니다.
               </p>
               
