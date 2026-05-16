@@ -34,19 +34,19 @@ export default function Navbar() {
       href: '/greeting',
       dropdown: [
         { name: '인사말', href: '/greeting' },
-        { name: '회사���혁', href: '/history' },
+        { name: '회사연혁', href: '/history' },
         { name: '인증현황', href: '/certifications' },
         { name: '오시는 길', href: '/directions' },
       ]
     },
     {
-      name: '사업���역',
+      name: '사업영역',
       href: '/business/home-appliance',
       dropdown: [
         { name: '가전', href: '/business/home-appliance' },
         { name: '산업용', href: '/business/industrial' },
-        { name: '의��기기', href: '/business/medical' },
-        { name: '신재생에너���', href: '/business/renewable' },
+        { name: '의료기기', href: '/business/medical' },
+        { name: '신재생에너지', href: '/business/renewable' },
       ]
     },
     {
@@ -54,7 +54,7 @@ export default function Navbar() {
       href: '/products',
       dropdown: [
         { name: '임베디드 컨트롤러', href: '/main-controller' },
-        { name: 'HMI 솔루��', href: '/display' },
+        { name: 'HMI 솔루션', href: '/display' },
         { name: '주변기기 및 커스텀', href: '/others' },
         { name: '제조공정', href: '/process' },
       ]
