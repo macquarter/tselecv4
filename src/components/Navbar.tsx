@@ -34,29 +34,36 @@ export default function Navbar() {
       href: '/greeting',
       dropdown: [
         { name: '인사말', href: '/greeting' },
-        { name: '회사연혁', href: '/history' },
-        { name: '회사전경', href: '/facility' },
+        { name: '회사���혁', href: '/history' },
         { name: '인증현황', href: '/certifications' },
-        { name: '조직도', href: '/organization' },
         { name: '오시는 길', href: '/directions' },
+      ]
+    },
+    {
+      name: '사업���역',
+      href: '/business/home-appliance',
+      dropdown: [
+        { name: '가전', href: '/business/home-appliance' },
+        { name: '산업용', href: '/business/industrial' },
+        { name: '의��기기', href: '/business/medical' },
+        { name: '신재생에너���', href: '/business/renewable' },
       ]
     },
     {
       name: '제품소개',
       href: '/products',
       dropdown: [
-        { name: '제품영역', href: '/products' },
-        { name: '메인 컨트롤러', href: '/main-controller' },
-        { name: '디스플레이', href: '/display' },
-        { name: '기타', href: '/others' },
-        { name: '공정도', href: '/process' },
+        { name: '임베디드 컨트롤러', href: '/main-controller' },
+        { name: 'HMI 솔루��', href: '/display' },
+        { name: '주변기기 및 커스텀', href: '/others' },
+        { name: '제조공정', href: '/process' },
       ]
     },
     {
       name: '고객센터',
       href: '/news',
       dropdown: [
-        { name: '뉴스 & 공지사항', href: '/news' },
+        { name: '공지사항', href: '/news' },
         { name: '자료실', href: '/downloads' },
         { name: '문의하기', href: '/#contact' },
       ]
