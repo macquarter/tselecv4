@@ -6,7 +6,7 @@ import ProductNav from '../components/ProductNav';
 export default function MainController() {
   const specs = [
     { label: '프로세서', value: '32/16/8-bit MCU', desc: '다양한 응용에 맞는 프로세서 옵션' },
-    { label: '전원 입력', value: '5V ~ 24V DC', desc: '전압 범위 ���동 조정' },
+    { label: '전원 입력', value: '5V ~ 24V DC', desc: '전압 범위 자동 조정' },
     { label: '통신 인터페이스', value: 'UART, SPI, I2C', desc: '산업 표준 통신 프로토콜' },
     { label: '아날로그 입력', value: '8 ~ 16 채널', desc: '정밀 측정 및 제어' },
     { label: '디지털 I/O', value: '24 ~ 32 포트', desc: '센서 및 구동 신호 처리' },
