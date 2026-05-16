@@ -4,11 +4,11 @@ import { useText } from '../contexts/SiteContentContext';
 export default function Footer() {
   const logo1 = useText('logo-1', 'TSE');
   const logo2 = useText('logo-2', 'LEC');
-  const ftD = useText('ft-d', '1989년 설립 이래 마이크로컨트롤러 설계·제조 전문 기업으로 가전, 의료, 태양광 분야의 신뢰할 수 있는 전자부품 파트너입���다.');
+  const ftD = useText('ft-d', '1989년 설립 이래 마이크로컨트롤러 설계·제조 전문 기업으로 가전, 의료, 태양광 분야의 신뢰할 수 있는 전자부품 파트너입니다.');
   const ftC1 = useText('ft-c1', '회사소개');
   const ftC1b = useText('ft-c1b', '사업영역');
   const ftC2 = useText('ft-c2', '제품소개');
-  const ftC3 = useText('ft-c3', '고객���원');
+  const ftC3 = useText('ft-c3', '고객지원');
   const ftCp = useText('ft-cp', '© 2026 태승전자(주) TSELEC Co., Ltd. All rights reserved.');
   const ftB1 = useText('ft-b1', 'ISO 9001');
   const ftB2 = useText('ft-b2', 'CE');
@@ -65,7 +65,7 @@ export default function Footer() {
             <ul className="space-y-4 text-sm text-gray-500">
               <li><Link to="/news" className="hover:text-white transition-colors">공지사항</Link></li>
               <li><Link to="/downloads" className="hover:text-white transition-colors">자료실</Link></li>
-              <li><Link to="/#contact" className="hover:text-white transition-colors">문��하기</Link></li>
+              <li><Link to="/#contact" className="hover:text-white transition-colors">문의하기</Link></li>
             </ul>
           </div>
         </div>
