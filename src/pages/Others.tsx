@@ -14,9 +14,9 @@ export default function Others() {
   ];
 
   const apps = [
-    { num: '1', title: '냉방/냉동', desc: '냉동 저장실, 냉장 운송, 초저온 처리 시스템의 온도 유지에 사용되는 고신뢰성 솔루션입니다.' },
+    { num: '1', title: '냉방/냉동', desc: '냉동 저장실, 냉장 운송, 초저온 처리 시스템의 온도 유지에 사용되는 고신뢰성 솔루션입니��.' },
     { num: '2', title: '산업용 장비', desc: '금속 가공, 열처리, 반도체 제조 등 고정밀 온도 제어가 필요한 산업 공정에 적용됩니다.' },
-    { num: '3', title: '식품 가공', desc: '식품 건조, 가열 살균, 냉각 공정에서 엄격한 온도 관리를 통해 제품 품질을 보증합니다.' },
+    { num: '3', title: '식품 가공', desc: '식품 건조, 가열 살균, 냉각 공정에서 엄격한 온도 관리를 통해 제품 품질을 보증합���다.' },
     { num: '4', title: '농업 시설', desc: '온실, 육묘장, 축사 등에서 최적의 생육 환경 유지를 위한 환경 제어 시스템에 통합됩니다.' }
   ];
 
@@ -33,9 +33,9 @@ export default function Others() {
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             className="inline-block mb-6 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-sm font-medium text-gray-300"
           >
-            Other Solutions
+            Peripherals &amp; Custom
           </motion.div>
-          <motion.h1 
+          <motion.h1
             className="text-5xl md:text-7xl font-bold mb-8 tracking-tighter"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -43,7 +43,7 @@ export default function Others() {
           >
             한계를 넘어서는<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-600">
-              산업용 제어 솔루션.
+              주변기기 및 커스텀.
             </span>
           </motion.h1>
           <motion.p 
@@ -84,7 +84,7 @@ export default function Others() {
             >
               <h2 className="text-3xl md:text-4xl font-bold mb-6 tracking-tight">정밀 온도 제어.</h2>
               <p className="text-gray-400 text-lg leading-relaxed mb-12 font-light">
-                Electro Steel 컨트롤러는 산업용 가열 및 냉각 시스템의 정밀한 온도 제어를 담당합니다. 고급 센서 기술과 알고리즘을 통해 안정적인 온도 유지를 보장합니다.
+                Electro Steel 컨트롤러는 산업용 가열 및 ���각 시스템의 정밀한 온도 제어를 담당합니다. 고급 센서 기술과 알고리즘을 통해 안정적인 온도 유지를 보장합니다.
               </p>
               
               <div className="bg-[#0a0a0a] border border-white/5 rounded-[1.5rem] overflow-hidden">
