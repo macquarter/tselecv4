@@ -5,7 +5,7 @@ import ProductNav from '../components/ProductNav';
 
 export default function Others() {
   const specs = [
-    { label: '제어 범위', value: '-20°C ~ +200°C' },
+    { label: '제어 범���', value: '-20°C ~ +200°C' },
     { label: '정확도', value: '±0.5°C' },
     { label: '응답 시간', value: '< 2초' },
     { label: '입력 신호', value: 'Pt100, K-Type TC' },
@@ -17,7 +17,7 @@ export default function Others() {
     { num: '1', title: '냉방/냉동', desc: '냉동 저장실, 냉장 운송, 초저온 처리 시스템의 온도 유지에 사용되는 고신뢰성 솔루션입니다.' },
     { num: '2', title: '산업용 장비', desc: '금속 가공, 열처리, 반도체 제조 등 고정밀 온도 제어가 필요한 산업 공정에 적용됩니다.' },
     { num: '3', title: '식품 가공', desc: '식품 건조, 가열 살균, 냉각 공정에서 엄격한 온도 관리를 통해 제품 품질을 보증합니다.' },
-    { num: '4', title: '농업 시설', desc: '온실, 육묘장, ��사 등에서 최적의 생육 환경 유지를 위한 환경 제어 시스템��� 통합됩니다.' }
+    { num: '4', title: '농업 시설', desc: '온실, 육묘장, 축사 등에서 최적의 생육 환경 유지를 위한 환경 제어 시스템에 통합됩니다.' }
   ];
 
   return (
@@ -84,7 +84,7 @@ export default function Others() {
             >
               <h2 className="text-3xl md:text-4xl font-bold mb-6 tracking-tight">정밀 온도 제어.</h2>
               <p className="text-gray-400 text-lg leading-relaxed mb-12 font-light">
-                Electro Steel 컨트롤러는 산업용 가열 및 냉��� 시스템의 정밀한 온도 제어를 담당합니다. 고급 센서 기술과 알고리즘을 통해 안정적인 온도 유지를 보장��니다.
+                Electro Steel 컨트롤러는 산업용 가열 및 냉각 시스템의 정밀한 온도 제어를 담당합니다. 고급 센서 기술과 알고리즘을 통해 안정적인 온도 유지를 보장합니다.
               </p>
               
               <div className="bg-[#0a0a0a] border border-white/5 rounded-[1.5rem] overflow-hidden">
@@ -110,7 +110,7 @@ export default function Others() {
           >
             <div className="text-center mb-16">
               <h2 className="text-3xl font-bold mb-4">다양한 산업 적용 사례</h2>
-              <p className="text-gray-400 font-light">다양한 분야에서 활용되는 태승전자의 기술력을 확인하세요.</p>
+              <p className="text-gray-400 font-light">다양한 분야에��� 활용되는 태승전자의 ���술력을 확인하세요.</p>
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
