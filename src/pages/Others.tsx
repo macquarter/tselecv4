@@ -5,7 +5,7 @@ import ProductNav from '../components/ProductNav';
 
 export default function Others() {
   const specs = [
-    { label: '제어 범���', value: '-20°C ~ +200°C' },
+    { label: '제어 범위', value: '-20°C ~ +200°C' },
     { label: '정확도', value: '±0.5°C' },
     { label: '응답 시간', value: '< 2초' },
     { label: '입력 신호', value: 'Pt100, K-Type TC' },
@@ -110,7 +110,7 @@ export default function Others() {
           >
             <div className="text-center mb-16">
               <h2 className="text-3xl font-bold mb-4">다양한 산업 적용 사례</h2>
-              <p className="text-gray-400 font-light">다양한 분야에��� 활용되는 태승전자의 ���술력을 확인하세요.</p>
+              <p className="text-gray-400 font-light">다양한 분야에서 활용되는 태승전자의 기술력을 확인하세요.</p>
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
