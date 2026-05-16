@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
-import Clients from '../components/Clients';
+// Clients removed per 2026-05-14 revision (경쟁사 정보누출 방지)
 import About from '../components/About';
 import Expertise from '../components/Expertise';
 import Products from '../components/Products';
@@ -52,7 +52,6 @@ export default function Home() {
         <Navbar />
         <main>
           <Hero />
-          <Clients />
           <Expertise />
           <About />
           <Products onSelectProduct={setSelectedProduct} />
