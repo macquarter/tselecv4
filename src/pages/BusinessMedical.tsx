@@ -174,9 +174,20 @@ export default function BusinessMedical() {
               </div>
               <div>
                 <h3 className="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4">적용 분야</h3>
-                <div className="flex flex-wrap gap-2">
+                <div className="grid grid-cols-2 gap-3" style={{ perspective: '800px' }}>
                   {selectedFeature.details.applications.map((app, i) => (
-                    <span key={i} className="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm text-gray-300">{app}</span>
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, rotateX: -60, y: 20 }}
+                      animate={{ opacity: 1, rotateX: 0, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.3 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                      whileHover={{ rotateY: 8, rotateX: -5, scale: 1.05, z: 30 }}
+                      className="relative px-4 py-4 bg-gradient-to-br from-white/10 to-white/[0.02] border border-white/10 rounded-2xl text-sm text-gray-200 text-center cursor-default backdrop-blur-sm shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+                      style={{ transformStyle: 'preserve-3d' }}
+                    >
+                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/5 to-transparent opacity-0 hover:opacity-100 transition-opacity" style={{ transform: 'translateZ(2px)' }} />
+                      <span className="relative" style={{ transform: 'translateZ(10px)', display: 'block' }}>{app}</span>
+                    </motion.div>
                   ))}
                 </div>
               </div>
