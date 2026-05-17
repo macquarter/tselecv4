@@ -18,21 +18,24 @@ export default function Certifications() {
       title: '유비쿼터스를 통한 솔라 가로등 관리 방법 및 그 시스템',
       filing: '2008.09.01',
       registration: '2009.03.25',
-      appNumber: '2008-0085896'
+      appNumber: '2008-0085896',
+      img: '/images/patent-10-0891352.jpg'
     },
     {
       number: '10-0892297',
       title: '자가 진단 기능을 가진 경관조명 조절시스템 및 그 자가 진단 방법',
       filing: '2008.09.01',
       registration: '2009.04.01',
-      appNumber: '2008-0085903'
+      appNumber: '2008-0085903',
+      img: '/images/patent-10-0892297.jpg'
     },
     {
       number: '10-0892298',
       title: '절전형 조명 시스템 및 그 제어 방법',
       filing: '2008.10.30',
       registration: '2009.04.01',
-      appNumber: '2008-0106883'
+      appNumber: '2008-0106883',
+      img: '/images/patent-10-0892298.jpg'
     }
   ];
 
@@ -142,46 +145,45 @@ export default function Certifications() {
             {patents.map((patent, i) => (
               <motion.div
                 key={patent.number}
-                className="group bg-[#0a0a0a] border border-white/5 rounded-[2rem] p-10 hover:bg-[#111] hover:border-white/10 transition-all duration-500 relative overflow-hidden"
+                className="group bg-[#0a0a0a] border border-white/5 rounded-[2rem] overflow-hidden hover:bg-[#111] hover:border-white/10 transition-all duration-500 relative"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.8, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] }}
               >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-white/[0.03] to-transparent rounded-bl-[4rem]" />
-
-                {/* Patent Icon */}
-                <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-8 group-hover:bg-white/10 transition-colors duration-300">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400">
-                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                    <polyline points="14,2 14,8 20,8" />
-                    <line x1="16" y1="13" x2="8" y2="13" />
-                    <line x1="16" y1="17" x2="8" y2="17" />
-                    <polyline points="10,9 9,9 8,9" />
-                  </svg>
+                {/* Patent Thumbnail */}
+                <div className="h-64 bg-[#1a1a1a] border-b border-white/5 overflow-hidden relative">
+                  <img
+                    src={patent.img}
+                    alt={`특허증 ${patent.number}`}
+                    className="w-full h-full object-contain object-top p-4 opacity-90 group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent" />
                 </div>
 
-                {/* Patent Number */}
-                <div className="mb-4">
-                  <span className="text-xs font-mono text-gray-500 tracking-wider">특허 제 {patent.number} 호</span>
-                </div>
-
-                {/* Patent Title */}
-                <h3 className="text-xl font-bold mb-6 tracking-tight leading-snug min-h-[3.5rem]">{patent.title}</h3>
-
-                {/* Details */}
-                <div className="space-y-3 pt-6 border-t border-white/10">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">출원번호</span>
-                    <span className="text-gray-300 font-mono text-xs">{patent.appNumber}</span>
+                <div className="p-8">
+                  {/* Patent Number */}
+                  <div className="mb-4">
+                    <span className="text-xs font-mono text-gray-500 tracking-wider">특허 제 {patent.number} 호</span>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">출원일</span>
-                    <span className="text-gray-300">{patent.filing}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">등록일</span>
-                    <span className="text-white font-medium">{patent.registration}</span>
+
+                  {/* Patent Title */}
+                  <h3 className="text-xl font-bold mb-6 tracking-tight leading-snug min-h-[3.5rem]">{patent.title}</h3>
+
+                  {/* Details */}
+                  <div className="space-y-3 pt-6 border-t border-white/10">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-500">출원번호</span>
+                      <span className="text-gray-300 font-mono text-xs">{patent.appNumber}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-500">출원일</span>
+                      <span className="text-gray-300">{patent.filing}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-500">등록일</span>
+                      <span className="text-white font-medium">{patent.registration}</span>
+                    </div>
                   </div>
                 </div>
               </motion.div>
