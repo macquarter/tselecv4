@@ -83,6 +83,12 @@ export default function BusinessMedical() {
 
   return (
     <div className="bg-black min-h-screen text-white selection:bg-white/30 selection:text-white">
+      <style>{`
+        @keyframes appCardFloat {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-8px); }
+        }
+      `}</style>
       <Navbar />
 
       <main className="pt-32 pb-20">
@@ -174,20 +180,38 @@ export default function BusinessMedical() {
               </div>
               <div>
                 <h3 className="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4">적용 분야</h3>
-                <div className="grid grid-cols-2 gap-3" style={{ perspective: '800px' }}>
+                <div className="grid grid-cols-2 gap-4" style={{ perspective: '800px' }}>
                   {selectedFeature.details.applications.map((app, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, rotateX: -60, y: 20 }}
-                      animate={{ opacity: 1, rotateX: 0, y: 0 }}
-                      transition={{ duration: 0.5, delay: 0.3 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                      whileHover={{ rotateY: 8, rotateX: -5, scale: 1.05, z: 30 }}
-                      className="relative px-4 py-4 bg-gradient-to-br from-white/10 to-white/[0.02] border border-white/10 rounded-2xl text-sm text-gray-200 text-center cursor-default backdrop-blur-sm shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
-                      style={{ transformStyle: 'preserve-3d' }}
-                    >
-                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/5 to-transparent opacity-0 hover:opacity-100 transition-opacity" style={{ transform: 'translateZ(2px)' }} />
-                      <span className="relative" style={{ transform: 'translateZ(10px)', display: 'block' }}>{app}</span>
-                    </motion.div>
+                    <div key={i} style={{ animation: `appCardFloat ${3 + i * 0.4}s ease-in-out ${i * 0.2}s infinite` }}>
+                      <motion.div
+                        initial={{ opacity: 0, rotateY: 90, scale: 0.5 }}
+                        animate={{ opacity: 1, rotateY: 0, scale: 1 }}
+                        transition={{ duration: 0.8, delay: 0.3 + i * 0.15, ease: [0.16, 1, 0.3, 1] }}
+                        whileHover={{
+                          rotateY: 15,
+                          rotateX: -10,
+                          scale: 1.12,
+                        }}
+                        className="group relative px-5 py-6 rounded-2xl text-sm text-gray-100 text-center cursor-default overflow-hidden"
+                        style={{
+                          transformStyle: 'preserve-3d',
+                          background: 'linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.03) 100%)',
+                          border: '1px solid rgba(255,255,255,0.12)',
+                          boxShadow: '0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
+                          transition: 'box-shadow 0.4s ease',
+                        }}
+                        onMouseEnter={(e) => {
+                          (e.currentTarget as HTMLDivElement).style.boxShadow = '0 25px 60px rgba(100,150,255,0.3), 0 0 40px rgba(100,150,255,0.15), inset 0 1px 0 rgba(255,255,255,0.25)';
+                        }}
+                        onMouseLeave={(e) => {
+                          (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)';
+                        }}
+                      >
+                        <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: 'linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 45%, rgba(255,255,255,0.05) 55%, transparent 60%)', transform: 'translateZ(2px)' }} />
+                        <div className="absolute -inset-[1px] rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: 'linear-gradient(135deg, rgba(100,160,255,0.4), rgba(160,100,255,0.2), rgba(100,160,255,0.4))', zIndex: -1, filter: 'blur(4px)' }} />
+                        <span className="relative font-medium tracking-tight" style={{ transform: 'translateZ(25px)', display: 'block' }}>{app}</span>
+                      </motion.div>
+                    </div>
                   ))}
                 </div>
               </div>
