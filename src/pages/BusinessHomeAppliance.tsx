@@ -83,6 +83,12 @@ export default function BusinessHomeAppliance() {
 
   return (
     <div className="bg-black min-h-screen text-white selection:bg-white/30 selection:text-white">
+      <style>{`
+        @keyframes appCardFloat {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-8px); }
+        }
+      `}</style>
       <Navbar />
 
       <main className="pt-32 pb-20">
@@ -154,17 +160,35 @@ export default function BusinessHomeAppliance() {
 
       <AnimatePresence>
         {selectedFeature && (
-          <motion.div className="fixed inset-0 z-50 flex items-center justify-center p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
             <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setSelectedFeature(null)} />
-            <motion.div className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-[#111] border border-white/10 rounded-[2rem] p-8 md:p-10" initial={{ opacity: 0, scale: 0.9, y: 30 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 30 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}>
-              <button onClick={() => setSelectedFeature(null)} className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors">
+            <motion.div
+              className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-[#111] border border-white/10 rounded-[2rem] p-8 md:p-10"
+              initial={{ opacity: 0, scale: 0.9, y: 30 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 30 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <button
+                onClick={() => setSelectedFeature(null)}
+                className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
+              >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
               </button>
+
               <div className="h-48 rounded-2xl overflow-hidden mb-8 border border-white/5">
                 <img src={selectedFeature.image} alt={selectedFeature.title} className="w-full h-full object-cover opacity-70" />
               </div>
+
               <h2 className="text-3xl font-bold mb-3 tracking-tight">{selectedFeature.title}</h2>
               <p className="text-gray-400 leading-relaxed mb-8 font-light">{selectedFeature.details.overview}</p>
+
               <div className="bg-black/50 border border-white/5 rounded-2xl p-6 mb-8">
                 <h3 className="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4">주요 사양</h3>
                 <div className="space-y-3">
@@ -176,22 +200,41 @@ export default function BusinessHomeAppliance() {
                   ))}
                 </div>
               </div>
+
               <div>
                 <h3 className="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4">적용 분야</h3>
-                <div className="grid grid-cols-2 gap-3" style={{ perspective: '800px' }}>
+                <div className="grid grid-cols-2 gap-4" style={{ perspective: '800px' }}>
                   {selectedFeature.details.applications.map((app, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, rotateX: -60, y: 20 }}
-                      animate={{ opacity: 1, rotateX: 0, y: 0 }}
-                      transition={{ duration: 0.5, delay: 0.3 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                      whileHover={{ rotateY: 8, rotateX: -5, scale: 1.05, z: 30 }}
-                      className="relative px-4 py-4 bg-gradient-to-br from-white/10 to-white/[0.02] border border-white/10 rounded-2xl text-sm text-gray-200 text-center cursor-default backdrop-blur-sm shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
-                      style={{ transformStyle: 'preserve-3d' }}
-                    >
-                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/5 to-transparent opacity-0 hover:opacity-100 transition-opacity" style={{ transform: 'translateZ(2px)' }} />
-                      <span className="relative" style={{ transform: 'translateZ(10px)', display: 'block' }}>{app}</span>
-                    </motion.div>
+                    <div key={i} style={{ animation: `appCardFloat ${3 + i * 0.4}s ease-in-out ${i * 0.2}s infinite` }}>
+                      <motion.div
+                        initial={{ opacity: 0, rotateY: 90, scale: 0.5 }}
+                        animate={{ opacity: 1, rotateY: 0, scale: 1 }}
+                        transition={{ duration: 0.8, delay: 0.3 + i * 0.15, ease: [0.16, 1, 0.3, 1] }}
+                        whileHover={{
+                          rotateY: 15,
+                          rotateX: -10,
+                          scale: 1.12,
+                        }}
+                        className="group relative px-5 py-6 rounded-2xl text-sm text-gray-100 text-center cursor-default overflow-hidden"
+                        style={{
+                          transformStyle: 'preserve-3d',
+                          background: 'linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.03) 100%)',
+                          border: '1px solid rgba(255,255,255,0.12)',
+                          boxShadow: '0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
+                          transition: 'box-shadow 0.4s ease',
+                        }}
+                        onMouseEnter={(e) => {
+                          (e.currentTarget as HTMLDivElement).style.boxShadow = '0 25px 60px rgba(100,150,255,0.3), 0 0 40px rgba(100,150,255,0.15), inset 0 1px 0 rgba(255,255,255,0.25)';
+                        }}
+                        onMouseLeave={(e) => {
+                          (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)';
+                        }}
+                      >
+                        <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: 'linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 45%, rgba(255,255,255,0.05) 55%, transparent 60%)', transform: 'translateZ(2px)' }} />
+                        <div className="absolute -inset-[1px] rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: 'linear-gradient(135deg, rgba(100,160,255,0.4), rgba(160,100,255,0.2), rgba(100,160,255,0.4))', zIndex: -1, filter: 'blur(4px)' }} />
+                        <span className="relative font-medium tracking-tight" style={{ transform: 'translateZ(25px)', display: 'block' }}>{app}</span>
+                      </motion.div>
+                    </div>
                   ))}
                 </div>
               </div>
