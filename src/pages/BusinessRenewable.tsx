@@ -83,12 +83,6 @@ export default function BusinessRenewable() {
 
   return (
     <div className="bg-black min-h-screen text-white selection:bg-white/30 selection:text-white">
-      <style>{`
-        @keyframes appCardFloat {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-8px); }
-        }
-      `}</style>
       <Navbar />
 
       <main className="pt-32 pb-20">
@@ -180,38 +174,20 @@ export default function BusinessRenewable() {
               </div>
               <div>
                 <h3 className="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4">적용 분야</h3>
-                <div className="grid grid-cols-2 gap-4" style={{ perspective: '800px' }}>
+                <div className="grid grid-cols-2 gap-3">
                   {selectedFeature.details.applications.map((app, i) => (
-                    <div key={i} style={{ animation: `appCardFloat ${3 + i * 0.4}s ease-in-out ${i * 0.2}s infinite` }}>
-                      <motion.div
-                        initial={{ opacity: 0, rotateY: 90, scale: 0.5 }}
-                        animate={{ opacity: 1, rotateY: 0, scale: 1 }}
-                        transition={{ duration: 0.8, delay: 0.3 + i * 0.15, ease: [0.16, 1, 0.3, 1] }}
-                        whileHover={{
-                          rotateY: 15,
-                          rotateX: -10,
-                          scale: 1.12,
-                        }}
-                        className="group relative px-5 py-6 rounded-2xl text-sm text-gray-100 text-center cursor-default overflow-hidden"
-                        style={{
-                          transformStyle: 'preserve-3d',
-                          background: 'linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.03) 100%)',
-                          border: '1px solid rgba(255,255,255,0.12)',
-                          boxShadow: '0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
-                          transition: 'box-shadow 0.4s ease',
-                        }}
-                        onMouseEnter={(e) => {
-                          (e.currentTarget as HTMLDivElement).style.boxShadow = '0 25px 60px rgba(100,150,255,0.3), 0 0 40px rgba(100,150,255,0.15), inset 0 1px 0 rgba(255,255,255,0.25)';
-                        }}
-                        onMouseLeave={(e) => {
-                          (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)';
-                        }}
-                      >
-                        <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: 'linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 45%, rgba(255,255,255,0.05) 55%, transparent 60%)', transform: 'translateZ(2px)' }} />
-                        <div className="absolute -inset-[1px] rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: 'linear-gradient(135deg, rgba(100,160,255,0.4), rgba(160,100,255,0.2), rgba(100,160,255,0.4))', zIndex: -1, filter: 'blur(4px)' }} />
-                        <span className="relative font-medium tracking-tight" style={{ transform: 'translateZ(25px)', display: 'block' }}>{app}</span>
-                      </motion.div>
-                    </div>
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.35, delay: 0.15 + i * 0.06 }}
+                      className="group relative"
+                    >
+                      <div className="absolute -inset-[1px] rounded-xl bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      <div className="relative px-4 py-3.5 rounded-xl bg-white/[0.04] border border-white/[0.06] text-sm text-gray-300 text-center transition-all duration-300 group-hover:bg-white/[0.08] group-hover:text-white group-hover:border-white/[0.12] group-hover:-translate-y-[2px] group-hover:shadow-lg group-hover:shadow-black/20">
+                        {app}
+                      </div>
+                    </motion.div>
                   ))}
                 </div>
               </div>
