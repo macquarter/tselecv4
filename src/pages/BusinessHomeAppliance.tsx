@@ -84,57 +84,25 @@ export default function BusinessHomeAppliance() {
   return (
     <div className="bg-black min-h-screen text-white selection:bg-white/30 selection:text-white">
       <Navbar />
-
       <main className="pt-32 pb-20">
         <section className="relative flex flex-col items-center justify-center text-center px-6 mb-32">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-block mb-6 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-sm font-medium text-gray-300"
-          >
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }} className="inline-block mb-6 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-sm font-medium text-gray-300">
             Home Appliance
           </motion.div>
-          <motion.h1
-            className="text-5xl md:text-7xl font-bold mb-8 tracking-tighter"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          >
+          <motion.h1 className="text-5xl md:text-7xl font-bold mb-8 tracking-tighter" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}>
             일상을 바꾸는 기술.<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-600">
-              가전 제어 솔루션.
-            </span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-600">가전 제어 솔루션.</span>
           </motion.h1>
-          <motion.p
-            className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto font-light tracking-tight"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          >
-            냉장고, 세탁기, 에어컨 등<br className="hidden md:block" />
-            생활가전의 핵심 제어 기술을 제공합니다.
+          <motion.p className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto font-light tracking-tight" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}>
+            냉장고, 세탁기, 에어컨 등<br className="hidden md:block" />생활가전의 핵심 제어 기술을 제공합니다.
           </motion.p>
         </section>
-
         <section className="max-w-7xl mx-auto px-6 mb-32">
           <BusinessNav />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {features.map((feature, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="relative rounded-[2rem] bg-[#0a0a0a] border border-white/5 overflow-hidden group aspect-[4/3] cursor-pointer"
-                onClick={() => setSelectedFeature(feature)}
-              >
-                <img
-                  src={feature.image}
-                  alt={feature.title}
-                  className="absolute inset-0 w-full h-full object-cover opacity-40 transition-transform duration-1000 group-hover:scale-105"
-                />
+              <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }} className="relative rounded-[2rem] bg-[#0a0a0a] border border-white/5 overflow-hidden group aspect-[4/3] cursor-pointer" onClick={() => setSelectedFeature(feature)}>
+                <img src={feature.image} alt={feature.title} className="absolute inset-0 w-full h-full object-cover opacity-40 transition-transform duration-1000 group-hover:scale-105" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                 <div className="relative z-10 flex flex-col justify-end h-full p-8">
                   <h3 className="text-2xl font-bold mb-2 tracking-tight">{feature.title}</h3>
@@ -149,40 +117,20 @@ export default function BusinessHomeAppliance() {
           </div>
         </section>
       </main>
-
       <Footer />
-
       <AnimatePresence>
         {selectedFeature && (
-          <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
+          <motion.div className="fixed inset-0 z-50 flex items-center justify-center p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
             <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setSelectedFeature(null)} />
-            <motion.div
-              className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-[#111] border border-white/10 rounded-[2rem] p-8 md:p-10"
-              initial={{ opacity: 0, scale: 0.9, y: 30 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 30 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <button
-                onClick={() => setSelectedFeature(null)}
-                className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
-              >
+            <motion.div className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-[#111] border border-white/10 rounded-[2rem] p-8 md:p-10" initial={{ opacity: 0, scale: 0.9, y: 30 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 30 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}>
+              <button onClick={() => setSelectedFeature(null)} className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
               </button>
-
               <div className="h-48 rounded-2xl overflow-hidden mb-8 border border-white/5">
                 <img src={selectedFeature.image} alt={selectedFeature.title} className="w-full h-full object-cover opacity-70" />
               </div>
-
               <h2 className="text-3xl font-bold mb-3 tracking-tight">{selectedFeature.title}</h2>
               <p className="text-gray-400 leading-relaxed mb-8 font-light">{selectedFeature.details.overview}</p>
-
               <div className="bg-black/50 border border-white/5 rounded-2xl p-6 mb-8">
                 <h3 className="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4">주요 사양</h3>
                 <div className="space-y-3">
@@ -194,23 +142,13 @@ export default function BusinessHomeAppliance() {
                   ))}
                 </div>
               </div>
-
               <div>
                 <h3 className="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4">적용 분야</h3>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-wrap gap-2">
                   {selectedFeature.details.applications.map((app, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.35, delay: 0.15 + i * 0.06 }}
-                      className="group relative"
-                    >
-                      <div className="absolute -inset-[1px] rounded-xl bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                      <div className="relative px-4 py-3.5 rounded-xl bg-white/[0.04] border border-white/[0.06] text-sm text-gray-300 text-center transition-all duration-300 group-hover:bg-white/[0.08] group-hover:text-white group-hover:border-white/[0.12] group-hover:-translate-y-[2px] group-hover:shadow-lg group-hover:shadow-black/20">
-                        {app}
-                      </div>
-                    </motion.div>
+                    <span key={i} className="px-3 py-1.5 rounded-full bg-white/[0.06] text-sm text-gray-400">
+                      {app}
+                    </span>
                   ))}
                 </div>
               </div>
