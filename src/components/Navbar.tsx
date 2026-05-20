@@ -34,6 +34,7 @@ export default function Navbar() {
       href: '/greeting',
       dropdown: [
         { name: '인사말', href: '/greeting' },
+        { name: '부서소개', href: '/organization' },
         { name: '회사연혁', href: '/history' },
         { name: '인증현황', href: '/certifications' },
         { name: '오시는 길', href: '/directions' },
