@@ -148,18 +148,7 @@ export default function Organization() {
                 <div className={`absolute top-0 left-0 w-full h-full bg-gradient-to-b ${dept.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
 
                 <div className="relative z-10">
-                  <motion.div
-                    className="w-14 h-14 rounded-2xl bg-[#1a1a1a] border border-white/5 flex items-center justify-center mb-6 group-hover:bg-white group-hover:border-white/20 transition-colors duration-500 text-gray-400 group-hover:text-black"
-                    whileHover={{
-                      scale: 1.15,
-                      rotate: [0, -8, 8, -4, 0],
-                      transition: {
-                        scale: { type: 'spring', stiffness: 400, damping: 15 },
-                        rotate: { duration: 0.5, ease: 'easeInOut' }
-                      }
-                    }}
-                    whileTap={{ scale: 0.9 }}
-                  >
+                  <div className="w-14 h-14 rounded-2xl bg-[#1a1a1a] border border-white/5 flex items-center justify-center mb-6 group-hover:bg-white group-hover:border-white/20 transition-colors duration-500 text-gray-400 group-hover:text-black overflow-hidden">
                     <motion.svg
                       viewBox="0 0 24 24"
                       fill="none"
@@ -167,13 +156,20 @@ export default function Organization() {
                       strokeWidth="1.5"
                       className="w-7 h-7"
                       whileHover={{
+                        scale: 1.2,
+                        rotate: [0, -10, 10, -5, 0],
                         strokeWidth: 2,
-                        transition: { duration: 0.2 }
+                        transition: {
+                          scale: { type: 'spring', stiffness: 400, damping: 12 },
+                          rotate: { duration: 0.5, ease: 'easeInOut' },
+                          strokeWidth: { duration: 0.2 }
+                        }
                       }}
+                      whileTap={{ scale: 0.85 }}
                     >
                       <path d={dept.icon} />
                     </motion.svg>
-                  </motion.div>
+                  </div>
 
                   <div className="mb-1">
                     <span className="text-[10px] font-semibold tracking-[0.2em] text-gray-500 uppercase">{dept.enName}</span>
