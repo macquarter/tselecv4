@@ -148,11 +148,32 @@ export default function Organization() {
                 <div className={`absolute top-0 left-0 w-full h-full bg-gradient-to-b ${dept.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
 
                 <div className="relative z-10">
-                  <div className="w-14 h-14 rounded-2xl bg-[#1a1a1a] border border-white/5 flex items-center justify-center mb-6 group-hover:bg-white group-hover:text-black transition-colors duration-500 text-gray-400">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-7 h-7">
+                  <motion.div
+                    className="w-14 h-14 rounded-2xl bg-[#1a1a1a] border border-white/5 flex items-center justify-center mb-6 group-hover:bg-white group-hover:border-white/20 transition-colors duration-500 text-gray-400 group-hover:text-black"
+                    whileHover={{
+                      scale: 1.15,
+                      rotate: [0, -8, 8, -4, 0],
+                      transition: {
+                        scale: { type: 'spring', stiffness: 400, damping: 15 },
+                        rotate: { duration: 0.5, ease: 'easeInOut' }
+                      }
+                    }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <motion.svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      className="w-7 h-7"
+                      whileHover={{
+                        strokeWidth: 2,
+                        transition: { duration: 0.2 }
+                      }}
+                    >
                       <path d={dept.icon} />
-                    </svg>
-                  </div>
+                    </motion.svg>
+                  </motion.div>
 
                   <div className="mb-1">
                     <span className="text-[10px] font-semibold tracking-[0.2em] text-gray-500 uppercase">{dept.enName}</span>
@@ -160,14 +181,16 @@ export default function Organization() {
                   <h3 className="text-xl font-bold mb-3 tracking-tight">{dept.name}</h3>
                   <p className="text-gray-500 text-xs leading-relaxed font-light mb-6">{dept.desc}</p>
 
-                  <ul className="space-y-2">
-                    {dept.tasks.map((task, j) => (
-                      <li key={j} className="flex items-start text-gray-400 text-xs leading-relaxed font-light">
-                        <span className="w-1 h-1 rounded-full bg-gray-600 mr-2.5 mt-1.5 shrink-0" />
+                  <div className="flex flex-wrap gap-1.5">
+                    {dept.tasks.map((task) => (
+                      <span
+                        key={task}
+                        className="px-2.5 py-1 text-[10px] rounded-full bg-white/5 text-gray-500 font-medium group-hover:bg-white/10 group-hover:text-gray-300 transition-all duration-300"
+                      >
                         {task}
-                      </li>
+                      </span>
                     ))}
-                  </ul>
+                  </div>
                 </div>
               </motion.div>
             ))}
