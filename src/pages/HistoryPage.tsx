@@ -4,6 +4,12 @@ import Footer from '../components/Footer';
 
 export default function HistoryPage() {
   const historyData = [
+    { year: '2026', text: '공식 홈페이지 전면 개편 및 브랜드 리뉴얼' },
+    { year: '2025', text: 'IoT 연동형 ESP32 기반 무선 제어 모듈 라인업 확충' },
+    { year: '2022', text: 'Renesas MCU 기반 통합 제어 시스템 솔루션 런칭' },
+    { year: '2021', text: '산업용 HMI(Human Machine Interface) 디스플레이 제어 시스템 개발' },
+    { year: '2019', text: '정밀 의료기기/가전용 메인 컨트롤러(MCU) 설계 및 공급 확대' },
+    { year: '2017', text: '주요 협력사 공급망 확대 및 대량 생산 공정 최적화' },
     { year: '2016', text: '(현) 인천광역시 청라지구로 확장이전' },
     { year: '2011', text: '경기도 부천시 도당동으로 사옥 확장 이전' },
     { year: '2006', text: 'ISO 14001:2004 / KSA 14001:2004 환경시스템 인증 획득' },
@@ -20,60 +26,24 @@ export default function HistoryPage() {
       <Navbar />
       
       <main className="pt-32 pb-20">
-        {/* Hero Section */}
         <section className="relative flex flex-col items-center justify-center text-center px-6 mb-32">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-block mb-6 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-sm font-medium text-gray-300"
-          >
-            History
-          </motion.div>
-          <motion.h1 
-            className="text-5xl md:text-7xl font-bold mb-8 tracking-tighter"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          >
-            끊임없는 혁신.<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-600">
-              태승전자의 발자취.
-            </span>
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }} className="inline-block mb-6 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-sm font-medium text-gray-300">History</motion.div>
+          <motion.h1 className="text-5xl md:text-7xl font-bold mb-8 tracking-tighter" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}>
+            끊임없는 혁신.<br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-600">태승전자의 발자취.</span>
           </motion.h1>
-          <motion.p 
-            className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto font-light tracking-tight"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          >
-            1989년 설립 이후, 최고의 품질을 향한<br className="hidden md:block" />
-            우리의 도전은 계속됩니다.
+          <motion.p className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto font-light tracking-tight" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}>
+            1989년 설립 이후, 최고의 품질을 향한<br className="hidden md:block" />우리의 도전은 계속됩니다.
           </motion.p>
         </section>
 
-        {/* Timeline Section */}
         <section className="max-w-4xl mx-auto px-6">
           <div className="relative border-l border-white/10 ml-4 md:ml-0">
             {historyData.map((item, index) => (
-              <motion.div 
-                key={item.year}
-                className="mb-20 pl-8 md:pl-16 relative group"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              >
-                {/* Dot */}
+              <motion.div key={item.year} className="mb-20 pl-8 md:pl-16 relative group" initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}>
                 <div className="absolute w-3 h-3 bg-[#1a1a1a] border-2 border-gray-500 rounded-full -left-[6.5px] top-2.5 group-hover:bg-white group-hover:border-white transition-colors duration-500 shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:shadow-[0_0_15px_rgba(255,255,255,0.5)]"></div>
-                
                 <div className="flex flex-col md:flex-row md:items-baseline gap-4 md:gap-12">
-                  <h3 className="text-4xl md:text-5xl font-bold text-white tracking-tighter shrink-0 opacity-80 group-hover:opacity-100 transition-opacity duration-500">
-                    {item.year}
-                  </h3>
-                  <p className="text-gray-400 text-lg leading-relaxed font-light whitespace-pre-line group-hover:text-gray-200 transition-colors duration-500">
-                    {item.text}
-                  </p>
+                  <h3 className="text-4xl md:text-5xl font-bold text-white tracking-tighter shrink-0 opacity-80 group-hover:opacity-100 transition-opacity duration-500">{item.year}</h3>
+                  <p className="text-gray-400 text-lg leading-relaxed font-light whitespace-pre-line group-hover:text-gray-200 transition-colors duration-500">{item.text}</p>
                 </div>
               </motion.div>
             ))}
