@@ -35,8 +35,7 @@ const features: Feature[] = [
   {
     title: '진단기 제어보드',
     desc: '체외진단 장비의 시료 이송·반응·측정을 통합 제어하는 솔루션',
-    image:
-      'https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/medical-device.jpg',
     details: {
       overview:
         '혈액 분석기, 면역 분석기 등 체외진단(IVD) 장비의 시료 이송, 시약 분주, 반응 제어, 광학 측정을 통합 제어하는 솔루션입니다. 마이크로리터 단위의 정밀 분주와 정확한 온도·시간 제어로 재현성 높은 검사 결과를 보장합니다.',
@@ -123,6 +122,9 @@ export default function BusinessMedical() {
                   src={feature.image}
                   alt={feature.title}
                   className="absolute inset-0 w-full h-full object-cover opacity-40 transition-transform duration-1000 group-hover:scale-105"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).style.display = 'none';
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                 <div className="relative z-10 flex flex-col justify-end h-full p-8">
