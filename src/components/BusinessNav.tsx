@@ -1,14 +1,16 @@
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 
 export default function BusinessNav() {
   const location = useLocation();
+  const { t } = useTranslation();
 
   const links = [
-    { name: '가전', path: '/business/home-appliance' },
-    { name: '산업용', path: '/business/industrial' },
-    { name: '의료기기', path: '/business/medical' },
-    { name: '신재생에너지', path: '/business/renewable' },
+    { key: 'homeAppliance', path: '/business/home-appliance' },
+    { key: 'industrial', path: '/business/industrial' },
+    { key: 'medical', path: '/business/medical' },
+    { key: 'renewable', path: '/business/renewable' },
   ];
 
   return (
@@ -31,7 +33,7 @@ export default function BusinessNav() {
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 />
               )}
-              <span className="relative z-10">{link.name}</span>
+              <span className="relative z-10">{t(`nav.${link.key}`)}</span>
             </Link>
           );
         })}
