@@ -19,7 +19,8 @@
     "support": "Support",
     "news": "News & Announcements",
     "downloads": "Downloads",
-    "contact": "Contact Us"
+    "contact": "Contact Us",
+    "productsAll": "All Products"
   },
   "footer": {
     "description": "Since our founding in 1989, we have been a trusted partner in microcontroller design and manufacturing for the home appliance, medical, and solar energy sectors.",
@@ -27,7 +28,8 @@
     "business": "Business Areas",
     "products": "Products",
     "support": "Customer Support",
-    "copyright": "© 2026 태승전자(주) TSELEC Co., Ltd. All rights reserved."
+    "copyright": "© 2026 태승전자(주) TSELEC Co., Ltd. All rights reserved.",
+    "equipmentLabel": "Equipment & Systems"
   },
   "common": {
     "learnMore": "Learn More",
@@ -83,5 +85,66 @@
     "zh": "中文",
     "ja": "日本語",
     "vi": "Tiếng Việt"
+  },
+  "greeting": {
+    "badge": "CEO Message",
+    "t1": "Our promise",
+    "t2": "for the future.",
+    "desc1": "With cutting-edge technology that challenges limits,",
+    "desc2": "we lead customer-first management.",
+    "msg1": "Thank you for visiting our website.",
+    "msg2": "TSELEC began in 1989 and for 36 years has focused on a single thing — control boards. We supply parts for diverse industries: home appliance, industrial, medical, and renewable energy.",
+    "msg3": "We believe one good component creates one good product. We will continue to refine, deeply.",
+    "ceoName": "Tae-Ho You",
+    "ceoTitle": "CEO, TSELEC Co., Ltd.",
+    "cvBadge": "Core Values",
+    "cvT1": "Four promises",
+    "cvT2": "we keep.",
+    "cvDesc": "These are the working principles of TSELEC, unchanged for 36 years.",
+    "v0t": "Precision Quality",
+    "v0d": "Under 100PPM defect rate, 100% inspection coverage. We develop and manufacture precision microcontrollers with leading technology.",
+    "v1t": "Customer Trust",
+    "v1d": "99% on-time delivery, 36 years of accumulated partnerships. We prioritize customer needs and build long-term trust.",
+    "v2t": "Technical Innovation",
+    "v2d": "In-house R&D from circuit design to firmware to mass production. We create new value through digital convergence.",
+    "v3t": "Sustainable Growth",
+    "v3d": "Full lineup across 4 business areas, expanding exports. We elevate brand value and pursue sustainable growth.",
+    "v0stat": "100PPM",
+    "v1stat": "99%",
+    "v2stat": "R&D",
+    "v3stat": "4",
+    "v0statLabel": "Defect rate",
+    "v1statLabel": "On-time delivery",
+    "v2statLabel": "In-house R&D",
+    "v3statLabel": "Business areas"
+  },
+  "history": {
+    "kicker": "Endless innovation.",
+    "title": "Recent milestones.",
+    "m0y": "2026",
+    "m0t": "AI-based quality inspection introduced · 4 business categories (home appliance · industrial · medical · renewable) full lineup established",
+    "m1y": "2024",
+    "m1t": "Launched renewable energy (solar · hydrogen · fuel cell) control board lineup · expanded export categories",
+    "m2y": "2022",
+    "m2t": "Medical MCU board IEC 60601 certified · ISO 14001 environmental management renewed",
+    "m3y": "2020",
+    "m3t": "Relocated to new factory at Robot Land, Incheon · Smart factory (MES + 3 SMT lines) deployed"
+  },
+  "process": {
+    "badge": "Manufacturing Process",
+    "t1": "A journey to perfection.",
+    "t2": "Manufacturing process.",
+    "desc1": "From design to shipping — a systematic 10-step process",
+    "desc2": "produces defect-free products.",
+    "stagesTitle": "10-step manufacturing process.",
+    "stagesHint": "Hover over each step to view the details.",
+    "kpi0label": "Defect rate",
+    "kpi1label": "On-time delivery",
+    "kpi2label": "Inspection coverage",
+    "kpi3label": "Monthly capacity",
+    "qcTitle": "3-Stage Quality Control.",
+    "qcSubtitle": "Triple quality gate from incoming to shipping.",
+    "capTitle": "Core capabilities.",
+    "catTitle": "Response categories."
   }
 }
