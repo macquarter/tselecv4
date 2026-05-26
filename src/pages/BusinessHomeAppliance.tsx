@@ -67,8 +67,7 @@ const features: Feature[] = [
   {
     title: '공기청정기 제어보드',
     desc: '미세먼지 센서 연동과 다단 필터 시스템을 제어하는 PCB 솔루션',
-    image:
-      'https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/air-purifier-main.jpg',
     details: {
       overview:
         'PM2.5/PM10 미세먼지 센서, VOC 센서와 연동하여 실내 공기질을 실시간으로 모니터링하고, HEPA 필터 팬 속도를 자동 조절하는 제어보드입니다. 필터 수명 관리와 IoT 연동을 통한 원격 제어 기능을 지원합니다.',
@@ -139,6 +138,9 @@ export default function BusinessHomeAppliance() {
                   src={feature.image}
                   alt={feature.title}
                   className="absolute inset-0 w-full h-full object-cover opacity-40 transition-transform duration-1000 group-hover:scale-105"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).style.display = 'none';
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                 <div className="relative z-10 flex flex-col justify-end h-full p-8">
