@@ -1,64 +1,21 @@
 import { motion } from 'motion/react';
-import { Cpu, Heart, Sparkles, TrendingUp, ArrowUpRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { useText } from '../contexts/SiteContentContext';
 
+/**
+ * 인사말 페이지.
+ * 언어 전환 시 본문이 즉시 바뀌도록 i18n의 t()를 단일 출처로 사용합니다.
+ * 핵심가치 섹션은 미니멀 타이포그래피 기반으로 단순화.
+ */
 export default function Greeting() {
   const { t } = useTranslation();
 
-  // i18n 우선, Firebase CMS override 가능
-  const badge = useText('gr-badge', t('greeting.badge'));
-  const grT1 = useText('gr-t1', t('greeting.t1'));
-  const grT2 = useText('gr-t2', t('greeting.t2'));
-  const grD1 = useText('gr-d1', t('greeting.desc1'));
-  const grD2 = useText('gr-d2', t('greeting.desc2'));
-  const ceoName = useText('gr-ceo-name', t('greeting.ceoName'));
-  const ceoTitle = useText('gr-ceo-title', t('greeting.ceoTitle'));
-  const msg1 = useText('gr-msg1', t('greeting.msg1'));
-  const msg2 = useText('gr-msg2', t('greeting.msg2'));
-  const msg3 = useText('gr-msg3', t('greeting.msg3'));
-  void useText('gr-msg4', t('greeting.ceoTitle'));
-
-  const cvBadge = useText('gr-cv-badge', t('greeting.cvBadge'));
-  const cvT1 = useText('gr-cv-t1', t('greeting.cvT1'));
-  const cvT2 = useText('gr-cv-t2', t('greeting.cvT2'));
-  const cvDesc = useText('gr-cv-desc', t('greeting.cvDesc'));
-
   const coreValues = [
-    {
-      n: '01',
-      icon: <Cpu strokeWidth={1.5} className="w-6 h-6" />,
-      title: useText('gr-v0t', t('greeting.v0t')),
-      desc: useText('gr-v0d', t('greeting.v0d')),
-      stat: t('greeting.v0stat'),
-      statLabel: t('greeting.v0statLabel'),
-    },
-    {
-      n: '02',
-      icon: <Heart strokeWidth={1.5} className="w-6 h-6" />,
-      title: useText('gr-v1t', t('greeting.v1t')),
-      desc: useText('gr-v1d', t('greeting.v1d')),
-      stat: t('greeting.v1stat'),
-      statLabel: t('greeting.v1statLabel'),
-    },
-    {
-      n: '03',
-      icon: <Sparkles strokeWidth={1.5} className="w-6 h-6" />,
-      title: useText('gr-v2t', t('greeting.v2t')),
-      desc: useText('gr-v2d', t('greeting.v2d')),
-      stat: t('greeting.v2stat'),
-      statLabel: t('greeting.v2statLabel'),
-    },
-    {
-      n: '04',
-      icon: <TrendingUp strokeWidth={1.5} className="w-6 h-6" />,
-      title: useText('gr-v3t', t('greeting.v3t')),
-      desc: useText('gr-v3d', t('greeting.v3d')),
-      stat: t('greeting.v3stat'),
-      statLabel: t('greeting.v3statLabel'),
-    },
+    { n: '01', title: t('greeting.v0t'), desc: t('greeting.v0d') },
+    { n: '02', title: t('greeting.v1t'), desc: t('greeting.v1d') },
+    { n: '03', title: t('greeting.v2t'), desc: t('greeting.v2d') },
+    { n: '04', title: t('greeting.v3t'), desc: t('greeting.v3d') },
   ];
 
   return (
@@ -72,9 +29,9 @@ export default function Greeting() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-block mb-6 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-sm font-medium text-gray-300"
+            className="inline-block mb-6 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-xs tracking-widest uppercase text-gray-300"
           >
-            {badge}
+            {t('greeting.badge')}
           </motion.div>
           <motion.h1
             className="text-5xl md:text-7xl font-bold mb-8 tracking-tighter"
@@ -82,9 +39,9 @@ export default function Greeting() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           >
-            {grT1}<br />
+            {t('greeting.t1')}<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-600">
-              {grT2}
+              {t('greeting.t2')}
             </span>
           </motion.h1>
           <motion.p
@@ -93,8 +50,8 @@ export default function Greeting() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
-            {grD1}<br className="hidden md:block" />
-            {grD2}
+            {t('greeting.desc1')}<br className="hidden md:block" />
+            {t('greeting.desc2')}
           </motion.p>
         </section>
 
@@ -108,84 +65,60 @@ export default function Greeting() {
           >
             <div className="space-y-8 text-gray-300 leading-relaxed font-light text-lg">
               <p className="text-2xl font-medium text-white tracking-tight">
-                {msg1}
+                {t('greeting.msg1')}
               </p>
-              <p>{msg2}</p>
-              <p>{msg3}</p>
+              <p>{t('greeting.msg2')}</p>
+              <p>{t('greeting.msg3')}</p>
               <div className="pt-8 border-t border-white/10">
-                <h2 className="text-2xl font-bold tracking-tight">{ceoName}</h2>
-                <p className="text-gray-400 font-medium mt-1 tracking-wide uppercase text-sm">{ceoTitle}</p>
+                <h2 className="text-2xl font-bold tracking-tight">{t('greeting.ceoName')}</h2>
+                <p className="text-gray-400 font-medium mt-1 tracking-wide uppercase text-sm">{t('greeting.ceoTitle')}</p>
               </div>
             </div>
           </motion.div>
         </section>
 
-        {/* Core Values — Apple-style */}
-        <section className="max-w-7xl mx-auto px-6">
+        {/* Core Values — Minimal */}
+        <section className="max-w-4xl mx-auto px-6">
           <motion.div
-            className="text-center mb-20"
+            className="mb-20"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="inline-block mb-6 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-xs tracking-widest uppercase text-gray-400">
-              {cvBadge}
+            <div className="text-xs tracking-widest uppercase text-gray-500 mb-4">
+              {t('greeting.cvBadge')}
             </div>
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tighter mb-6">
-              {cvT1}<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-600">
-                {cvT2}
-              </span>
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-4">
+              {t('greeting.cvT1')} {t('greeting.cvT2')}
             </h2>
-            <p className="text-lg text-gray-500 font-light tracking-tight max-w-2xl mx-auto">
-              {cvDesc}
+            <p className="text-base text-gray-500 font-light tracking-tight">
+              {t('greeting.cvDesc')}
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          <div className="divide-y divide-white/5">
             {coreValues.map((item, i) => (
               <motion.div
                 key={item.n}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="group relative rounded-[2rem] bg-[#0a0a0a] border border-white/5 p-8 md:p-10 overflow-hidden hover:border-white/15 transition-colors duration-700"
+                viewport={{ once: true, margin: '-30px' }}
+                transition={{ duration: 0.6, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                className="grid grid-cols-12 gap-6 py-8 group"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-
-                <div className="relative z-10 flex items-start justify-between mb-10">
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs font-mono tracking-widest text-gray-600">{item.n}</span>
-                    <div className="h-px w-8 bg-white/10" />
-                  </div>
-                  <div className="flex items-center justify-center w-11 h-11 rounded-full bg-white/[0.04] border border-white/10 text-gray-300 group-hover:bg-white group-hover:text-black group-hover:border-white transition-all duration-500">
-                    {item.icon}
-                  </div>
+                <div className="col-span-2 md:col-span-1">
+                  <span className="text-xs font-mono tracking-widest text-gray-600">{item.n}</span>
                 </div>
-
-                <h3 className="relative z-10 text-3xl md:text-4xl font-bold tracking-tighter mb-4 text-white">
-                  {item.title}
-                </h3>
-
-                <p className="relative z-10 text-gray-400 font-light leading-relaxed mb-10 max-w-md">
-                  {item.desc}
-                </p>
-
-                <div className="relative z-10 flex items-end justify-between pt-6 border-t border-white/5">
-                  <div>
-                    <div className="text-3xl md:text-4xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500">
-                      {item.stat}
-                    </div>
-                    <div className="text-xs tracking-widest uppercase text-gray-500 mt-1">
-                      {item.statLabel}
-                    </div>
-                  </div>
-                  <ArrowUpRight
-                    className="w-5 h-5 text-gray-600 group-hover:text-white group-hover:-translate-y-1 group-hover:translate-x-1 transition-all duration-500"
-                    strokeWidth={1.5}
-                  />
+                <div className="col-span-10 md:col-span-4">
+                  <h3 className="text-xl md:text-2xl font-bold tracking-tight text-white group-hover:text-white">
+                    {item.title}
+                  </h3>
+                </div>
+                <div className="col-span-12 md:col-span-7">
+                  <p className="text-gray-400 font-light leading-relaxed text-sm md:text-base">
+                    {item.desc}
+                  </p>
                 </div>
               </motion.div>
             ))}
