@@ -15,11 +15,13 @@ interface Feature {
   };
 }
 
+const STOCK = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=80`;
+
 const features: Feature[] = [
   {
     title: '냉장고 Display PCB',
     desc: '냉장고 전면 디스플레이 및 온도 제어를 위한 전용 PCB 솔루션',
-    image: '/images/products/fridge-display.jpg',
+    image: STOCK('photo-1571175443880-49e1d25b2bc5'),
     details: {
       overview:
         '태승전자의 냉장고 Display PCB는 전면 터치 디스플레이와 멀티 존 온도 제어를 통합하는 핵심 제어보드입니다. 고객사 요구에 맞춘 커스텀 설계로 다양한 냉장고 라인업에 유연하게 대응하며, 저전력 설계로 에너지 효율 향상에 기여합니다.',
@@ -35,7 +37,7 @@ const features: Feature[] = [
   {
     title: '얼음정수기 제어보드',
     desc: '정수·냉각·얼음 생성을 하나의 보드로 통합 제어하는 솔루션',
-    image: '/images/products/water-purifier.jpg',
+    image: STOCK('photo-1548839140-29a749e1cf4d'),
     details: {
       overview:
         '정수 필터 관리, 냉각 시스템 구동, 얼음 생성 사이클을 하나의 제어보드로 통합한 솔루션입니다. UV 살균 타이밍 제어와 필터 교체 알림, 누수 감지 기능까지 내장하여 안전하고 편리한 사용 환경을 제공합니다.',
@@ -51,7 +53,7 @@ const features: Feature[] = [
   {
     title: '레인지후드 제어보드',
     desc: '흡입력 자동 조절과 LED 조명을 통합 제어하는 레인지후드 PCB',
-    image: '/images/products/range-hood.jpg',
+    image: STOCK('photo-1556909114-f6e7ad7d3136'),
     details: {
       overview:
         'BLDC 팬 모터 구동과 조리 환경에 따른 자동 풍량 조절, LED 조명 제어를 통합한 레인지후드 전용 PCB입니다. 가스·연기 센서와 연동하여 자동으로 흡입력을 조절하며, 저소음 설계로 쾌적한 주방 환경을 만들어줍니다.',
@@ -67,7 +69,7 @@ const features: Feature[] = [
   {
     title: '공기청정기 제어보드',
     desc: '미세먼지 센서 연동과 다단 필터 시스템을 제어하는 PCB 솔루션',
-    image: '/images/products/air-purifier-main.jpg',
+    image: STOCK('photo-1585771724684-38269d6639fd'),
     details: {
       overview:
         'PM2.5/PM10 미세먼지 센서, VOC 센서와 연동하여 실내 공기질을 실시간으로 모니터링하고, HEPA 필터 팬 속도를 자동 조절하는 제어보드입니다. 필터 수명 관리와 IoT 연동을 통한 원격 제어 기능을 지원합니다.',
@@ -89,7 +91,6 @@ export default function BusinessHomeAppliance() {
     <div className="min-h-screen bg-black text-white">
       <Navbar />
 
-      {/* Hero */}
       <section className="relative pt-40 pb-24 px-6">
         <div className="max-w-7xl mx-auto text-center">
           <motion.div
@@ -120,7 +121,6 @@ export default function BusinessHomeAppliance() {
 
       <BusinessNav />
 
-      {/* Features Grid */}
       <section className="py-24 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -137,10 +137,8 @@ export default function BusinessHomeAppliance() {
                 <img
                   src={feature.image}
                   alt={feature.title}
-                  className="absolute inset-0 w-full h-full object-cover opacity-40 transition-transform duration-1000 group-hover:scale-105"
-                  onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).style.display = 'none';
-                  }}
+                  className="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-1000 group-hover:scale-105"
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                 <div className="relative z-10 flex flex-col justify-end h-full p-8">
@@ -148,18 +146,8 @@ export default function BusinessHomeAppliance() {
                   <p className="text-gray-400 text-sm font-light leading-relaxed">{feature.desc}</p>
                   <span className="mt-4 inline-flex items-center text-xs text-gray-500 group-hover:text-white transition-colors">
                     자세히 보기
-                    <svg
-                      className="ml-1 w-3.5 h-3.5"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        d="M5 12h14M12 5l7 7-7 7"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
+                    <svg className="ml-1 w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </span>
                 </div>
@@ -169,7 +157,6 @@ export default function BusinessHomeAppliance() {
         </div>
       </section>
 
-      {/* Modal */}
       <AnimatePresence>
         {selectedFeature && (
           <motion.div
@@ -197,30 +184,10 @@ export default function BusinessHomeAppliance() {
                 </svg>
               </button>
 
-              <motion.h2
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.05 }}
-                className="text-2xl font-bold tracking-tight mb-4"
-              >
-                {selectedFeature.title}
-              </motion.h2>
+              <h2 className="text-2xl font-bold tracking-tight mb-4">{selectedFeature.title}</h2>
+              <p className="text-gray-400 text-sm font-light leading-relaxed mb-8">{selectedFeature.details.overview}</p>
 
-              <motion.p
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.08 }}
-                className="text-gray-400 text-sm font-light leading-relaxed mb-8"
-              >
-                {selectedFeature.details.overview}
-              </motion.p>
-
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.12 }}
-                className="mb-8"
-              >
+              <div className="mb-8">
                 <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">주요 사양</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {selectedFeature.details.specs.map((spec, i) => (
@@ -230,25 +197,18 @@ export default function BusinessHomeAppliance() {
                     </div>
                   ))}
                 </div>
-              </motion.div>
+              </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.16 }}
-              >
+              <div>
                 <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">적용 분야</h3>
                 <div className="flex flex-wrap gap-2">
                   {selectedFeature.details.applications.map((app, i) => (
-                    <span
-                      key={i}
-                      className="px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs text-gray-300"
-                    >
+                    <span key={i} className="px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs text-gray-300">
                       {app}
                     </span>
                   ))}
                 </div>
-              </motion.div>
+              </div>
             </motion.div>
           </motion.div>
         )}
