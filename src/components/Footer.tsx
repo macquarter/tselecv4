@@ -2,7 +2,12 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useText } from '../contexts/SiteContentContext';
 
-export default function Footer() {
+interface FooterProps {
+  /** 페이지 고유 메타 라벨 (예: "Manufacturing Process · v6.0 · ISO 9001 인증 라인"). */
+  pageBadge?: string;
+}
+
+export default function Footer({ pageBadge }: FooterProps) {
   const { t } = useTranslation();
   const logo1 = useText('logo-1', 'TSE');
   const logo2 = useText('logo-2', 'LEC');
@@ -66,9 +71,17 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-white/10 text-xs text-gray-600">
-          <div>{t('footer.copyright')}</div>
-          <div className="flex gap-4 mt-4 md:mt-0">
+        <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-white/10 text-xs text-gray-600 gap-4">
+          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-3">
+            <span>{t('footer.copyright')}</span>
+            {pageBadge && (
+              <>
+                <span className="hidden md:inline text-gray-700">·</span>
+                <span className="text-gray-500 font-mono tracking-wide">{pageBadge}</span>
+              </>
+            )}
+          </div>
+          <div className="flex gap-4">
             <span className="px-3 py-1 rounded-full border border-white/10 text-gray-400">{ftB1}</span>
             <span className="px-3 py-1 rounded-full border border-white/10 text-gray-400">{ftB2}</span>
             <span className="px-3 py-1 rounded-full border border-white/10 text-gray-400">{ftB3}</span>
