@@ -15,110 +15,115 @@ interface Feature {
   };
 }
 
+const features: Feature[] = [
+  {
+    title: '냉장고 Display PCB',
+    desc: '냉장고 전면 디스플레이 및 온도 제어를 위한 전용 PCB 솔루션',
+    image: '/images/products/fridge-display.jpg',
+    details: {
+      overview:
+        '태승전자의 냉장고 Display PCB는 전면 터치 디스플레이와 멀티 존 온도 제어를 통합하는 핵심 제어보드입니다. 고객사 요구에 맞춘 커스텀 설계로 다양한 냉장고 라인업에 유연하게 대응하며, 저전력 설계로 에너지 효율 향상에 기여합니다.',
+      specs: [
+        { label: '프로세서', value: '32-bit ARM Cortex-M' },
+        { label: '온도 정밀도', value: '±0.3°C' },
+        { label: '제어 채널', value: '최대 4존 독립 제어' },
+        { label: '통신', value: 'UART, I2C, Wi-Fi 모듈 지원' },
+      ],
+      applications: ['양문형 냉장고', '김치냉장고', '업소용 냉장·냉동고', '와인셀러'],
+    },
+  },
+  {
+    title: '얼음정수기 제어보드',
+    desc: '정수·냉각·얼음 생성을 하나의 보드로 통합 제어하는 솔루션',
+    image: '/images/products/water-purifier.jpg',
+    details: {
+      overview:
+        '정수 필터 관리, 냉각 시스템 구동, 얼음 생성 사이클을 하나의 제어보드로 통합한 솔루션입니다. UV 살균 타이밍 제어와 필터 교체 알림, 누수 감지 기능까지 내장하여 안전하고 편리한 사용 환경을 제공합니다.',
+      specs: [
+        { label: '냉각 제어', value: '인버터 컴프레서 구동' },
+        { label: '필터 관리', value: '자동 교체 알림' },
+        { label: '안전 기능', value: '누수 감지, UV 살균' },
+        { label: '인터페이스', value: '터치 패널, LED 표시' },
+      ],
+      applications: ['직수형 정수기', '얼음정수기', '냉온정수기', '업소용 정수기'],
+    },
+  },
+  {
+    title: '레인지후드 제어보드',
+    desc: '흡입력 자동 조절과 LED 조명을 통합 제어하는 레인지후드 PCB',
+    image: '/images/products/range-hood.jpg',
+    details: {
+      overview:
+        'BLDC 팬 모터 구동과 조리 환경에 따른 자동 풍량 조절, LED 조명 제어를 통합한 레인지후드 전용 PCB입니다. 가스·연기 센서와 연동하여 자동으로 흡입력을 조절하며, 저소음 설계로 쾌적한 주방 환경을 만들어줍니다.',
+      specs: [
+        { label: '모터 제어', value: 'BLDC 3단 풍량' },
+        { label: '센서 연동', value: '가스·연기 자동 감지' },
+        { label: '소음 레벨', value: '< 35dB (저속)' },
+        { label: '조명', value: 'LED 디밍 제어' },
+      ],
+      applications: ['빌트인 레인지후드', '벽걸이형 후드', '아일랜드 후드', '업소용 환기설비'],
+    },
+  },
+  {
+    title: '공기청정기 제어보드',
+    desc: '미세먼지 센서 연동과 다단 필터 시스템을 제어하는 PCB 솔루션',
+    image:
+      'https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=800&q=80',
+    details: {
+      overview:
+        'PM2.5/PM10 미세먼지 센서, VOC 센서와 연동하여 실내 공기질을 실시간으로 모니터링하고, HEPA 필터 팬 속도를 자동 조절하는 제어보드입니다. 필터 수명 관리와 IoT 연동을 통한 원격 제어 기능을 지원합니다.',
+      specs: [
+        { label: '센서', value: 'PM2.5, PM10, VOC, CO2' },
+        { label: '모터 제어', value: 'BLDC 인버터' },
+        { label: '필터 관리', value: '수명 자동 산출' },
+        { label: '연결', value: 'Wi-Fi, BLE' },
+      ],
+      applications: ['가정용 공기청정기', '차량용 공기청정기', '상업용 공기청정기', '공기청정 에어컨'],
+    },
+  },
+];
+
 export default function BusinessHomeAppliance() {
   const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
 
-  const features: Feature[] = [
-    {
-      title: '냉장고 컨트롤러',
-      desc: '정밀 온도 제어와 에너지 효율을 극대화하는 냉장고 전용 MCU 솔루션',
-      image: 'https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?auto=format&fit=crop&w=800&q=80',
-      details: {
-        overview: '태승전자의 냉장고 컨트롤러는 멀티 존 온도 제어, 인버터 컴프레서 구동, 디스플레이 인터페이스를 하나의 MCU로 통합 관리합니다. 저전력 설계로 에너지 등급 향상에 기여하며, 다양한 냉장고 라인업에 유연하게 적용 가능합니다.',
-        specs: [
-          { label: '프로세서', value: '32-bit ARM Cortex-M4' },
-          { label: '온도 정밀도', value: '±0.3°C' },
-          { label: '제어 채널', value: '최대 4존 독립 제어' },
-          { label: '통신', value: 'UART, I2C, Wi-Fi 모듈 지원' },
-        ],
-        applications: ['양문형 냉장고', '김치냉장고', '업소용 냉장·냉동고', '와인셀러'],
-      },
-    },
-    {
-      title: '세탁기 제어보드',
-      desc: '다양한 세탁 모드와 모터 구동을 안정적으로 제어하는 통합 보드',
-      image: 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=800&q=80',
-      details: {
-        overview: 'DD(Direct Drive) 모터부터 BLDC 모터까지 다양한 모터 타입을 지원하는 세탁기 전용 제어보드입니다. 진동 감지 센서와 연동하여 불균형 보정 알고리즘을 내장하고 있으며, IoT 연동을 통한 원격 제어가 가능합니다.',
-        specs: [
-          { label: '모터 제어', value: 'FOC 벡터 제어' },
-          { label: '최대 RPM', value: '1,600 RPM' },
-          { label: '세탁 모드', value: '최대 20가지 프로그램' },
-          { label: '안전 기능', value: '누수 감지, 도어 잠금' },
-        ],
-        applications: ['드럼 세탁기', '통돌이 세탁기', '건조기', '세탁건조기 복합'],
-      },
-    },
-    {
-      title: '에어컨 인버터',
-      desc: '고효율 BLDC 모터 인버터 기반의 쾌적한 냉난방 제어 시스템',
-      image: 'https://images.unsplash.com/photo-1585338107529-13afc5f02586?auto=format&fit=crop&w=800&q=80',
-      details: {
-        overview: '태승전자의 에어컨 인버터 솔루션은 고효율 BLDC 컴프레서 모터를 정밀하게 제어하여 소비 전력을 최소화합니다. PFC(역률 보정) 회로 내장으로 전력 품질을 높이고, 저소음 PWM 제어로 쾌적한 실내 환경을 만들어줍니다.',
-        specs: [
-          { label: '효율', value: 'SEER 6.0 이상 지원' },
-          { label: '입력 전압', value: 'AC 220V ±15%' },
-          { label: '냉매 호환', value: 'R32, R410A' },
-          { label: '소음 레벨', value: '< 22dB (실내기)' },
-        ],
-        applications: ['벽걸이 에어컨', '스탠드 에어컨', '시스템 에어컨', '창문형 에어컨'],
-      },
-    },
-    {
-      title: '소형가전 MCU',
-      desc: '청소기, 공기청정기 등 소형 생활가전을 위한 저전력 MCU 솔루션',
-      image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=800&q=80',
-      details: {
-        overview: '8/16비트 저전력 MCU를 기반으로 다양한 소형가전에 적용 가능한 범용 제어 솔루션입니다. 터치 키 인터페이스, LED 디스플레이 드라이버, 모터 제어를 원칩으로 구현하여 BOM 비용을 절감합니다.',
-        specs: [
-          { label: '프로세서', value: '8/16-bit MCU' },
-          { label: '동작 전류', value: '< 5mA (활성 모드)' },
-          { label: '터치 키', value: '최대 12채널' },
-          { label: '패키지', value: 'QFP, SOP 다양' },
-        ],
-        applications: ['로봇청소기', '공기청정기', '가습기', '전기밥솥'],
-      },
-    },
-  ];
-
   return (
-    <div className="bg-black min-h-screen text-white selection:bg-white/30 selection:text-white">
+    <div className="min-h-screen bg-black text-white">
       <Navbar />
 
-      <main className="pt-32 pb-20">
-        <section className="relative flex flex-col items-center justify-center text-center px-6 mb-32">
+      {/* Hero */}
+      <section className="relative pt-40 pb-24 px-6">
+        <div className="max-w-7xl mx-auto text-center">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-block mb-6 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-sm font-medium text-gray-300"
-          >
-            Home Appliance
-          </motion.div>
-          <motion.h1
-            className="text-5xl md:text-7xl font-bold mb-8 tracking-tighter"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            일상을 바꾸는 기술.<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-600">
-              가전 제어 솔루션.
+            <span className="inline-block px-4 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs tracking-widest text-gray-400 uppercase mb-8">
+              Home Appliance
             </span>
-          </motion.h1>
-          <motion.p
-            className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto font-light tracking-tight"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          >
-            냉장고, 세탁기, 에어컨 등<br className="hidden md:block" />
-            생활가전의 핵심 제어 기술을 제공합니다.
-          </motion.p>
-        </section>
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] mb-6">
+              일상을 바꾸는 기술.
+              <br />
+              <span className="bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent">
+                가전 제어 솔루션.
+              </span>
+            </h1>
+            <p
+              className="text-lg text-gray-400 font-light max-w-2xl mx-auto leading-relaxed"
+              dangerouslySetInnerHTML={{
+                __html:
+                  '냉장고, 정수기, 레인지후드, 공기청정기 등<br/>생활가전의 핵심 제어보드를 공급합니다.',
+              }}
+            />
+          </motion.div>
+        </div>
+      </section>
 
-        <section className="max-w-7xl mx-auto px-6 mb-32">
-          <BusinessNav />
+      <BusinessNav />
+
+      {/* Features Grid */}
+      <section className="py-24 px-6">
+        <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {features.map((feature, i) => (
               <motion.div
@@ -141,62 +146,101 @@ export default function BusinessHomeAppliance() {
                   <p className="text-gray-400 text-sm font-light leading-relaxed">{feature.desc}</p>
                   <span className="mt-4 inline-flex items-center text-xs text-gray-500 group-hover:text-white transition-colors">
                     자세히 보기
-                    <svg className="ml-1 w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    <svg
+                      className="ml-1 w-3.5 h-3.5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M5 12h14M12 5l7 7-7 7"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
                   </span>
                 </div>
               </motion.div>
             ))}
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
 
-      <Footer />
-
+      {/* Modal */}
       <AnimatePresence>
         {selectedFeature && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-50 flex items-center justify-center px-6 bg-black/80 backdrop-blur-sm"
+            onClick={() => setSelectedFeature(null)}
           >
-            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setSelectedFeature(null)} />
             <motion.div
-              className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-[#111] border border-white/10 rounded-[2rem] p-8 md:p-10"
-              initial={{ opacity: 0, scale: 0.9, y: 30 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 30 }}
+              initial={{ opacity: 0, y: 40, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 40, scale: 0.96 }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-[2rem] bg-[#0a0a0a] border border-white/10 p-8 md:p-10"
+              onClick={(e) => e.stopPropagation()}
             >
               <button
                 onClick={() => setSelectedFeature(null)}
-                className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
+                className="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition-colors"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </button>
 
-              <div className="h-48 rounded-2xl overflow-hidden mb-8 border border-white/5">
-                <img src={selectedFeature.image} alt={selectedFeature.title} className="w-full h-full object-cover opacity-70" />
-              </div>
+              <motion.h2
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: 0.05 }}
+                className="text-2xl font-bold tracking-tight mb-4"
+              >
+                {selectedFeature.title}
+              </motion.h2>
 
-              <h2 className="text-3xl font-bold mb-3 tracking-tight">{selectedFeature.title}</h2>
-              <p className="text-gray-400 leading-relaxed mb-8 font-light">{selectedFeature.details.overview}</p>
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: 0.08 }}
+                className="text-gray-400 text-sm font-light leading-relaxed mb-8"
+              >
+                {selectedFeature.details.overview}
+              </motion.p>
 
-              <div className="bg-black/50 border border-white/5 rounded-2xl p-6 mb-8">
-                <h3 className="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4">주요 사양</h3>
-                <div className="space-y-3">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: 0.1 }}
+                className="mb-8"
+              >
+                <h4 className="text-xs tracking-widest text-gray-500 uppercase mb-4">주요 사양</h4>
+                <div className="rounded-2xl border border-white/[0.06] overflow-hidden">
                   {selectedFeature.details.specs.map((spec, i) => (
-                    <div key={i} className="flex justify-between text-sm border-b border-white/5 pb-3 last:border-0 last:pb-0">
+                    <div
+                      key={i}
+                      className={`flex justify-between items-center px-5 py-3.5 text-sm ${
+                        i !== selectedFeature.details.specs.length - 1 ? 'border-b border-white/[0.06]' : ''
+                      }`}
+                    >
                       <span className="text-gray-500">{spec.label}</span>
-                      <span className="text-white font-medium">{spec.value}</span>
+                      <span className="text-gray-200 font-medium">{spec.value}</span>
                     </div>
                   ))}
                 </div>
-              </div>
+              </motion.div>
 
-              <div>
-                <h3 className="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4">적용 분야</h3>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: 0.12 }}
+              >
+                <h4 className="text-xs tracking-widest text-gray-500 uppercase mb-4">적용 분야</h4>
                 <div className="grid grid-cols-2 gap-3">
                   {selectedFeature.details.applications.map((app, i) => (
                     <motion.div
@@ -213,11 +257,13 @@ export default function BusinessHomeAppliance() {
                     </motion.div>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      <Footer />
     </div>
   );
 }
