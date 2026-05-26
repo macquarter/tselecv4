@@ -43,10 +43,10 @@ export default function Process() {
   };
 
   const kpis = [
-    { value: '50PPM 이하', label: '불량률' },
-    { value: '98%', label: '납기준수율' },
+    { value: '100PPM 이하', label: '불량률' },
+    { value: '99%', label: '납기준수율' },
     { value: '100%', label: '검사커버리지' },
-    { value: '50만+', label: '월생산량' }
+    { value: '30만개~', label: '월생산량' }
   ];
 
   return (
@@ -154,54 +154,59 @@ export default function Process() {
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent" />
-            <h2 className="text-3xl md:text-4xl font-bold mb-16 tracking-tight relative z-10">핵심 품질 성과.</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-12 relative z-10">
+            <h3 className="text-3xl font-bold mb-4 tracking-tight relative z-10">핵심 품질 성과</h3>
+            <p className="text-gray-400 font-light mb-16 relative z-10">숫자로 증명하는 태승전자의 제조 경쟁력.</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-12 relative z-10">
               {kpis.map((kpi, i) => (
-                <div key={i} className="flex flex-col items-center">
-                  <div className="text-5xl md:text-6xl font-bold text-white mb-4 tracking-tighter">
-                    {kpi.value}
-                  </div>
-                  <p className="text-gray-400 text-sm tracking-wide font-medium">{kpi.label}</p>
-                </div>
+                <motion.div 
+                  key={kpi.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <div className="text-4xl md:text-5xl font-bold tracking-tighter mb-3">{kpi.value}</div>
+                  <div className="text-gray-500 text-sm font-light">{kpi.label}</div>
+                </motion.div>
               ))}
             </div>
           </motion.div>
         </section>
       </main>
 
-      <Footer />
-
+      {/* Step Detail Modal */}
       <AnimatePresence>
         {selectedStep && (
-          <motion.div 
-            className="fixed inset-0 z-[100] flex items-center justify-center p-6"
+          <motion.div
+            className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            onClick={() => setSelectedStep(null)}
           >
-            <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={() => setSelectedStep(null)} />
-            <motion.div 
+            <motion.div
               layoutId={`step-${selectedStep.num}`}
-              className="bg-[#111] border border-white/10 rounded-[2rem] p-10 max-w-lg w-full relative z-10 shadow-2xl"
+              className="bg-[#0a0a0a] border border-white/10 rounded-[2rem] p-10 md:p-14 max-w-lg w-full relative"
+              onClick={(e) => e.stopPropagation()}
             >
               <button 
                 onClick={() => setSelectedStep(null)}
-                className="absolute top-6 right-6 text-gray-400 hover:text-white transition-colors"
+                className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
               >
-                <X size={24} />
+                <X className="w-5 h-5" />
               </button>
-              <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center text-white text-2xl font-bold mb-6">
+              <div className="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center text-xl font-bold mb-8">
                 {selectedStep.num}
               </div>
-              <h3 className="text-3xl font-bold mb-2 tracking-tight text-white">{selectedStep.title}</h3>
-              <p className="text-gray-400 font-medium mb-6">{selectedStep.desc}</p>
-              <p className="text-gray-300 leading-relaxed font-light">
-                {selectedStep.detail}
-              </p>
+              <h3 className="text-3xl font-bold mb-2 tracking-tight">{selectedStep.title}</h3>
+              <p className="text-gray-500 text-sm mb-8">{selectedStep.desc}</p>
+              <p className="text-gray-300 leading-relaxed font-light text-lg">{selectedStep.detail}</p>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      <Footer />
     </div>
   );
 }
