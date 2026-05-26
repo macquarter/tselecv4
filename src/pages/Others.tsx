@@ -1,159 +1,141 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductNav from '../components/ProductNav';
 
-interface Product {
-  title: string;
-  desc: string;
-  img: string;
-  specs: { label: string; value: string }[];
-}
-
 export default function Others() {
-  const [selected, setSelected] = useState<Product | null>(null);
+  const specs = [
+    { label: '제어 범위', value: '-20°C ~ +200°C' },
+    { label: '정확도', value: '±0.5°C' },
+    { label: '응답 시간', value: '< 2초' },
+    { label: '입력 신호', value: 'Pt100, K-Type TC' },
+    { label: '출력', value: '4-20mA, 0-10V' },
+    { label: '인증', value: 'ISO 9001, CE' }
+  ];
 
-  const products: Product[] = [
-    {
-      title: 'SMPS 25V/2.0A',
-      desc: '25V 2.0A 출력 스위칭 모드 전원공급장치',
-      img: '/images/products/smps-25v.jpg',
-      specs: [
-        { label: '출력 전압', value: '25V' },
-        { label: '출력 전류', value: '2.0A' },
-        { label: '타입', value: 'SMPS (스위칭 모드)' },
-        { label: '용도', value: '각종 제어 기판 전원공급' },
-      ],
-    },
-    {
-      title: 'SMPS 120W',
-      desc: '120W급 고출력 스위칭 모드 전원공급장치',
-      img: '/images/products/smps-120w.jpg',
-      specs: [
-        { label: '출력', value: '120W' },
-        { label: '타입', value: 'SMPS (스위칭 모드)' },
-        { label: '특징', value: '고출력, 고효율' },
-        { label: '용도', value: '산업·가전 기기 전원공급' },
-      ],
-    },
-    {
-      title: '공기청정기 POWER',
-      desc: '220VAC 입력, 모터 구동 전용 파워보드',
-      img: '/images/products/air-purifier-power.jpg',
-      specs: [
-        { label: '입력 전원', value: '220VAC' },
-        { label: '제어 대상', value: 'MOTOR' },
-        { label: '타입', value: '전용 파워보드' },
-        { label: '용도', value: '공기청정기 모터 구동' },
-      ],
-    },
-    {
-      title: '정수기 POWER',
-      desc: '정수기 전용 파워 서플라이 보드',
-      img: '/images/products/water-purifier-power.jpg',
-      specs: [
-        { label: '타입', value: '전용 파워보드' },
-        { label: '출력', value: 'DC (다중 출력)' },
-        { label: '특징', value: '안정적 전력 공급' },
-        { label: '용도', value: '정수기 전원부' },
-      ],
-    },
-    {
-      title: '연료전지 PBU',
-      desc: '연료전지 Power Board Unit 제어 기판',
-      img: '/images/products/fuel-cell-pbu.jpg',
-      specs: [
-        { label: '타입', value: 'Power Board Unit' },
-        { label: '용도', value: '연료전지 전력 제어' },
-        { label: '특징', value: '고효율 전력 변환' },
-        { label: '산업', value: '신재생에너지' },
-      ],
-    },
+  const apps = [
+    { num: '1', title: '냉방/냉동', desc: '냉동 저장실, 냉장 운송, 초저온 처리 시스템의 온도 유지에 사용되는 고신뢰성 솔루션입니다.' },
+    { num: '2', title: '산업용 장비', desc: '금속 가공, 열처리, 반도체 제조 등 고정밀 온도 제어가 필요한 산업 공정에 적용됩니다.' },
+    { num: '3', title: '식품 가공', desc: '식품 건조, 가열 살균, 냉각 공정에서 엄격한 온도 관리를 통해 제품 품질을 보증합니다.' },
+    { num: '4', title: '농업 시설', desc: '온실, 육묘장, 축사 등에서 최적의 생육 환경 유지를 위한 환경 제어 시스템에 통합됩니다.' }
   ];
 
   return (
     <div className="bg-black min-h-screen text-white selection:bg-white/30 selection:text-white">
       <Navbar />
-
+      
       <main className="pt-32 pb-20">
-        {/* Hero */}
+        {/* Hero Section */}
         <section className="relative flex flex-col items-center justify-center text-center px-6 mb-32">
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }} className="inline-block mb-6 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-sm font-medium text-gray-300">
-            Power &amp; Peripherals
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="inline-block mb-6 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-sm font-medium text-gray-300"
+          >
+            Peripherals &amp; Custom
           </motion.div>
-          <motion.h1 className="text-5xl md:text-7xl font-bold mb-8 tracking-tighter" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}>
-            안정적인 전원.<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-600">SMPS &amp; 파워보드.</span>
+          <motion.h1
+            className="text-5xl md:text-7xl font-bold mb-8 tracking-tighter"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          >
+            한계를 넘어서는<br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-600">
+              주변기기 및 커스텀.
+            </span>
           </motion.h1>
-          <motion.p className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto font-light tracking-tight" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}>
-            SMPS, 파워보드, 연료전지 PBU 등<br className="hidden md:block" />
-            전력 변환 및 공급 솔루션.
+          <motion.p 
+            className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto font-light tracking-tight"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          >
+            정밀 온도 제어부터 특수 산업 장비까지,<br className="hidden md:block" />
+            태승전자의 혁신적인 기술력을 경험하세요.
           </motion.p>
         </section>
 
-        {/* Products */}
+        {/* Content Section */}
         <section className="max-w-7xl mx-auto px-6 mb-32">
           <ProductNav />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.map((p, i) => (
-              <motion.div
-                key={p.title}
-                className="group bg-[#0a0a0a] border border-white/5 rounded-[2rem] overflow-hidden cursor-pointer hover:bg-[#111] transition-colors duration-500"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.8, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                onClick={() => setSelected(p)}
-              >
-                <div className="aspect-square bg-[#111] flex items-center justify-center p-6 relative overflow-hidden">
-                  <img src={p.img} alt={p.title} className="max-w-full max-h-full object-contain transition-transform duration-700 group-hover:scale-110" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent opacity-60" />
-                </div>
-                <div className="p-6">
-                  <h3 className="text-lg font-bold tracking-tight mb-1">{p.title}</h3>
-                  <p className="text-gray-500 text-xs font-light leading-relaxed">{p.desc}</p>
-                  <span className="mt-3 inline-flex items-center text-[11px] text-gray-600 group-hover:text-white transition-colors">
-                    사양 보기
-                    <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  </span>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-      </main>
-
-      <Footer />
-
-      <AnimatePresence>
-        {selected && (
-          <motion.div className="fixed inset-0 z-50 flex items-center justify-center p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setSelected(null)} />
-            <motion.div className="relative w-full max-w-lg max-h-[85vh] overflow-y-auto bg-[#111] border border-white/10 rounded-[2rem] p-8" initial={{ opacity: 0, scale: 0.9, y: 30 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 30 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}>
-              <button onClick={() => setSelected(null)} className="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
-              </button>
-              <div className="h-48 bg-[#0a0a0a] rounded-2xl flex items-center justify-center mb-6 border border-white/5">
-                <img src={selected.img} alt={selected.title} className="max-w-full max-h-full object-contain p-4" />
-              </div>
-              <h2 className="text-2xl font-bold mb-2 tracking-tight">{selected.title}</h2>
-              <p className="text-gray-400 text-sm mb-6 font-light">{selected.desc}</p>
-              <div className="bg-black/50 border border-white/5 rounded-2xl p-5">
-                <h3 className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-4">주요 사양</h3>
-                <div className="space-y-3">
-                  {selected.specs.map((s, i) => (
-                    <div key={i} className="flex justify-between text-sm border-b border-white/5 pb-3 last:border-0 last:pb-0">
-                      <span className="text-gray-500">{s.label}</span>
-                      <span className="text-white font-medium text-right">{s.value}</span>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-32">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              className="relative rounded-[2rem] bg-[#0a0a0a] border border-white/5 p-8 flex items-center justify-center aspect-square overflow-hidden group"
+            >
+              <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.05] to-transparent rounded-[2rem]" />
+              <img 
+                src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?auto=format&fit=crop&w=800&q=80" 
+                alt="Electro Steel Controller" 
+                className="w-full h-full object-cover rounded-[1.5rem] relative z-10 transition-transform duration-1000 group-hover:scale-105 opacity-80"
+              />
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <h2 className="text-3xl md:text-4xl font-bold mb-6 tracking-tight">정밀 온도 제어.</h2>
+              <p className="text-gray-400 text-lg leading-relaxed mb-12 font-light">
+                Electro Steel 컨트롤러는 산업용 가열 및 냉각 시스템의 정밀한 온도 제어를 담당합니다. 고급 센서 기술과 알고리즘을 통해 안정적인 온도 유지를 보장합니다.
+              </p>
+              
+              <div className="bg-[#0a0a0a] border border-white/5 rounded-[1.5rem] overflow-hidden">
+                <div className="divide-y divide-white/5">
+                  {specs.map((spec, i) => (
+                    <div key={i} className="flex justify-between p-5 hover:bg-white/5 transition-colors">
+                      <strong className="text-white font-medium tracking-tight">{spec.label}</strong>
+                      <span className="text-gray-400 font-light">{spec.value}</span>
                     </div>
                   ))}
                 </div>
               </div>
             </motion.div>
+          </div>
+
+          {/* Applications Grid */}
+          <motion.div 
+            className="bg-[#0a0a0a] border border-white/5 rounded-[2rem] p-10 md:p-16"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold mb-4">다양한 산업 적용 사례</h2>
+              <p className="text-gray-400 font-light">다양한 분야에서 활용되는 태승전자의 기술력을 확인하세요.</p>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {apps.map((app, i) => (
+                <motion.div 
+                  key={i}
+                  className="bg-[#111] border border-white/10 rounded-2xl p-8 hover:border-red-500/50 transition-colors duration-500"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                >
+                  <div className="w-12 h-12 rounded-full bg-red-600 flex items-center justify-center text-white font-bold text-xl mb-6 font-orbitron">
+                    {app.num}
+                  </div>
+                  <h3 className="text-xl font-bold mb-4">{app.title}</h3>
+                  <p className="text-gray-400 text-sm leading-relaxed">{app.desc}</p>
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
-        )}
-      </AnimatePresence>
+        </section>
+      </main>
+
+      <Footer />
     </div>
   );
 }
