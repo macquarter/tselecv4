@@ -1,15 +1,17 @@
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 
 export default function ProductNav() {
   const location = useLocation();
-  
+  const { t } = useTranslation();
+
   const links = [
-    { name: '전체보기', path: '/products' },
-    { name: '임베디드 컨트롤러', path: '/main-controller' },
-    { name: 'HMI 솔루션', path: '/display' },
-    { name: '주변기기 및 커스텀', path: '/others' },
-    { name: '제조공정', path: '/process' },
+    { key: 'productsAll', path: '/products' },
+    { key: 'embedded', path: '/main-controller' },
+    { key: 'hmi', path: '/display' },
+    { key: 'custom', path: '/others' },
+    { key: 'process', path: '/process' },
   ];
 
   return (
@@ -32,7 +34,7 @@ export default function ProductNav() {
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 />
               )}
-              <span className="relative z-10">{link.name}</span>
+              <span className="relative z-10">{t(`nav.${link.key}`)}</span>
             </Link>
           );
         })}
