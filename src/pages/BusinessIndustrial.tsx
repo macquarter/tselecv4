@@ -15,11 +15,13 @@ interface Feature {
   };
 }
 
+const STOCK = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=80`;
+
 const features: Feature[] = [
   {
     title: '산업용 식기세척기',
     desc: '고온 세척·헹굼·건조 전 공정을 자동 제어하는 산업용 솔루션',
-    image: '/images/products/dishwasher.jpg',
+    image: STOCK('photo-1581244277943-fe4a9c777189'),
     details: {
       overview:
         '대형 업소용 식기세척기의 세척·헹굼·건조·배수 전 공정을 자동 제어하는 메인보드입니다. 워터 레벨 센서, 온도 센서, 도어 스위치 등 다양한 센서 입력을 처리하고, 고온(80°C 이상) 헹굼 사이클 제어로 위생 기준을 충족합니다.',
@@ -35,7 +37,7 @@ const features: Feature[] = [
   {
     title: '산업용 온도제어기',
     desc: '정밀 PID 제어 알고리즘 기반의 산업 현장 온도 관리 시스템',
-    image: '/images/products/temp-controller.jpg',
+    image: STOCK('photo-1581092334651-ddf26d9a09d0'),
     details: {
       overview:
         '자동 튜닝 PID 알고리즘을 탑재한 산업용 온도 제어기 전용 보드입니다. 열전대(K, J, T 타입) 및 RTD(Pt100) 센서를 직접 입력받아 ±0.1°C 정밀도의 온도 제어를 수행합니다. 다단계 프로파일 제어로 복잡한 열처리 공정도 자동화할 수 있습니다.',
@@ -51,7 +53,7 @@ const features: Feature[] = [
   {
     title: '펌프 제어보드',
     desc: '수위 감지부터 인버터 모터 구동까지 통합하는 펌프 제어 솔루션',
-    image: '/images/products/pump.jpg',
+    image: STOCK('photo-1581092160562-40aa08e78837'),
     details: {
       overview:
         '산업용·건물용 펌프 시스템의 수위 감지, 압력 제어, 인버터 모터 구동을 통합 관리하는 제어보드입니다. 다중 펌프 교대 운전 알고리즘과 이상 진동 감지 기능으로 설비 수명을 연장하고 에너지 효율을 극대화합니다.',
@@ -67,7 +69,7 @@ const features: Feature[] = [
   {
     title: '회의부스 1인부스',
     desc: '조명·환기·전원을 스마트하게 제어하는 1인 프라이빗 부스 솔루션',
-    image: '/images/products/booth-single.jpg',
+    image: STOCK('photo-1497366216548-37526070297c'),
     details: {
       overview:
         '1인 집중 업무 공간인 프라이빗 부스의 LED 조명, 환기 팬, 전원 콘센트, 재실 감지를 하나의 제어보드로 통합 관리합니다. PIR 센서로 자동 ON/OFF 하여 에너지를 절약하고, 조도·환기량 자동 조절로 쾌적한 업무 환경을 제공합니다.',
@@ -83,7 +85,7 @@ const features: Feature[] = [
   {
     title: '회의부스 회의룸',
     desc: '다인 회의 공간의 조명·AV·공조를 통합 제어하는 스마트 솔루션',
-    image: '/images/products/booth-meeting.jpg',
+    image: STOCK('photo-1497366811353-6870744d04b2'),
     details: {
       overview:
         '4~8인 회의 부스의 LED 조명, 환기 시스템, AV 장비 전원, 예약 디스플레이를 통합 제어하는 보드입니다. CO2 센서 연동 자동 환기와 회의 예약 시스템 연동으로 스마트 오피스 환경을 구현합니다.',
@@ -105,7 +107,6 @@ export default function BusinessIndustrial() {
     <div className="min-h-screen bg-black text-white">
       <Navbar />
 
-      {/* Hero */}
       <section className="relative pt-40 pb-24 px-6">
         <div className="max-w-7xl mx-auto text-center">
           <motion.div
@@ -136,7 +137,6 @@ export default function BusinessIndustrial() {
 
       <BusinessNav />
 
-      {/* Features Grid */}
       <section className="py-24 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -153,7 +153,8 @@ export default function BusinessIndustrial() {
                 <img
                   src={feature.image}
                   alt={feature.title}
-                  className="absolute inset-0 w-full h-full object-cover opacity-40 transition-transform duration-1000 group-hover:scale-105"
+                  className="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-1000 group-hover:scale-105"
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                 <div className="relative z-10 flex flex-col justify-end h-full p-8">
@@ -161,18 +162,8 @@ export default function BusinessIndustrial() {
                   <p className="text-gray-400 text-sm font-light leading-relaxed">{feature.desc}</p>
                   <span className="mt-4 inline-flex items-center text-xs text-gray-500 group-hover:text-white transition-colors">
                     자세히 보기
-                    <svg
-                      className="ml-1 w-3.5 h-3.5"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        d="M5 12h14M12 5l7 7-7 7"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
+                    <svg className="ml-1 w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </span>
                 </div>
@@ -182,7 +173,6 @@ export default function BusinessIndustrial() {
         </div>
       </section>
 
-      {/* Modal */}
       <AnimatePresence>
         {selectedFeature && (
           <motion.div
@@ -210,30 +200,10 @@ export default function BusinessIndustrial() {
                 </svg>
               </button>
 
-              <motion.h2
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.05 }}
-                className="text-2xl font-bold tracking-tight mb-4"
-              >
-                {selectedFeature.title}
-              </motion.h2>
+              <h2 className="text-2xl font-bold tracking-tight mb-4">{selectedFeature.title}</h2>
+              <p className="text-gray-400 text-sm font-light leading-relaxed mb-8">{selectedFeature.details.overview}</p>
 
-              <motion.p
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.08 }}
-                className="text-gray-400 text-sm font-light leading-relaxed mb-8"
-              >
-                {selectedFeature.details.overview}
-              </motion.p>
-
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.12 }}
-                className="mb-8"
-              >
+              <div className="mb-8">
                 <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">주요 사양</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {selectedFeature.details.specs.map((spec, i) => (
@@ -243,25 +213,18 @@ export default function BusinessIndustrial() {
                     </div>
                   ))}
                 </div>
-              </motion.div>
+              </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.16 }}
-              >
+              <div>
                 <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">적용 분야</h3>
                 <div className="flex flex-wrap gap-2">
                   {selectedFeature.details.applications.map((app, i) => (
-                    <span
-                      key={i}
-                      className="px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs text-gray-300"
-                    >
+                    <span key={i} className="px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs text-gray-300">
                       {app}
                     </span>
                   ))}
                 </div>
-              </motion.div>
+              </div>
             </motion.div>
           </motion.div>
         )}
