@@ -11,7 +11,7 @@ interface Message {
 }
 
 /* ─────────────────────────────────────────────
-   태승전자 CS 챗봇 v2 — 문맥 인식 · 상담 태도
+   태승전자 CS 챗봇 v3 — 문맥 인식 · 상담 태도 · 구조화 문의
    ───────────────────────────────────────────── */
 
 // ── 지식 베이스 (카테고리별) ──
@@ -19,7 +19,7 @@ interface KBEntry {
   id: string;
   keywords: string[];
   answer: string;
-  followUp?: string;        // 답변 후 이어갈 멘트
+  followUp?: string;
   category: string;
 }
 
@@ -142,7 +142,121 @@ const KB: KBEntry[] = [
     keywords: ['협력', '파트너', '거래', '납품', '공급', '제휴'],
     answer: '태승전자는 신규 거래처와의 협력을 환영합니다!\n\n30년 이상의 제조 노하우와 안정적인 스마트팩토리 생산 체계를 갖추고 있습니다.',
     followUp: '거래 관련 상담을 원하시면 연락처를 남겨주시거나 032-329-7600 영업팀으로 문의해 주세요!' },
+  // ── 신규개발 ──
+  { id: 'dev-full', category: '신규개발',
+    keywords: ['회로설계', '회로 설계', 'PCB 아트웍', '아트웍', '설계부터', '전부 진행', '턴키'],
+    answer: '네, 가능합니다! 기능 사양서(스펙 문서)를 제공해 주시면 회로 설계부터 PCB 아트웍까지 전 과정을 진행해 드립니다.\n\n태승전자는 설계→PCB제작→펌웨어개발→양산까지 턴키 솔루션을 제공합니다.' },
+  { id: 'dev-reference', category: '신규개발',
+    keywords: ['레퍼런스', '경험', '실적', '해본', '설계 경험', '납품 실적'],
+    answer: '가전용 MCU 제어, 산업용 모터 드라이버, 고전압/대전류 신재생 인버터 보드 등 다양한 분야의 설계 레퍼런스를 보유하고 있습니다.\n\n36년간 축적된 설계 노하우로 다양한 산업 분야의 제어보드를 개발해 왔습니다.',
+    followUp: '관심 분야를 말씀해 주시면 관련 레퍼런스를 안내드리겠습니다.' },
+  { id: 'dev-firmware', category: '신규개발',
+    keywords: ['펌웨어', 'firmware', 'SW 개발', '소프트웨어', '구동 소프트', '임베디드'],
+    answer: '네, HW 설계 외에 펌웨어(Firmware) 및 구동 소프트웨어 개발도 함께 진행 가능합니다.\n\n하드웨어와 소프트웨어를 동시에 개발하여 최적화된 솔루션을 제공합니다.' },
+  { id: 'dev-nre', category: '신규개발',
+    keywords: ['NRE', '착수금', '설계비', '아트웍 비용', '개발비', '개발 비용'],
+    answer: '개발 착수금(NRE 비용), 회로 설계비, 아트웍 비용은 프로젝트 규모와 복잡도에 따라 달라집니다.\n\n구체적인 요구사항을 말씀해 주시면 견적을 안내드리겠습니다.',
+    followUp: '연락처를 남겨주시면 영업팀에서 상세 견적을 안내드리겠습니다!' },
+  { id: 'dev-timeline', category: '신규개발',
+    keywords: ['개발 기간', '얼마나 걸', '소요 기간', '일정', '기간', '샘플 기간', '목업'],
+    answer: '개발 시작부터 첫 동작 샘플(Working Mock-up)까지의 기간은 프로젝트 복잡도에 따라 달라집니다.\n\n구체적인 일정은 요구사양 검토 후 연구소에서 안내드립니다.',
+    followUp: '프로젝트 개요를 알려주시면 예상 일정을 확인해 드리겠습니다.' },
+  { id: 'dev-revision', category: '신규개발',
+    keywords: ['수정', '리웍', '재설계', '수정 비용', '리비전'],
+    answer: '첫 샘플 테스트에서 수정 사항 발생 시 회로 수정(리웍) 및 재설계 비용은 수정 범위에 따라 달라집니다.\n\n구체적인 비용은 연구소 검토 후 안내드립니다.' },
+  { id: 'dev-ip', category: '신규개발',
+    keywords: ['소유권', 'IP', '지적재산', '소스코드', '거버파일', '이관', '양도'],
+    answer: '개발한 회로도(Schematic), 거버 파일, 소스 코드의 IP 소유권은 태승전자에 귀속됩니다.\n\n단, 양산 계약 조건에 따라 별도 협의가 가능합니다.',
+    followUp: '자세한 계약 조건은 영업팀과 상담해 주세요.' },
+  { id: 'dev-cert', category: '신규개발',
+    keywords: ['인증 대행', 'KC 인증', 'UL 인증', 'CE 인증', 'EMC', '인증 지원'],
+    answer: '국가 인증(KC, UL, CE 등) 대행은 불가하나, EMC 디버깅 등 기술 지원은 가능합니다.\n\n인증 시험 과정에서 발생하는 기술적 이슈에 대해 적극 지원해 드립니다.',
+    followUp: '인증 관련 기술 지원이 필요하시면 연락처를 남겨주세요.' },
+  { id: 'dev-cost-offset', category: '신규개발',
+    keywords: ['개발비 보전', '개발비 차감', '단가 차감', '양산 단가', '비용 보전'],
+    answer: '개발 완료 후 양산 진행 시 개발 비용 보전(할인) 또는 양산 단가에서 차감하는 조건은 협의 가능합니다.\n\n구체적인 조건은 양산 수량과 계약 기간에 따라 달라집니다.',
+    followUp: '자세한 조건은 영업팀과 협의해 주세요.' },
+  // ── 이원화/양산이관 ──
+  { id: 'transfer-capa', category: '양산이관',
+    keywords: ['생산능력', 'capa', '생산 능력', '최대 생산', '생산량'],
+    answer: '월간 최대 생산 능력은 50만대 이상입니다.\n\n3개 SMT 라인과 스마트팩토리 시스템으로 안정적인 대량 생산이 가능합니다.' },
+  { id: 'transfer-leadtime', category: '양산이관',
+    keywords: ['거버', 'gerber', 'BOM', '접수', '리드타임', '양산 리드타임', 'proto'],
+    answer: '거버 파일(Gerber)과 BOM 접수 후 첫 샘플(Proto) 제작 및 양산까지의 리드타임은 제품 복잡도에 따라 달라집니다.\n\n구체적인 일정은 자료 검토 후 안내드립니다.',
+    followUp: '거버 파일과 BOM을 보내주시면 정확한 일정을 확인해 드리겠습니다.' },
+  { id: 'transfer-moq', category: '양산이관',
+    keywords: ['MOQ', '최소주문', '최소 주문', '최소수량'],
+    answer: 'MOQ(최소주문수량)는 제품 종류와 사양에 따라 협의 가능합니다.\n\n양산 이관 제품의 경우 기존 생산 이력을 참고하여 유연하게 대응해 드립니다.',
+    followUp: '제품 정보와 함께 연락처를 남겨주시면 영업팀에서 안내드리겠습니다.' },
+  { id: 'transfer-payment', category: '양산이관',
+    keywords: ['결제 조건', '결제조건', '지불 조건', '결제', '대금'],
+    answer: '결제 조건은 거래 규모와 계약 형태에 따라 협의 가능합니다.\n\n일반적인 조건은 영업팀에서 상세히 안내드립니다.',
+    followUp: '연락처를 남겨주시면 영업팀에서 결제 조건을 안내드리겠습니다.' },
+  { id: 'transfer-quote', category: '양산이관',
+    keywords: ['단가표', '견적서', '단가 표', '견적', '프라이스리스트'],
+    answer: '단가표 및 견적서는 제품 사양과 수량에 따라 개별 견적으로 제공됩니다.\n\n제품 정보와 예상 수량을 알려주시면 빠르게 견적을 준비해 드리겠습니다.',
+    followUp: '연락처와 함께 제품 정보를 남겨주시면 견적서를 보내드리겠습니다.' },
+  { id: 'transfer-no-gerber', category: '양산이관',
+    keywords: ['거버 없이', '샘플만', '샘플 PCB만', 'BOM 없이', '파일 없이'],
+    answer: '거버 파일과 BOM 없이 샘플 PCB만으로는 동일 제작이 불가합니다.\n\n다만, 동작 사양서가 있으시면 신규 개발로 진행이 가능합니다.',
+    followUp: '보유하고 계신 자료를 알려주시면 최적의 진행 방법을 안내드리겠습니다.' },
 ];
+
+// ── 구조화 문의 폼 ──
+type InquiryCategory = '제품개발의뢰' | '제조양산견적' | '기존거래처기술지원' | '기타비즈니스제휴' | '';
+type InquiryStep = 'idle' | 'selectCategory' | 'purpose' | 'features' | 'quantity' | 'targetPrice' | 'deadline' | 'hasGerber' | 'description' | 'contact' | 'name' | 'done';
+
+interface InquiryFormData {
+  category: InquiryCategory;
+  purpose: string;
+  features: string;
+  quantity: string;
+  targetPrice: string;
+  deadline: string;
+  hasGerber: boolean;
+  description: string;
+  contact: string;
+  name: string;
+}
+
+const defaultInquiry: InquiryFormData = {
+  category: '', purpose: '', features: '', quantity: '',
+  targetPrice: '', deadline: '', hasGerber: false,
+  description: '', contact: '', name: '',
+};
+
+const INQUIRY_CATEGORIES = [
+  { key: '제품개발의뢰' as InquiryCategory, label: '① 제품 개발 의뢰' },
+  { key: '제조양산견적' as InquiryCategory, label: '② 제조 및 양산 견적' },
+  { key: '기존거래처기술지원' as InquiryCategory, label: '③ 기존 거래처 기술 지원' },
+  { key: '기타비즈니스제휴' as InquiryCategory, label: '④ 기타 비즈니스 제휴' },
+];
+
+function getNextInquiryStep(cat: InquiryCategory, current: InquiryStep): { next: InquiryStep; prompt: string } {
+  const isDetailed = cat === '제품개발의뢰' || cat === '제조양산견적';
+  if (isDetailed) {
+    switch (current) {
+      case 'selectCategory': return { next: 'purpose', prompt: '제품의 용도를 알려주세요.\n(예: 태양광 인버터 제어보드, 공기청정기 메인PCB 등)' };
+      case 'purpose': return { next: 'features', prompt: '핵심 요구 기능을 알려주세요.\n(예: 와이파이 통신 필요, 모터 2대 제어 등)' };
+      case 'features': return { next: 'quantity', prompt: '목표 양산 수량은 어느 정도인가요?\n(예: 연간 10,000대)' };
+      case 'quantity': return { next: 'targetPrice', prompt: '목표 양산 단가가 있으시면 알려주세요.\n(예: 대당 15,000원 이하 / 미정이면 "미정"이라고 입력해 주세요)' };
+      case 'targetPrice': return { next: 'deadline', prompt: '희망 개발 완료 일정을 알려주세요.\n(예: 2026년 3월까지 / 가능한 빠르게)' };
+      case 'deadline':
+        if (cat === '제조양산견적') return { next: 'hasGerber', prompt: '거버(Gerber) 파일과 BOM 첨부가 가능하신가요?\n("네" 또는 "아니오"로 답변해 주세요)' };
+        return { next: 'contact', prompt: '연락 가능한 전화번호나 이메일을 알려주세요.\n(예: 010-1234-5678 또는 example@email.com)' };
+      case 'hasGerber': return { next: 'contact', prompt: '연락 가능한 전화번호나 이메일을 알려주세요.\n(예: 010-1234-5678 또는 example@email.com)' };
+      case 'contact': return { next: 'name', prompt: '마지막으로, 성함 또는 회사명을 알려주세요.' };
+      default: return { next: 'done', prompt: '' };
+    }
+  } else {
+    switch (current) {
+      case 'selectCategory': return { next: 'description', prompt: cat === '기존거래처기술지원' ? '어떤 기술 지원이 필요하신지 간단히 설명해 주세요.\n(제품명, 증상 등)' : '어떤 내용으로 제휴를 원하시는지 간단히 설명해 주세요.' };
+      case 'description': return { next: 'contact', prompt: '연락 가능한 전화번호나 이메일을 알려주세요.\n(예: 010-1234-5678 또는 example@email.com)' };
+      case 'contact': return { next: 'name', prompt: '마지막으로, 성함 또는 회사명을 알려주세요.' };
+      default: return { next: 'done', prompt: '' };
+    }
+  }
+}
 
 // ── Firestore 문의 저장 ──
 async function saveInquiryToFirestore(data: {
@@ -152,6 +266,7 @@ async function saveInquiryToFirestore(data: {
   category: string;
   conversation: { role: string; text: string }[];
   userName: string;
+  formData?: InquiryFormData;
 }) {
   try {
     await addDoc(collection(db, 'chatInquiries'), {
@@ -159,7 +274,7 @@ async function saveInquiryToFirestore(data: {
       status: 'new',
       createdAt: serverTimestamp(),
     });
-    console.log('✅ 챗봇 문의 Firestore 저장 완료');
+    console.log('챗봇 문의 Firestore 저장 완료');
   } catch (e) {
     console.warn('챗봇 문의 저장 실패:', e);
   }
@@ -167,14 +282,14 @@ async function saveInquiryToFirestore(data: {
 
 // ── 상담 문맥 ──
 interface ConversationContext {
-  lastTopic: string;          // 마지막 대화 주제 (KB entry id)
-  lastCategory: string;       // 마지막 카테고리
-  awaitingContact: boolean;   // 연락처 대기 중
-  inquiryTopic: string;       // 문의 주제
-  userName: string;            // 이름 (파악 시)
-  contactGiven: boolean;       // 연락처 제공 완료
-  lastBotResponse: string;     // 마지막 봇 응답 (중복 방지)
-  turnCount: number;           // 대화 횟수
+  lastTopic: string;
+  lastCategory: string;
+  awaitingContact: boolean;
+  inquiryTopic: string;
+  userName: string;
+  contactGiven: boolean;
+  lastBotResponse: string;
+  turnCount: number;
 }
 
 const defaultCtx: ConversationContext = {
@@ -232,7 +347,6 @@ function generateResponse(input: string, ctx: ConversationContext): ResponseResu
 
   // 4) 너무 짧은 입력 처리 (1~2자)
   if (q.replace(/\s/g, '').length <= SHORT_INPUT_THRESHOLD) {
-    // 한 글자 "요", "네", "의" 등
     if (/^[네예응요]$/i.test(q.trim())) {
       if (ctx.awaitingContact) {
         return { text: '네! 연락 가능한 전화번호나 이메일을 남겨주시면 담당자가 연락드리겠습니다.', newCtx };
@@ -242,7 +356,6 @@ function generateResponse(input: string, ctx: ConversationContext): ResponseResu
       }
       return { text: '네! 무엇을 도와드릴까요? 제품, 견적, 기술 상담 등 편하게 말씀해 주세요.', newCtx };
     }
-    // 의미 불분명한 짧은 입력
     return {
       text: '죄송합니다, 조금 더 구체적으로 말씀해 주시겠어요?\n\n예를 들어:\n• "컨트롤러 제품 문의"\n• "견적 받고 싶어요"\n• "MOQ가 어떻게 되나요?"',
       newCtx
@@ -251,7 +364,6 @@ function generateResponse(input: string, ctx: ConversationContext): ResponseResu
 
   // 5) 문의하기 / 상담 요청 감지
   if (/문의|상담|알고\s?싶|궁금|질문/.test(qLower) && !/전화|번호/.test(qLower)) {
-    // 어떤 종류의 문의인지 파악 시도
     let topic = '';
     for (const entry of KB) {
       for (const kw of entry.keywords) {
@@ -280,7 +392,7 @@ function generateResponse(input: string, ctx: ConversationContext): ResponseResu
     };
   }
 
-  // 6) "연락주세요", "연락 부탁", "콜백" 등 → 연락처 요청
+  // 6) "연락주세요", "연락 부탁", "콜백" 등
   if (/연락\s?주|콜백|전화\s?주|전화\s?해|연결\s?해|상담\s?원|사람/.test(qLower)) {
     newCtx.awaitingContact = true;
     newCtx.inquiryTopic = ctx.lastCategory || '일반';
@@ -316,7 +428,7 @@ function generateResponse(input: string, ctx: ConversationContext): ResponseResu
     };
   }
 
-  // 10) 지식 베이스 매칭 (가중치 + 유사도)
+  // 10) 지식 베이스 매칭
   let bestScore = 0;
   let bestEntry: KBEntry | null = null;
 
@@ -324,11 +436,9 @@ function generateResponse(input: string, ctx: ConversationContext): ResponseResu
     let score = 0;
     for (const kw of entry.keywords) {
       if (qLower.includes(kw.toLowerCase())) {
-        // 긴 키워드일수록 높은 점수
         score += 1 + (kw.length > 3 ? 1 : 0);
       }
     }
-    // 이전 주제와 같은 카테고리면 보너스
     if (score > 0 && entry.category === ctx.lastCategory) {
       score += 0.5;
     }
@@ -343,7 +453,6 @@ function generateResponse(input: string, ctx: ConversationContext): ResponseResu
     newCtx.lastCategory = bestEntry.category;
 
     let text = bestEntry.answer;
-    // 중복 응답 방지 — 같은 답변이면 약간 다르게
     if (text === ctx.lastBotResponse && bestEntry.followUp) {
       text = bestEntry.followUp;
     } else if (bestEntry.followUp) {
@@ -354,9 +463,8 @@ function generateResponse(input: string, ctx: ConversationContext): ResponseResu
     return { text, newCtx };
   }
 
-  // 11) 연락처 대기 중인데 매칭 안 된 경우 → 연락처인지 재확인
+  // 11) 연락처 대기 중인데 매칭 안 된 경우
   if (ctx.awaitingContact) {
-    // 숫자가 포함되어 있으면 연락처 시도로 간주
     if (/\d{4,}/.test(q.replace(/[-.\s]/g, ''))) {
       newCtx.contactGiven = true;
       newCtx.awaitingContact = false;
@@ -373,7 +481,7 @@ function generateResponse(input: string, ctx: ConversationContext): ResponseResu
     };
   }
 
-  // 12) 최종 폴백 — 상냥하게, 구체적으로 안내
+  // 12) 최종 폴백
   const name = ctx.userName ? `${ctx.userName}님, ` : '';
   newCtx.awaitingContact = true;
   newCtx.inquiryTopic = '일반';
@@ -388,6 +496,20 @@ function getTime() {
   return new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
 }
 
+// ── 문의 요약 빌드 ──
+function buildInquirySummary(data: InquiryFormData): string {
+  const lines: string[] = [];
+  if (data.purpose) lines.push(`• 제품 용도: ${data.purpose}`);
+  if (data.features) lines.push(`• 핵심 요구기능: ${data.features}`);
+  if (data.quantity) lines.push(`• 목표 양산 수량: ${data.quantity}`);
+  if (data.targetPrice) lines.push(`• 목표 양산 단가: ${data.targetPrice}`);
+  if (data.deadline) lines.push(`• 희망 완료 일정: ${data.deadline}`);
+  if (data.category === '제조양산견적') lines.push(`• 거버/BOM 첨부: ${data.hasGerber ? '가능' : '불가'}`);
+  if (data.description) lines.push(`• 설명: ${data.description}`);
+  lines.push(`• 연락처: ${data.contact}`);
+  return lines.join('\n');
+}
+
 // ── 컴포넌트 ──
 export default function ChatBot() {
   const [open, setOpen] = useState(false);
@@ -396,15 +518,115 @@ export default function ChatBot() {
   ]);
   const [input, setInput] = useState('');
   const [ctx, setCtx] = useState<ConversationContext>({ ...defaultCtx });
+  const [inquiryStep, setInquiryStep] = useState<InquiryStep>('idle');
+  const [inquiryData, setInquiryData] = useState<InquiryFormData>({ ...defaultInquiry });
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  const addBotMessage = useCallback((text: string) => {
+    setMessages(prev => [...prev, { role: 'bot', text, time: getTime() }]);
+  }, []);
+
+  const addUserMessage = useCallback((text: string) => {
+    setMessages(prev => [...prev, { role: 'user', text, time: getTime() }]);
+  }, []);
+
+  // 구조화 문의 카테고리 선택
+  const handleInquiryCategorySelect = useCallback((cat: InquiryCategory) => {
+    const label = INQUIRY_CATEGORIES.find(c => c.key === cat)?.label || cat;
+    addUserMessage(label);
+    const updated = { ...defaultInquiry, category: cat };
+    setInquiryData(updated);
+
+    setTimeout(() => {
+      const { next, prompt } = getNextInquiryStep(cat, 'selectCategory');
+      setInquiryStep(next);
+      addBotMessage(prompt);
+    }, 300 + Math.random() * 300);
+  }, [addUserMessage, addBotMessage]);
+
+  // 문의하기 시작
+  const startInquiry = useCallback(() => {
+    setInquiryStep('selectCategory');
+    setInquiryData({ ...defaultInquiry });
+    addUserMessage('문의하기');
+    setTimeout(() => {
+      addBotMessage('어떤 종류의 문의인가요? 아래에서 선택해 주세요!');
+    }, 300);
+  }, [addUserMessage, addBotMessage]);
+
+  // 구조화 문의 응답 처리
+  const handleInquiryInput = useCallback((userInput: string) => {
+    const q = userInput.trim();
+    if (!q) return;
+
+    addUserMessage(q);
+    setInput('');
+
+    const updated = { ...inquiryData };
+
+    switch (inquiryStep) {
+      case 'purpose': updated.purpose = q; break;
+      case 'features': updated.features = q; break;
+      case 'quantity': updated.quantity = q; break;
+      case 'targetPrice': updated.targetPrice = q; break;
+      case 'deadline': updated.deadline = q; break;
+      case 'hasGerber':
+        updated.hasGerber = /네|예|응|가능|있/.test(q);
+        break;
+      case 'description': updated.description = q; break;
+      case 'contact': updated.contact = q; break;
+      case 'name': updated.name = q; break;
+      default: break;
+    }
+    setInquiryData(updated);
+
+    setTimeout(() => {
+      const { next, prompt } = getNextInquiryStep(updated.category, inquiryStep);
+
+      if (next === 'done') {
+        setInquiryStep('done');
+        const catLabel = INQUIRY_CATEGORIES.find(c => c.key === updated.category)?.label || updated.category;
+        const summary = buildInquirySummary(updated);
+        addBotMessage(`감사합니다, ${updated.name}님! 문의가 접수되었습니다.\n\n📋 문의 유형: ${catLabel}\n${summary}\n\n담당자가 영업시간(평일 09:00~18:00) 내에 연락드리겠습니다.\n\n다른 궁금하신 점이 있으시면 편하게 말씀해 주세요!`);
+
+        // Firestore 저장
+        const contactType = EMAIL_REGEX.test(updated.contact) ? 'email' as const : 'phone' as const;
+        const convo = messages.map(m => ({ role: m.role, text: m.text }));
+        saveInquiryToFirestore({
+          contact: updated.contact,
+          contactType,
+          topic: updated.category,
+          category: updated.category,
+          conversation: convo,
+          userName: updated.name,
+          formData: updated,
+        });
+
+        // 상태 리셋
+        setTimeout(() => {
+          setInquiryStep('idle');
+          setInquiryData({ ...defaultInquiry });
+        }, 500);
+      } else {
+        setInquiryStep(next);
+        addBotMessage(prompt);
+      }
+    }, 300 + Math.random() * 300);
+  }, [inquiryStep, inquiryData, addUserMessage, addBotMessage, messages]);
+
   const handleSend = useCallback(() => {
     const q = input.trim();
     if (!q) return;
+
+    // 구조화 문의 진행 중이면 해당 핸들러로
+    if (inquiryStep !== 'idle' && inquiryStep !== 'selectCategory' && inquiryStep !== 'done') {
+      handleInquiryInput(q);
+      return;
+    }
 
     const userMsg: Message = { role: 'user', text: q, time: getTime() };
     const updatedMessages = [...messages, userMsg];
@@ -416,7 +638,6 @@ export default function ChatBot() {
       setCtx(newCtx);
       setMessages(prev => [...prev, { role: 'bot', text, time: getTime() }]);
 
-      // Firestore에 문의 저장
       if (saveInquiry) {
         const convo = updatedMessages.map(m => ({ role: m.role, text: m.text }));
         saveInquiryToFirestore({
@@ -426,7 +647,9 @@ export default function ChatBot() {
         });
       }
     }, 300 + Math.random() * 500);
-  }, [input, ctx, messages]);
+  }, [input, ctx, messages, inquiryStep, handleInquiryInput]);
+
+  const isInquiryActive = inquiryStep !== 'idle' && inquiryStep !== 'done';
 
   return (
     <>
@@ -502,28 +725,65 @@ export default function ChatBot() {
               <div ref={bottomRef} />
             </div>
 
-            {/* Quick Actions — 처음에만 + 연락처 대기 중일 때도 표시 */}
-            {messages.length <= 2 && (
+            {/* Quick Actions — 초기 + 문의 카테고리 선택 */}
+            {inquiryStep === 'selectCategory' ? (
+              <div className="px-4 pb-2 flex flex-col gap-1.5">
+                {INQUIRY_CATEGORIES.map(cat => (
+                  <button
+                    key={cat.key}
+                    onClick={() => handleInquiryCategorySelect(cat.key)}
+                    className="px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-[12px] text-gray-300 hover:text-white hover:bg-sky-500/15 hover:border-sky-500/30 transition-colors text-left"
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+            ) : messages.length <= 2 && !isInquiryActive ? (
               <div className="px-4 pb-2 flex flex-wrap gap-1.5">
-                {['제품 문의', '견적 요청', 'MOQ 확인', '맞춤 개발 상담'].map(q => (
+                {['제품 문의', '견적 요청', 'MOQ 확인', '문의하기'].map(q => (
                   <button
                     key={q}
-                    onClick={() => { setInput(q); }}
-                    className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[11px] text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+                    onClick={() => { q === '문의하기' ? startInquiry() : setInput(q); }}
+                    className={`px-3 py-1.5 rounded-full border text-[11px] transition-colors ${
+                      q === '문의하기'
+                        ? 'bg-sky-500/15 border-sky-500/30 text-sky-300 hover:text-white hover:bg-sky-500/25'
+                        : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:bg-white/10'
+                    }`}
                   >
                     {q}
                   </button>
                 ))}
               </div>
-            )}
+            ) : null}
 
             {/* 연락처 대기 중 안내 바 */}
-            {ctx.awaitingContact && !ctx.contactGiven && messages.length > 2 && (
+            {ctx.awaitingContact && !ctx.contactGiven && !isInquiryActive && messages.length > 2 && (
               <div className="px-4 pb-2">
                 <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-sky-500/10 border border-sky-500/20">
                   <Phone size={12} className="text-sky-400 shrink-0" />
                   <span className="text-[11px] text-sky-300">전화번호나 이메일을 입력하시면 문의 접수가 완료됩니다</span>
                 </div>
+              </div>
+            )}
+
+            {/* 구조화 문의 진행 안내 바 */}
+            {isInquiryActive && inquiryStep !== 'selectCategory' && (
+              <div className="px-4 pb-2">
+                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
+                  <span className="text-[11px] text-indigo-300">📋 문의 작성 중... 위 질문에 답변해 주세요</span>
+                </div>
+              </div>
+            )}
+
+            {/* 하단: 문의하기 버튼 (대화 진행 중, 비문의 상태일 때) */}
+            {!isInquiryActive && messages.length > 2 && !ctx.awaitingContact && (
+              <div className="px-4 pb-2 flex justify-end">
+                <button
+                  onClick={startInquiry}
+                  className="px-3 py-1.5 rounded-full bg-sky-500/15 border border-sky-500/30 text-[11px] text-sky-300 hover:text-white hover:bg-sky-500/25 transition-colors"
+                >
+                  📋 문의하기
+                </button>
               </div>
             )}
 
@@ -535,12 +795,18 @@ export default function ChatBot() {
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && handleSend()}
-                  placeholder={ctx.awaitingContact ? "전화번호 또는 이메일을 입력하세요..." : "메시지를 입력하세요..."}
-                  className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none focus:border-white/20 transition-colors"
+                  placeholder={
+                    inquiryStep === 'selectCategory' ? '위에서 문의 유형을 선택해 주세요...'
+                    : isInquiryActive ? '답변을 입력하세요...'
+                    : ctx.awaitingContact ? '전화번호 또는 이메일을 입력하세요...'
+                    : '메시지를 입력하세요...'
+                  }
+                  disabled={inquiryStep === 'selectCategory'}
+                  className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none focus:border-white/20 transition-colors disabled:opacity-40"
                 />
                 <button
                   onClick={handleSend}
-                  disabled={!input.trim()}
+                  disabled={!input.trim() || inquiryStep === 'selectCategory'}
                   className="w-10 h-10 rounded-xl bg-sky-500 hover:bg-sky-400 disabled:opacity-30 disabled:hover:bg-sky-500 flex items-center justify-center text-white transition-colors shrink-0"
                 >
                   <Send size={16} />
