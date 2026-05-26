@@ -15,110 +15,115 @@ interface Feature {
   };
 }
 
+const features: Feature[] = [
+  {
+    title: '태양광 패널 제어',
+    desc: '태양광 발전 시스템의 MPPT 제어와 모니터링을 위한 솔루션',
+    image: '/images/products/solar-panel.jpg',
+    details: {
+      overview:
+        '태양광 패널에서 생산되는 DC 전력을 최적으로 관리하는 제어보드입니다. MPPT(최대전력점추적) 알고리즘으로 기상 조건 변화에 따른 최적 발전량을 확보하며, 계통 연계 보호 기능과 발전량 모니터링 기능을 내장하고 있습니다.',
+      specs: [
+        { label: '변환 효율', value: '최대 98.5%' },
+        { label: 'MPPT 트래커', value: '최대 4채널 독립' },
+        { label: '출력 범위', value: '3kW ~ 100kW' },
+        { label: '계통 연계', value: 'IEEE 1547 / KC 적합' },
+      ],
+      applications: ['주택용 태양광', '상업용 태양광', '대규모 발전소', '건물 일체형(BIPV)'],
+    },
+  },
+  {
+    title: '수소 시스템 제어',
+    desc: '수소 연료전지·전해조의 핵심 제어와 안전 관리 솔루션',
+    image: '/images/products/hydrogen.jpg',
+    details: {
+      overview:
+        '수소 연료전지 스택의 출력 제어와 수전해 시스템의 운전 관리를 위한 보드입니다. 수소 누출 감지, 압력·온도 제어, 스택 전압 모니터링 등 다중 안전 기능을 내장하여 수소 에너지 시스템의 안전하고 효율적인 운영을 지원합니다.',
+      specs: [
+        { label: '스택 모니터링', value: '셀 전압 개별 측정' },
+        { label: '안전 감지', value: '수소 누출·압력·온도' },
+        { label: '제어 출력', value: '밸브·펌프·블로워' },
+        { label: '통신', value: 'CAN, RS-485, Ethernet' },
+      ],
+      applications: ['수소 연료전지 발전', '수소 드론', '수소 지게차', '수전해 시스템'],
+    },
+  },
+  {
+    title: '리튬이온 충전기 제어',
+    desc: '리튬이온 배터리의 안전한 충방전 관리를 위한 BMS 솔루션',
+    image: '/images/products/lithium-charger.jpg',
+    details: {
+      overview:
+        '리튬이온 배터리 팩의 CC/CV 충전 제어, 셀 밸런싱, SOC/SOH 추정, 과충전·과방전 보호를 통합 수행하는 BMS 보드입니다. 다양한 배터리 용량과 전압에 대응하는 유연한 설계로 전기이동수단, ESS 등 폭넓은 분야에 적용됩니다.',
+      specs: [
+        { label: '셀 모니터링', value: '최대 16S' },
+        { label: 'SOC 정확도', value: '±2%' },
+        { label: '보호 기능', value: '과충전·과방전·과전류·과열' },
+        { label: '밸런싱', value: '패시브 밸런싱' },
+      ],
+      applications: ['전동 킥보드', '전기자전거', '소형 ESS', '산업용 배터리 팩'],
+    },
+  },
+  {
+    title: '연료전지 제어',
+    desc: '연료전지 발전 시스템의 스택 운전과 BoP를 통합 관리하는 솔루션',
+    image:
+      'https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?auto=format&fit=crop&w=800&q=80',
+    details: {
+      overview:
+        'PEMFC/SOFC 연료전지 스택의 출력 제어와 Balance of Plant(BoP) 장비를 통합 관리하는 제어보드입니다. 공기·연료 유량 조절, 가습기 제어, 열관리 등을 자동화하며, 부하 변동에 대한 빠른 응답 제어를 지원합니다.',
+      specs: [
+        { label: '출력 범위', value: '1kW ~ 100kW' },
+        { label: 'BoP 제어', value: '블로워, 밸브, 펌프, 가습기' },
+        { label: '응답 속도', value: '< 500ms (부하 변동)' },
+        { label: '효율', value: '시스템 효율 40% 이상' },
+      ],
+      applications: ['가정용 연료전지', '건물용 연료전지', '이동형 발전기', '선박용 발전'],
+    },
+  },
+];
+
 export default function BusinessRenewable() {
   const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
 
-  const features: Feature[] = [
-    {
-      title: '태양광 인버터',
-      desc: 'DC-AC 변환 효율을 극대화하는 태양광 발전용 인버터 제어 시스템',
-      image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80',
-      details: {
-        overview: '태양광 패널에서 생산되는 DC 전력을 고효율로 AC 변환하는 인버터 제어 솔루션입니다. MPPT(최대전력점추적) 알고리즘으로 기상 조건 변화에 따른 최적 발전량을 확보하며, 계통 연계 보호 기능과 무효전력 보상 기능을 내장하고 있습니다.',
-        specs: [
-          { label: '변환 효율', value: '최대 98.5%' },
-          { label: 'MPPT 트래커', value: '최대 4채널 독립' },
-          { label: '출력 범위', value: '3kW ~ 100kW' },
-          { label: '계통 연계', value: 'IEEE 1547 / KC 적합' },
-        ],
-        applications: ['주택용 태양광', '상업용 태양광', '대규모 발전소', '건물 일체형(BIPV)'],
-      },
-    },
-    {
-      title: 'ESS 제어',
-      desc: '배터리 충방전 관리 및 전력 최적화를 위한 에너지 저장 시스템 제어',
-      image: 'https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?auto=format&fit=crop&w=800&q=80',
-      details: {
-        overview: '리튬이온 배터리 팩의 충방전을 최적 관리하는 BMS(배터리관리시스템) 및 PCS(전력변환장치) 제어 솔루션입니다. 셀 밸런싱, SOC/SOH 추정, 열관리를 통합 수행하며, 피크 저감 및 수요 반응(DR) 운영 알고리즘을 지원합니다.',
-        specs: [
-          { label: '셀 모니터링', value: '최대 192셀' },
-          { label: 'SOC 정확도', value: '±2%' },
-          { label: '충방전 효율', value: '95% 이상 (PCS)' },
-          { label: '통신', value: 'CAN, RS-485, TCP/IP' },
-        ],
-        applications: ['주거용 ESS', '상업·산업용 ESS', 'UPS 대체형', '마이크로그리드'],
-      },
-    },
-    {
-      title: '스마트그리드',
-      desc: '분산 전원 통합 관리 및 전력망 안정화를 위한 지능형 제어 기술',
-      image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=800&q=80',
-      details: {
-        overview: '태양광, 풍력, ESS 등 분산 전원을 통합 관리하고 전력 수급 균형을 유지하는 EMS(에너지관리시스템) 제어 솔루션입니다. AI 기반 발전량 예측과 실시간 부하 관리를 통해 전력망 안정성을 확보하고 에너지 비용을 최적화합니다.',
-        specs: [
-          { label: '연결 DER', value: '최대 500개 관리' },
-          { label: '예측 정확도', value: '발전량 예측 ±5%' },
-          { label: '응답 시간', value: '< 100ms (긴급 제어)' },
-          { label: '프로토콜', value: 'IEC 61850, DNP3' },
-        ],
-        applications: ['산업단지 마이크로그리드', '도서·산간 독립 전원', '캠퍼스 에너지 관리', '스마트시티 전력망'],
-      },
-    },
-    {
-      title: '충전 인프라',
-      desc: '전기차 충전기 및 충전소 통합 관리를 위한 제어 솔루션',
-      image: 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=800&q=80',
-      details: {
-        overview: '완속(7kW)부터 초급속(350kW)까지 다양한 전기차 충전기의 전력 변환 및 충전 프로토콜 제어를 담당합니다. OCPP 기반 백엔드 연동으로 원격 모니터링·결제·부하 관리가 가능하며, V2G(Vehicle-to-Grid) 양방향 충전도 지원합니다.',
-        specs: [
-          { label: '충전 용량', value: '7kW ~ 350kW' },
-          { label: '충전 규격', value: 'CCS1/2, CHAdeMO, AC' },
-          { label: '백엔드', value: 'OCPP 1.6J / 2.0.1' },
-          { label: 'V2G', value: '양방향 충방전 지원' },
-        ],
-        applications: ['공용 급속충전소', '아파트 완속충전기', '버스·트럭 전용 충전', 'V2G 충전 스테이션'],
-      },
-    },
-  ];
-
   return (
-    <div className="bg-black min-h-screen text-white selection:bg-white/30 selection:text-white">
+    <div className="min-h-screen bg-black text-white">
       <Navbar />
 
-      <main className="pt-32 pb-20">
-        <section className="relative flex flex-col items-center justify-center text-center px-6 mb-32">
+      {/* Hero */}
+      <section className="relative pt-40 pb-24 px-6">
+        <div className="max-w-7xl mx-auto text-center">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-block mb-6 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-sm font-medium text-gray-300"
-          >
-            Renewable Energy
-          </motion.div>
-          <motion.h1
-            className="text-5xl md:text-7xl font-bold mb-8 tracking-tighter"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            지속 가능한 미래.<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-600">
-              신재생에너지 제어 솔루션.
+            <span className="inline-block px-4 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs tracking-widest text-gray-400 uppercase mb-8">
+              Renewable Energy
             </span>
-          </motion.h1>
-          <motion.p
-            className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto font-light tracking-tight"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          >
-            태양광 인버터, ESS 등<br className="hidden md:block" />
-            친환경 에너지 시스템 제어 기술을 제공합니다.
-          </motion.p>
-        </section>
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] mb-6">
+              지속 가능한 미래.
+              <br />
+              <span className="bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent">
+                신재생에너지 제어 솔루션.
+              </span>
+            </h1>
+            <p
+              className="text-lg text-gray-400 font-light max-w-2xl mx-auto leading-relaxed"
+              dangerouslySetInnerHTML={{
+                __html:
+                  '태양광, 수소, 리튬이온 충전 등<br/>친환경 에너지 시스템 제어 기술을 제공합니다.',
+              }}
+            />
+          </motion.div>
+        </div>
+      </section>
 
-        <section className="max-w-7xl mx-auto px-6 mb-32">
-          <BusinessNav />
+      <BusinessNav />
+
+      {/* Features Grid */}
+      <section className="py-24 px-6">
+        <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {features.map((feature, i) => (
               <motion.div
@@ -130,62 +135,135 @@ export default function BusinessRenewable() {
                 className="relative rounded-[2rem] bg-[#0a0a0a] border border-white/5 overflow-hidden group aspect-[4/3] cursor-pointer"
                 onClick={() => setSelectedFeature(feature)}
               >
-                <img src={feature.image} alt={feature.title} className="absolute inset-0 w-full h-full object-cover opacity-40 transition-transform duration-1000 group-hover:scale-105" />
+                <img
+                  src={feature.image}
+                  alt={feature.title}
+                  className="absolute inset-0 w-full h-full object-cover opacity-40 transition-transform duration-1000 group-hover:scale-105"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                 <div className="relative z-10 flex flex-col justify-end h-full p-8">
                   <h3 className="text-2xl font-bold mb-2 tracking-tight">{feature.title}</h3>
                   <p className="text-gray-400 text-sm font-light leading-relaxed">{feature.desc}</p>
                   <span className="mt-4 inline-flex items-center text-xs text-gray-500 group-hover:text-white transition-colors">
                     자세히 보기
-                    <svg className="ml-1 w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    <svg
+                      className="ml-1 w-3.5 h-3.5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M5 12h14M12 5l7 7-7 7"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
                   </span>
                 </div>
               </motion.div>
             ))}
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
 
-      <Footer />
-
+      {/* Modal */}
       <AnimatePresence>
         {selectedFeature && (
-          <motion.div className="fixed inset-0 z-50 flex items-center justify-center p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setSelectedFeature(null)} />
-            <motion.div className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-[#111] border border-white/10 rounded-[2rem] p-8 md:p-10" initial={{ opacity: 0, scale: 0.9, y: 30 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 30 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}>
-              <button onClick={() => setSelectedFeature(null)} className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-50 flex items-center justify-center px-6 bg-black/80 backdrop-blur-sm"
+            onClick={() => setSelectedFeature(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 40, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 40, scale: 0.96 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-[2rem] bg-[#0a0a0a] border border-white/10 p-8 md:p-10"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setSelectedFeature(null)}
+                className="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </button>
-              <div className="h-48 rounded-2xl overflow-hidden mb-8 border border-white/5">
-                <img src={selectedFeature.image} alt={selectedFeature.title} className="w-full h-full object-cover opacity-70" />
-              </div>
-              <h2 className="text-3xl font-bold mb-3 tracking-tight">{selectedFeature.title}</h2>
-              <p className="text-gray-400 leading-relaxed mb-8 font-light">{selectedFeature.details.overview}</p>
-              <div className="bg-black/50 border border-white/5 rounded-2xl p-6 mb-8">
-                <h3 className="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4">주요 사양</h3>
-                <div className="space-y-3">
+
+              <motion.h2
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: 0.05 }}
+                className="text-2xl font-bold tracking-tight mb-4"
+              >
+                {selectedFeature.title}
+              </motion.h2>
+
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: 0.08 }}
+                className="text-gray-400 text-sm font-light leading-relaxed mb-8"
+              >
+                {selectedFeature.details.overview}
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: 0.1 }}
+                className="mb-8"
+              >
+                <h4 className="text-xs tracking-widest text-gray-500 uppercase mb-4">주요 사양</h4>
+                <div className="rounded-2xl border border-white/[0.06] overflow-hidden">
                   {selectedFeature.details.specs.map((spec, i) => (
-                    <div key={i} className="flex justify-between text-sm border-b border-white/5 pb-3 last:border-0 last:pb-0">
+                    <div
+                      key={i}
+                      className={`flex justify-between items-center px-5 py-3.5 text-sm ${
+                        i !== selectedFeature.details.specs.length - 1 ? 'border-b border-white/[0.06]' : ''
+                      }`}
+                    >
                       <span className="text-gray-500">{spec.label}</span>
-                      <span className="text-white font-medium">{spec.value}</span>
+                      <span className="text-gray-200 font-medium">{spec.value}</span>
                     </div>
                   ))}
                 </div>
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4">적용 분야</h3>
-                <div className="flex flex-wrap gap-2">
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: 0.12 }}
+              >
+                <h4 className="text-xs tracking-widest text-gray-500 uppercase mb-4">적용 분야</h4>
+                <div className="grid grid-cols-2 gap-3">
                   {selectedFeature.details.applications.map((app, i) => (
-                    <span key={i} className="px-3 py-1.5 rounded-full bg-white/[0.06] text-sm text-gray-400">
-                      {app}
-                    </span>
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.35, delay: 0.15 + i * 0.06 }}
+                      className="group relative"
+                    >
+                      <div className="absolute -inset-[1px] rounded-xl bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      <div className="relative px-4 py-3.5 rounded-xl bg-white/[0.04] border border-white/[0.06] text-sm text-gray-300 text-center transition-all duration-300 group-hover:bg-white/[0.08] group-hover:text-white group-hover:border-white/[0.12] group-hover:-translate-y-[2px] group-hover:shadow-lg group-hover:shadow-black/20">
+                        {app}
+                      </div>
+                    </motion.div>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      <Footer />
     </div>
   );
 }
