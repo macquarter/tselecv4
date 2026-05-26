@@ -19,7 +19,7 @@ const features: Feature[] = [
   {
     title: '원심분리기 제어보드',
     desc: '고속 회전체의 정밀 RPM 제어와 안전 인터록을 담당하는 핵심 보드',
-    image: '/images/products/medical-device.jpg',
+    image: '/images/products/centrifuge.jpg',
     details: {
       overview:
         '의료·연구용 원심분리기의 BLDC 모터 속도 제어, 온도 관리, 안전 인터록 기능을 통합한 제어보드입니다. 최대 15,000RPM 정밀 속도 제어와 가속·감속 프로파일 설정, 불균형 감지 자동 정지 기능으로 안전하고 재현성 높은 분리 결과를 보장합니다.',
@@ -52,7 +52,7 @@ const features: Feature[] = [
   {
     title: '치과 스케일러 제어보드',
     desc: '초음파 진동자의 출력과 주파수를 정밀 제어하는 치과 장비 솔루션',
-    image: 'https://images.unsplash.com/photo-1609840114035-3c981b782dfe?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/dental-scaler.jpg',
     details: {
       overview:
         '치과용 초음파 스케일러의 피에조 진동자 구동 주파수와 출력 파워를 정밀하게 제어하는 보드입니다. 다단계 출력 조절과 자동 주파수 추적으로 다양한 시술 상황에 대응하며, 환자 안전을 위한 과출력 자동 차단 기능을 내장하고 있습니다.',
@@ -206,9 +206,9 @@ export default function BusinessMedical() {
                 <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">주요 사양</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {selectedFeature.details.specs.map((spec, i) => (
-                    <div key={i} className="rounded-2xl bg-white/[0.03] border border-white/5 p-4">
-                      <div className="text-[11px] text-gray-500 mb-1">{spec.label}</div>
-                      <div className="text-sm font-medium">{spec.value}</div>
+                    <div key={i} className="rounded-xl bg-white/[0.03] border border-white/[0.06] p-4">
+                      <span className="text-[11px] text-gray-500 block mb-1">{spec.label}</span>
+                      <span className="text-sm font-medium">{spec.value}</span>
                     </div>
                   ))}
                 </div>
@@ -224,7 +224,7 @@ export default function BusinessMedical() {
                   {selectedFeature.details.applications.map((app, i) => (
                     <span
                       key={i}
-                      className="px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs text-gray-400"
+                      className="px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs text-gray-300"
                     >
                       {app}
                     </span>
