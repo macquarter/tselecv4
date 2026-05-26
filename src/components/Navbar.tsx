@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useText } from '../contexts/SiteContentContext';
+import LanguageSwitcher from './LanguageSwitcher';
 
 export default function Navbar() {
+  const { t } = useTranslation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -13,7 +16,6 @@ export default function Navbar() {
 
   const logo1 = useText('logo-1', 'TSE');
   const logo2 = useText('logo-2', 'LEC');
-  const navBtn = useText('nav-btn', '문의하기');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,43 +32,43 @@ export default function Navbar() {
 
   const navLinks = [
     {
-      name: '회사소개',
+      name: t('nav.company'),
       href: '/greeting',
       dropdown: [
-        { name: '인사말', href: '/greeting' },
-        { name: '부서소개', href: '/organization' },
-        { name: '회사연혁', href: '/history' },
-        { name: '인증현황', href: '/certifications' },
-        { name: '오시는 길', href: '/directions' },
+        { name: t('nav.greeting'), href: '/greeting' },
+        { name: t('nav.organization'), href: '/organization' },
+        { name: t('nav.history'), href: '/history' },
+        { name: t('nav.certifications'), href: '/certifications' },
+        { name: t('nav.directions'), href: '/directions' },
       ]
     },
     {
-      name: '사업영역',
+      name: t('nav.business'),
       href: '/business/home-appliance',
       dropdown: [
-        { name: '가전', href: '/business/home-appliance' },
-        { name: '산업용', href: '/business/industrial' },
-        { name: '의료기기', href: '/business/medical' },
-        { name: '신재생에너지', href: '/business/renewable' },
+        { name: t('nav.homeAppliance'), href: '/business/home-appliance' },
+        { name: t('nav.industrial'), href: '/business/industrial' },
+        { name: t('nav.medical'), href: '/business/medical' },
+        { name: t('nav.renewable'), href: '/business/renewable' },
       ]
     },
     {
-      name: '제품소개',
+      name: t('nav.products'),
       href: '/products',
       dropdown: [
-        { name: '임베디드 컨트롤러', href: '/main-controller' },
-        { name: 'HMI 솔루션', href: '/display' },
-        { name: '주변기기 및 커스텀', href: '/others' },
-        { name: '제조공정', href: '/process' },
+        { name: t('nav.embedded'), href: '/main-controller' },
+        { name: t('nav.hmi'), href: '/display' },
+        { name: t('nav.custom'), href: '/others' },
+        { name: t('nav.process'), href: '/process' },
       ]
     },
     {
-      name: '고객센터',
+      name: t('nav.support'),
       href: '/news',
       dropdown: [
-        { name: '공지사항', href: '/news' },
-        { name: '자료실', href: '/downloads' },
-        { name: '문의하기', href: '/#contact' },
+        { name: t('nav.news'), href: '/news' },
+        { name: t('nav.downloads'), href: '/downloads' },
+        { name: t('nav.contact'), href: '/#contact' },
       ]
     },
   ];
@@ -91,14 +93,14 @@ export default function Navbar() {
 
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300 tracking-wide">
             {navLinks.map((link) => (
-              <div 
-                key={link.name} 
+              <div
+                key={link.name}
                 className="relative group h-16 flex items-center"
                 onMouseEnter={() => setActiveDropdown(link.name)}
                 onMouseLeave={() => setActiveDropdown(null)}
               >
-                <Link 
-                  to={link.href} 
+                <Link
+                  to={link.href}
                   className="hover:text-white transition-colors flex items-center gap-1"
                 >
                   {link.name}
@@ -136,8 +138,8 @@ export default function Navbar() {
                               key={dropLink.name}
                               to={dropLink.href}
                               className={`block px-4 py-2.5 text-sm rounded-lg transition-all ${
-                                location.pathname === dropLink.href 
-                                  ? 'bg-white/10 text-white font-semibold' 
+                                location.pathname === dropLink.href
+                                  ? 'bg-white/10 text-white font-semibold'
                                   : 'text-gray-400 hover:bg-white/5 hover:text-white hover:pl-5'
                               }`}
                             >
@@ -153,9 +155,10 @@ export default function Navbar() {
             ))}
           </div>
 
-          <div className="hidden md:flex">
-            <Link 
-              to="/#contact" 
+          <div className="hidden md:flex items-center gap-3">
+            <LanguageSwitcher />
+            <Link
+              to="/#contact"
               className="px-5 py-2.5 bg-white hover:bg-gray-200 text-black text-sm font-medium rounded-lg transition-all"
               onClick={(e) => {
                 if (location.pathname === '/') {
@@ -164,7 +167,7 @@ export default function Navbar() {
                 }
               }}
             >
-              {navBtn}
+              {t('nav.contact')}
             </Link>
           </div>
 
@@ -191,12 +194,15 @@ export default function Navbar() {
                   <span>{logo2}</span>
                 </div>
               </Link>
-              <button
-                className="text-gray-400 hover:text-white p-1"
-                onClick={() => { setMobileMenuOpen(false); setMobileExpanded(null); }}
-              >
-                <X size={28} />
-              </button>
+              <div className="flex items-center gap-2">
+                <LanguageSwitcher />
+                <button
+                  className="text-gray-400 hover:text-white p-1"
+                  onClick={() => { setMobileMenuOpen(false); setMobileExpanded(null); }}
+                >
+                  <X size={28} />
+                </button>
+              </div>
             </div>
 
             {/* Menu Items */}
@@ -279,7 +285,7 @@ export default function Navbar() {
                   }}
                   className="block w-full text-center bg-white text-black font-semibold py-4 rounded-xl text-base"
                 >
-                  {navBtn}
+                  {t('nav.contact')}
                 </Link>
               </div>
             </div>
