@@ -19,7 +19,7 @@ const features: Feature[] = [
   {
     title: '태양광 패널 제어',
     desc: '태양광 발전 시스템의 MPPT 제어와 모니터링을 위한 솔루션',
-    image: '/images/products/solar-panel.jpg',
+    image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80',
     details: {
       overview:
         '태양광 패널에서 생산되는 DC 전력을 최적으로 관리하는 제어보드입니다. MPPT(최대전력점추적) 알고리즘으로 기상 조건 변화에 따른 최적 발전량을 확보하며, 계통 연계 보호 기능과 발전량 모니터링 기능을 내장하고 있습니다.',
@@ -35,7 +35,7 @@ const features: Feature[] = [
   {
     title: '수소 시스템 제어',
     desc: '수소 연료전지·전해조의 핵심 제어와 안전 관리 솔루션',
-    image: '/images/products/hydrogen.jpg',
+    image: 'https://images.unsplash.com/photo-1532601224476-15c79f2f7a51?auto=format&fit=crop&w=800&q=80',
     details: {
       overview:
         '수소 연료전지 스택의 출력 제어와 수전해 시스템의 운전 관리를 위한 보드입니다. 수소 누출 감지, 압력·온도 제어, 스택 전압 모니터링 등 다중 안전 기능을 내장하여 수소 에너지 시스템의 안전하고 효율적인 운영을 지원합니다.',
@@ -51,7 +51,7 @@ const features: Feature[] = [
   {
     title: '리튬이온 충전기 제어',
     desc: '리튬이온 배터리의 안전한 충방전 관리를 위한 BMS 솔루션',
-    image: '/images/products/lithium-charger.jpg',
+    image: 'https://images.unsplash.com/photo-1619953942547-233eab5a70d6?auto=format&fit=crop&w=800&q=80',
     details: {
       overview:
         '리튬이온 배터리 팩의 CC/CV 충전 제어, 셀 밸런싱, SOC/SOH 추정, 과충전·과방전 보호를 통합 수행하는 BMS 보드입니다. 다양한 배터리 용량과 전압에 대응하는 유연한 설계로 전기이동수단, ESS 등 폭넓은 분야에 적용됩니다.',
@@ -216,20 +216,15 @@ export default function BusinessRenewable() {
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.1 }}
+                transition={{ duration: 0.35, delay: 0.12 }}
                 className="mb-8"
               >
-                <h4 className="text-xs tracking-widest text-gray-500 uppercase mb-4">주요 사양</h4>
-                <div className="rounded-2xl border border-white/[0.06] overflow-hidden">
+                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">주요 사양</h3>
+                <div className="grid grid-cols-2 gap-3">
                   {selectedFeature.details.specs.map((spec, i) => (
-                    <div
-                      key={i}
-                      className={`flex justify-between items-center px-5 py-3.5 text-sm ${
-                        i !== selectedFeature.details.specs.length - 1 ? 'border-b border-white/[0.06]' : ''
-                      }`}
-                    >
-                      <span className="text-gray-500">{spec.label}</span>
-                      <span className="text-gray-200 font-medium">{spec.value}</span>
+                    <div key={i} className="rounded-2xl bg-white/[0.03] border border-white/5 p-4">
+                      <div className="text-[11px] text-gray-500 mb-1">{spec.label}</div>
+                      <div className="text-sm font-medium">{spec.value}</div>
                     </div>
                   ))}
                 </div>
@@ -238,23 +233,17 @@ export default function BusinessRenewable() {
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.12 }}
+                transition={{ duration: 0.35, delay: 0.16 }}
               >
-                <h4 className="text-xs tracking-widest text-gray-500 uppercase mb-4">적용 분야</h4>
-                <div className="grid grid-cols-2 gap-3">
+                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">적용 분야</h3>
+                <div className="flex flex-wrap gap-2">
                   {selectedFeature.details.applications.map((app, i) => (
-                    <motion.div
+                    <span
                       key={i}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.35, delay: 0.15 + i * 0.06 }}
-                      className="group relative"
+                      className="px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs text-gray-400"
                     >
-                      <div className="absolute -inset-[1px] rounded-xl bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                      <div className="relative px-4 py-3.5 rounded-xl bg-white/[0.04] border border-white/[0.06] text-sm text-gray-300 text-center transition-all duration-300 group-hover:bg-white/[0.08] group-hover:text-white group-hover:border-white/[0.12] group-hover:-translate-y-[2px] group-hover:shadow-lg group-hover:shadow-black/20">
-                        {app}
-                      </div>
-                    </motion.div>
+                      {app}
+                    </span>
                   ))}
                 </div>
               </motion.div>
