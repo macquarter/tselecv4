@@ -67,8 +67,7 @@ const features: Feature[] = [
   {
     title: '연료전지 제어',
     desc: '연료전지 발전 시스템의 스택 운전과 BoP를 통합 관리하는 솔루션',
-    image:
-      'https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/fuel-cell-pbu.jpg',
     details: {
       overview:
         'PEMFC/SOFC 연료전지 스택의 출력 제어와 Balance of Plant(BoP) 장비를 통합 관리하는 제어보드입니다. 공기·연료 유량 조절, 가습기 제어, 열관리 등을 자동화하며, 부하 변동에 대한 빠른 응답 제어를 지원합니다.',
@@ -139,6 +138,9 @@ export default function BusinessRenewable() {
                   src={feature.image}
                   alt={feature.title}
                   className="absolute inset-0 w-full h-full object-cover opacity-40 transition-transform duration-1000 group-hover:scale-105"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).style.display = 'none';
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                 <div className="relative z-10 flex flex-col justify-end h-full p-8">
