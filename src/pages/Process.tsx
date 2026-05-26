@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 import {
   Shield,
   Cpu,
@@ -30,6 +31,7 @@ interface ProcessStep {
 }
 
 export default function Process() {
+  const { t } = useTranslation();
   const [hoveredStep, setHoveredStep] = useState<string | null>(null);
   const [selectedStep, setSelectedStep] = useState<ProcessStep | null>(null);
 
@@ -110,10 +112,10 @@ export default function Process() {
   ];
 
   const kpis = [
-    { value: '100PPM', label: '이하 불량률', icon: <Shield size={20} strokeWidth={1.5} className="text-gray-400" /> },
-    { value: '99%', label: '납기준수율', icon: <Truck size={20} strokeWidth={1.5} className="text-gray-400" /> },
-    { value: '100%', label: '검사커버리지', icon: <Eye size={20} strokeWidth={1.5} className="text-gray-400" /> },
-    { value: '50만+', label: '월 생산능력', icon: <Factory size={20} strokeWidth={1.5} className="text-gray-400" /> },
+    { value: '100PPM', label: t('process.kpi0label'), icon: <Shield size={20} strokeWidth={1.5} className="text-gray-400" /> },
+    { value: '99%', label: t('process.kpi1label'), icon: <Truck size={20} strokeWidth={1.5} className="text-gray-400" /> },
+    { value: '100%', label: t('process.kpi2label'), icon: <Eye size={20} strokeWidth={1.5} className="text-gray-400" /> },
+    { value: '50만+', label: t('process.kpi3label'), icon: <Factory size={20} strokeWidth={1.5} className="text-gray-400" /> },
   ];
 
   return (
@@ -129,7 +131,7 @@ export default function Process() {
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             className="inline-block mb-6 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-xs tracking-widest uppercase text-gray-400"
           >
-            Manufacturing Process
+            {t('process.badge')}
           </motion.div>
           <motion.h1
             className="text-5xl md:text-7xl font-bold mb-8 tracking-tighter"
@@ -137,10 +139,10 @@ export default function Process() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           >
-            완벽을 향한 여정.
+            {t('process.t1')}
             <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-600">
-              제조 공정.
+              {t('process.t2')}
             </span>
           </motion.h1>
           <motion.p
@@ -149,13 +151,13 @@ export default function Process() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
-            설계부터 출하까지 체계적인 10단계 공정으로
+            {t('process.desc1')}
             <br className="hidden md:block" />
-            무결점 제품을 생산합니다.
+            {t('process.desc2')}
           </motion.p>
         </section>
 
-        {/* ⬇️ 중간 네비게이션 (제품 카테고리 통일) */}
+        {/* 중간 네비게이션 */}
         <ProductNav />
 
         {/* KPI Cards */}
@@ -178,7 +180,7 @@ export default function Process() {
           </div>
         </section>
 
-        {/* Process Flow — Interactive Cards */}
+        {/* Process Flow */}
         <section className="max-w-7xl mx-auto px-6 mb-16">
           <motion.div
             className="mb-12"
@@ -187,8 +189,8 @@ export default function Process() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tighter mb-2">10단계 제조 공정.</h2>
-            <p className="text-gray-500 font-light tracking-tight">각 단계에 마우스를 올리면 상세 내용을 확인할 수 있습니다.</p>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tighter mb-2">{t('process.stagesTitle')}</h2>
+            <p className="text-gray-500 font-light tracking-tight">{t('process.stagesHint')}</p>
           </motion.div>
 
           {/* Row 1: Steps 01-05 */}
@@ -341,7 +343,7 @@ export default function Process() {
                   {selectedStep.detail}
                 </p>
                 <div>
-                  <h4 className="text-xs tracking-widest text-gray-500 uppercase mb-3">주요 장비 및 시스템</h4>
+                  <h4 className="text-xs tracking-widest text-gray-500 uppercase mb-3">{t('footer.equipmentLabel')}</h4>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                     {selectedStep.equipment.map((item, i) => (
                       <div
@@ -359,9 +361,8 @@ export default function Process() {
           </AnimatePresence>
         </section>
 
-        {/* ═══════ Bottom Sections: QC, Capabilities, Categories ═══════ */}
+        {/* QC + Capabilities + Categories */}
         <section className="max-w-7xl mx-auto px-6 mt-8 mb-32">
-          {/* 3-Stage Quality Control */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -374,8 +375,8 @@ export default function Process() {
                 <Shield size={20} strokeWidth={1.5} className="text-gray-400" />
               </div>
               <div>
-                <h3 className="text-2xl md:text-3xl font-bold tracking-tighter">3-Stage 품질관리.</h3>
-                <p className="text-sm text-gray-500 tracking-tight">입고부터 출하까지 3중 품질 게이트.</p>
+                <h3 className="text-2xl md:text-3xl font-bold tracking-tighter">{t('process.qcTitle')}</h3>
+                <p className="text-sm text-gray-500 tracking-tight">{t('process.qcSubtitle')}</p>
               </div>
             </div>
 
@@ -433,7 +434,6 @@ export default function Process() {
             </div>
           </motion.div>
 
-          {/* Core Capabilities + Response Categories — Two Column */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
@@ -448,7 +448,7 @@ export default function Process() {
                   <div className="w-10 h-10 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center">
                     <Cpu size={20} strokeWidth={1.5} className="text-gray-400" />
                   </div>
-                  <h3 className="text-xl font-bold tracking-tight">핵심 보유 역량.</h3>
+                  <h3 className="text-xl font-bold tracking-tight">{t('process.capTitle')}</h3>
                 </div>
                 <div className="space-y-3">
                   {[
@@ -490,7 +490,7 @@ export default function Process() {
                   <div className="w-10 h-10 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center">
                     <Layers size={20} strokeWidth={1.5} className="text-gray-400" />
                   </div>
-                  <h3 className="text-xl font-bold tracking-tight">대응 카테고리.</h3>
+                  <h3 className="text-xl font-bold tracking-tight">{t('process.catTitle')}</h3>
                 </div>
                 <div className="space-y-4">
                   {[
@@ -534,7 +534,6 @@ export default function Process() {
             </motion.div>
           </div>
         </section>
-        {/* ⬆️ 인페이지 카피라이트 라인은 제거. v6.0/ISO 9001 인증 라인은 글로벌 Footer 컴포넌트의 메타 영역에서 표시됩니다. */}
       </main>
 
       <Footer pageBadge="Manufacturing Process · v6.0 · ISO 9001 인증 라인" />
