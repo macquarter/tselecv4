@@ -19,7 +19,8 @@
     "support": "Trung tâm hỗ trợ",
     "news": "Thông báo",
     "downloads": "Tài liệu",
-    "contact": "Liên hệ"
+    "contact": "Liên hệ",
+    "productsAll": "Tất cả sản phẩm"
   },
   "footer": {
     "description": "Kể từ khi thành lập năm 1989, chúng tôi là doanh nghiệp chuyên thiết kế và sản xuất vi điều khiển, là đối tác linh kiện điện tử đáng tin cậy trong lĩnh vực gia dụng, y tế và năng lượng mặt trời.",
@@ -27,7 +28,8 @@
     "business": "Lĩnh vực kinh doanh",
     "products": "Giới thiệu sản phẩm",
     "support": "Hỗ trợ khách hàng",
-    "copyright": "© 2026 태승전자(주) TSELEC Co., Ltd. Bảo lưu mọi quyền."
+    "copyright": "© 2026 태승전자(주) TSELEC Co., Ltd. Bảo lưu mọi quyền.",
+    "equipmentLabel": "Thiết bị & Hệ thống"
   },
   "common": {
     "learnMore": "Xem thêm",
@@ -83,5 +85,66 @@
     "zh": "中文",
     "ja": "日本語",
     "vi": "Tiếng Việt"
+  },
+  "greeting": {
+    "badge": "CEO Message",
+    "t1": "Hướng tới tương lai",
+    "t2": "lời cam kết của chúng tôi.",
+    "desc1": "Với công nghệ vượt giới hạn,",
+    "desc2": "chúng tôi dẫn đầu trong quản trị lấy khách hàng làm trung tâm.",
+    "msg1": "Cảm ơn quý vị đã ghé thăm trang web của chúng tôi.",
+    "msg2": "TSELEC khởi đầu từ năm 1989 và trong suốt 36 năm chỉ tập trung vào một thứ — bo mạch điều khiển. Chúng tôi cung cấp linh kiện cho nhiều ngành: gia dụng, công nghiệp, y tế và năng lượng tái tạo.",
+    "msg3": "Chúng tôi tin một linh kiện tốt làm nên một sản phẩm tốt. Chúng tôi sẽ tiếp tục tinh chỉnh sâu sắc hơn.",
+    "ceoName": "Yu Tae-Ho",
+    "ceoTitle": "Tổng Giám đốc, TSELEC Co., Ltd.",
+    "cvBadge": "Core Values",
+    "cvT1": "Bốn lời cam kết",
+    "cvT2": "chúng tôi gìn giữ.",
+    "cvDesc": "Đây là phương châm làm việc không thay đổi của TSELEC trong 36 năm qua.",
+    "v0t": "Chất lượng chính xác",
+    "v0d": "Tỷ lệ lỗi dưới 100PPM, độ phủ kiểm tra 100%. Chúng tôi phát triển và sản xuất vi điều khiển chính xác với công nghệ hàng đầu.",
+    "v1t": "Sự hài lòng của khách hàng",
+    "v1d": "Tỷ lệ giao hàng đúng hạn 99%, mối quan hệ tích lũy 36 năm. Chúng tôi ưu tiên nhu cầu khách hàng và xây dựng niềm tin lâu dài.",
+    "v2t": "Đổi mới công nghệ",
+    "v2d": "Nghiên cứu nội bộ từ thiết kế mạch đến firmware và sản xuất hàng loạt. Tạo ra giá trị mới qua sự kết hợp với công nghệ số.",
+    "v3t": "Tăng trưởng bền vững",
+    "v3d": "Dòng sản phẩm đầy đủ trên 4 lĩnh vực kinh doanh, mở rộng xuất khẩu. Nâng tầm giá trị thương hiệu và theo đuổi tăng trưởng bền vững.",
+    "v0stat": "100PPM",
+    "v1stat": "99%",
+    "v2stat": "R&D",
+    "v3stat": "4",
+    "v0statLabel": "Tỷ lệ lỗi tối đa",
+    "v1statLabel": "Giao đúng hạn",
+    "v2statLabel": "R&D nội bộ",
+    "v3statLabel": "Lĩnh vực kinh doanh"
+  },
+  "history": {
+    "kicker": "Đổi mới không ngừng.",
+    "title": "Dấu ấn gần đây.",
+    "m0y": "2026",
+    "m0t": "Triển khai kiểm tra chất lượng dựa trên AI · Hoàn thiện đầy đủ 4 lĩnh vực (gia dụng · công nghiệp · y tế · năng lượng tái tạo)",
+    "m1y": "2024",
+    "m1t": "Ra mắt dòng bo mạch điều khiển năng lượng tái tạo (mặt trời · hydro · pin nhiên liệu) · Mở rộng danh mục xuất khẩu",
+    "m2y": "2022",
+    "m2t": "Bo mạch MCU y tế đạt chứng nhận IEC 60601 · Gia hạn hệ thống quản lý môi trường ISO 14001",
+    "m3y": "2020",
+    "m3t": "Chuyển đến nhà máy mới tại Robot Land, Incheon · Triển khai hệ thống smart factory (MES · 3 dây chuyền SMT)"
+  },
+  "process": {
+    "badge": "Manufacturing Process",
+    "t1": "Hành trình đến sự hoàn hảo.",
+    "t2": "Quy trình sản xuất.",
+    "desc1": "Từ thiết kế đến giao hàng — quy trình 10 bước có hệ thống",
+    "desc2": "tạo nên sản phẩm không lỗi.",
+    "stagesTitle": "Quy trình sản xuất 10 bước.",
+    "stagesHint": "Di chuột vào từng bước để xem chi tiết.",
+    "kpi0label": "Tỷ lệ lỗi",
+    "kpi1label": "Giao đúng hạn",
+    "kpi2label": "Độ phủ kiểm tra",
+    "kpi3label": "Sản lượng tháng",
+    "qcTitle": "Kiểm soát chất lượng 3 bước.",
+    "qcSubtitle": "Ba lớp kiểm soát chất lượng từ đầu vào đến đầu ra.",
+    "capTitle": "Năng lực cốt lõi.",
+    "catTitle": "Danh mục đáp ứng."
   }
 }
