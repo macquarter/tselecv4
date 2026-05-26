@@ -1,17 +1,20 @@
 import { motion } from 'motion/react';
 import { useTranslation } from 'react-i18next';
-import { useText } from '../contexts/SiteContentContext';
 
+/**
+ * 메인 페이지 발자취 섹션.
+ * 언어 전환 시 본문이 즉시 바뀌도록 useText(Firebase override)는 제거하고
+ * i18n의 t()를 단일 출처로 사용합니다.
+ */
 export default function History() {
   const { t } = useTranslation();
-  const hisT = useText('his-t', t('history.title'));
-  const kicker = useText('his-kicker', t('history.kicker'));
 
+  // 2020s 이후 4개 마일스톤
   const historyData = [
-    { year: useText('t0y', t('history.m0y')), text: useText('t0t', t('history.m0t')) },
-    { year: useText('t1y', t('history.m1y')), text: useText('t1t', t('history.m1t')) },
-    { year: useText('t2y', t('history.m2y')), text: useText('t2t', t('history.m2t')) },
-    { year: useText('t3y', t('history.m3y')), text: useText('t3t', t('history.m3t')) },
+    { year: t('history.m0y'), text: t('history.m0t') },
+    { year: t('history.m1y'), text: t('history.m1t') },
+    { year: t('history.m2y'), text: t('history.m2t') },
+    { year: t('history.m3y'), text: t('history.m3t') },
   ];
 
   return (
@@ -24,14 +27,14 @@ export default function History() {
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          {kicker}<br />
-          {hisT}
+          {t('history.kicker')}<br />
+          {t('history.title')}
         </motion.h2>
 
         <div className="space-y-16 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-px before:bg-gradient-to-b before:from-transparent before:via-white/10 before:to-transparent">
           {historyData.map((item, i) => (
             <motion.div
-              key={item.year}
+              key={item.year + i}
               className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active"
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
