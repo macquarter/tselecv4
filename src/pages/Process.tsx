@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -34,6 +34,7 @@ export default function Process() {
   const { t } = useTranslation();
   const [hoveredStep, setHoveredStep] = useState<string | null>(null);
   const [selectedStep, setSelectedStep] = useState<ProcessStep | null>(null);
+  const [autoIndex, setAutoIndex] = useState(0);
 
   const steps: ProcessStep[] = [
     {
@@ -111,12 +112,16 @@ export default function Process() {
     },
   ];
 
-  const kpis = [
-    { value: '100PPM', label: t('process.kpi0label'), icon: <Shield size={20} strokeWidth={1.5} className="text-gray-400" /> },
-    { value: '99%', label: t('process.kpi1label'), icon: <Truck size={20} strokeWidth={1.5} className="text-gray-400" /> },
-    { value: '100%', label: t('process.kpi2label'), icon: <Eye size={20} strokeWidth={1.5} className="text-gray-400" /> },
-    { value: '50만+', label: t('process.kpi3label'), icon: <Factory size={20} strokeWidth={1.5} className="text-gray-400" /> },
-  ];
+  // 10단계 경로 자동 순회 애니메이션 (1.2초 간격, hover 시 멈춤)
+  useEffect(() => {
+    if (hoveredStep !== null) return;
+    const id = window.setInterval(() => {
+      setAutoIndex((i) => (i + 1) % steps.length);
+    }, 1200);
+    return () => window.clearInterval(id);
+  }, [hoveredStep, steps.length]);
+
+  const activeStepNum = hoveredStep ?? steps[autoIndex].num;
 
   return (
     <div className="bg-black min-h-screen text-white selection:bg-white/30 selection:text-white">
@@ -160,28 +165,8 @@ export default function Process() {
         {/* 중간 네비게이션 */}
         <ProductNav />
 
-        {/* KPI Cards */}
-        <section className="max-w-7xl mx-auto px-6 mb-20">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {kpis.map((kpi, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="relative rounded-2xl bg-[#0a0a0a] border border-white/5 p-6 text-center group hover:border-white/10 transition-colors duration-500"
-              >
-                <div className="flex justify-center mb-3">{kpi.icon}</div>
-                <div className="text-3xl md:text-4xl font-bold tracking-tighter mb-1">{kpi.value}</div>
-                <div className="text-xs tracking-widest uppercase text-gray-500">{kpi.label}</div>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-
-        {/* Process Flow */}
-        <section className="max-w-7xl mx-auto px-6 mb-16">
+        {/* Process Flow — Interactive Cards with Auto Traveling Glow */}
+        <section className="max-w-7xl mx-auto px-6 mt-20 mb-16">
           <motion.div
             className="mb-12"
             initial={{ opacity: 0 }}
@@ -196,116 +181,169 @@ export default function Process() {
           {/* Row 1: Steps 01-05 */}
           <div className="flex flex-col gap-4 mb-4">
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
-              {steps.slice(0, 5).map((step, i) => (
-                <motion.div
-                  key={step.num}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                  className="relative group"
-                  onMouseEnter={() => { setHoveredStep(step.num); setSelectedStep(step); }}
-                  onMouseLeave={() => setHoveredStep(null)}
-                >
-                  <div className={`relative rounded-2xl bg-[#0a0a0a] border p-5 cursor-pointer transition-all duration-500 overflow-hidden ${
-                    hoveredStep === step.num ? 'border-white/15 bg-[#111] -translate-y-1' : 'border-white/5 hover:border-white/10'
-                  }`}>
-                    <div className={`absolute inset-0 bg-gradient-to-b from-white/[0.03] to-transparent transition-opacity duration-500 ${hoveredStep === step.num ? 'opacity-100' : 'opacity-0'}`} />
-
-                    <div className="relative z-10">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-[10px] font-mono text-gray-500 tracking-widest">STEP {step.num}</span>
-                        {step.qcTag && (
-                          <span className="px-2 py-0.5 rounded-full bg-white/[0.08] border border-white/10 text-[9px] font-medium text-gray-300 tracking-wide">{step.qcTag}</span>
+              {steps.slice(0, 5).map((step, i) => {
+                const isActive = activeStepNum === step.num;
+                return (
+                  <motion.div
+                    key={step.num}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                    className="relative group"
+                    onMouseEnter={() => { setHoveredStep(step.num); setSelectedStep(step); }}
+                    onMouseLeave={() => setHoveredStep(null)}
+                  >
+                    <motion.div
+                      animate={isActive ? { scale: 1.02, y: -4 } : { scale: 1, y: 0 }}
+                      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                      className={`relative rounded-2xl bg-[#0a0a0a] border p-5 cursor-pointer overflow-hidden transition-colors duration-500 ${
+                        isActive ? 'border-white/25 bg-[#111]' : 'border-white/5 hover:border-white/10'
+                      }`}
+                    >
+                      {/* Active glow overlay */}
+                      <AnimatePresence>
+                        {isActive && (
+                          <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.4 }}
+                            className="absolute inset-0 bg-gradient-to-b from-white/[0.06] to-transparent pointer-events-none"
+                          />
                         )}
+                      </AnimatePresence>
+
+                      {/* Ambient pulse ring on active */}
+                      {isActive && (
+                        <motion.div
+                          className="absolute inset-0 rounded-2xl border border-white/20 pointer-events-none"
+                          animate={{ opacity: [0.6, 0.15, 0.6] }}
+                          transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+                        />
+                      )}
+
+                      <div className="relative z-10">
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="text-[10px] font-mono text-gray-500 tracking-widest">STEP {step.num}</span>
+                          {step.qcTag && (
+                            <span className="px-2 py-0.5 rounded-full bg-white/[0.08] border border-white/10 text-[9px] font-medium text-gray-300 tracking-wide">{step.qcTag}</span>
+                          )}
+                        </div>
+
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 transition-all duration-500 ${
+                          isActive ? 'bg-white/[0.12] text-white' : 'bg-white/[0.04] text-gray-500'
+                        }`}>
+                          {step.icon}
+                        </div>
+
+                        <h3 className="text-sm font-bold tracking-tight mb-1 leading-snug">{step.title}</h3>
+                        <p className="text-[11px] text-gray-500 leading-relaxed">{step.desc}</p>
                       </div>
+                    </motion.div>
 
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 transition-all duration-500 ${
-                        hoveredStep === step.num ? 'bg-white/[0.08] text-gray-300' : 'bg-white/[0.04] text-gray-500'
-                      }`}>
-                        {step.icon}
-                      </div>
-
-                      <h3 className="text-sm font-bold tracking-tight mb-1 leading-snug">{step.title}</h3>
-                      <p className="text-[11px] text-gray-500 leading-relaxed">{step.desc}</p>
-                    </div>
-
+                    {/* Traveling connector arrow */}
                     {i < 4 && (
                       <div className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-[calc(50%+6px)] z-20">
                         <motion.div
-                          animate={{ x: hoveredStep === step.num ? [0, 3, 0] : 0 }}
-                          transition={{ duration: 1, repeat: hoveredStep === step.num ? Infinity : 0 }}
-                          className="text-gray-600"
+                          animate={isActive ? { x: [0, 4, 0], opacity: [0.6, 1, 0.6] } : { opacity: 0.3 }}
+                          transition={isActive ? { duration: 1.2, repeat: Infinity, ease: 'easeInOut' } : { duration: 0.3 }}
+                          className={isActive ? 'text-white' : 'text-gray-600'}
                         >
-                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                          <svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                         </motion.div>
                       </div>
                     )}
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                );
+              })}
             </div>
 
+            {/* Turn arrow */}
             <div className="hidden md:flex justify-end pr-[10%]">
               <motion.div
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                className="text-gray-600"
+                animate={{ y: [0, 4, 0], opacity: [0.3, 0.7, 0.3] }}
+                transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+                className="text-gray-500"
               >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12l7 7 7-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12l7 7 7-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
               </motion.div>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
-              {[...steps.slice(5, 10)].reverse().map((step, i) => (
-                <motion.div
-                  key={step.num}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.4 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                  className="relative group"
-                  onMouseEnter={() => { setHoveredStep(step.num); setSelectedStep(step); }}
-                  onMouseLeave={() => setHoveredStep(null)}
-                >
-                  <div className={`relative rounded-2xl bg-[#0a0a0a] border p-5 cursor-pointer transition-all duration-500 overflow-hidden ${
-                    hoveredStep === step.num ? 'border-white/15 bg-[#111] -translate-y-1' : 'border-white/5 hover:border-white/10'
-                  }`}>
-                    <div className={`absolute inset-0 bg-gradient-to-b from-white/[0.03] to-transparent transition-opacity duration-500 ${hoveredStep === step.num ? 'opacity-100' : 'opacity-0'}`} />
-
-                    <div className="relative z-10">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-[10px] font-mono text-gray-500 tracking-widest">STEP {step.num}</span>
-                        {step.qcTag && (
-                          <span className="px-2 py-0.5 rounded-full bg-white/[0.08] border border-white/10 text-[9px] font-medium text-gray-300 tracking-wide">{step.qcTag}</span>
+              {[...steps.slice(5, 10)].reverse().map((step, i) => {
+                const isActive = activeStepNum === step.num;
+                return (
+                  <motion.div
+                    key={step.num}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.4 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                    className="relative group"
+                    onMouseEnter={() => { setHoveredStep(step.num); setSelectedStep(step); }}
+                    onMouseLeave={() => setHoveredStep(null)}
+                  >
+                    <motion.div
+                      animate={isActive ? { scale: 1.02, y: -4 } : { scale: 1, y: 0 }}
+                      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                      className={`relative rounded-2xl bg-[#0a0a0a] border p-5 cursor-pointer overflow-hidden transition-colors duration-500 ${
+                        isActive ? 'border-white/25 bg-[#111]' : 'border-white/5 hover:border-white/10'
+                      }`}
+                    >
+                      <AnimatePresence>
+                        {isActive && (
+                          <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.4 }}
+                            className="absolute inset-0 bg-gradient-to-b from-white/[0.06] to-transparent pointer-events-none"
+                          />
                         )}
-                      </div>
+                      </AnimatePresence>
 
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 transition-all duration-500 ${
-                        hoveredStep === step.num ? 'bg-white/[0.08] text-gray-300' : 'bg-white/[0.04] text-gray-500'
-                      }`}>
-                        {step.icon}
-                      </div>
+                      {isActive && (
+                        <motion.div
+                          className="absolute inset-0 rounded-2xl border border-white/20 pointer-events-none"
+                          animate={{ opacity: [0.6, 0.15, 0.6] }}
+                          transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+                        />
+                      )}
 
-                      <h3 className="text-sm font-bold tracking-tight mb-1 leading-snug">{step.title}</h3>
-                      <p className="text-[11px] text-gray-500 leading-relaxed">{step.desc}</p>
-                    </div>
+                      <div className="relative z-10">
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="text-[10px] font-mono text-gray-500 tracking-widest">STEP {step.num}</span>
+                          {step.qcTag && (
+                            <span className="px-2 py-0.5 rounded-full bg-white/[0.08] border border-white/10 text-[9px] font-medium text-gray-300 tracking-wide">{step.qcTag}</span>
+                          )}
+                        </div>
+
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 transition-all duration-500 ${
+                          isActive ? 'bg-white/[0.12] text-white' : 'bg-white/[0.04] text-gray-500'
+                        }`}>
+                          {step.icon}
+                        </div>
+
+                        <h3 className="text-sm font-bold tracking-tight mb-1 leading-snug">{step.title}</h3>
+                        <p className="text-[11px] text-gray-500 leading-relaxed">{step.desc}</p>
+                      </div>
+                    </motion.div>
 
                     {i < 4 && (
                       <div className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[calc(50%+6px)] z-20">
                         <motion.div
-                          animate={{ x: hoveredStep === step.num ? [0, -3, 0] : 0 }}
-                          transition={{ duration: 1, repeat: hoveredStep === step.num ? Infinity : 0 }}
-                          className="text-gray-600"
+                          animate={isActive ? { x: [0, -4, 0], opacity: [0.6, 1, 0.6] } : { opacity: 0.3 }}
+                          transition={isActive ? { duration: 1.2, repeat: Infinity, ease: 'easeInOut' } : { duration: 0.3 }}
+                          className={isActive ? 'text-white' : 'text-gray-600'}
                         >
-                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M10 6H2M5 3L2 6l3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                          <svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M10 6H2M5 3L2 6l3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                         </motion.div>
                       </div>
                     )}
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
 
@@ -410,70 +448,65 @@ export default function Process() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: i * 0.15 }}
-                  className="rounded-[2rem] bg-[#0a0a0a] border border-white/5 p-7 relative overflow-hidden group hover:border-white/10 transition-all duration-500"
+                  className="rounded-[2rem] bg-[#0a0a0a] border border-white/5 p-7 group hover:border-white/10 transition-all duration-500"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-b from-white/[0.03] to-transparent opacity-50" />
-                  <div className="relative z-10">
-                    <span className="inline-block px-2.5 py-1 rounded-full bg-white/[0.08] border border-white/10 text-[10px] font-medium text-gray-300 tracking-wide mb-4">
-                      {qc.stage}
-                    </span>
-                    <h4 className="text-lg font-bold tracking-tight mb-1">{qc.title}</h4>
-                    <p className="text-[11px] text-gray-500 mb-4 tracking-tight">{qc.subtitle}</p>
-                    <p className="text-sm text-gray-400 font-light leading-relaxed mb-5">{qc.desc}</p>
-                    <div className="space-y-2">
-                      {qc.items.map((item, j) => (
-                        <div key={j} className="flex items-center gap-2.5">
-                          <div className="w-1.5 h-1.5 rounded-full bg-gray-400 shrink-0" />
-                          <span className="text-xs text-gray-400">{item}</span>
-                        </div>
-                      ))}
-                    </div>
+                  <span className="inline-block px-2.5 py-1 rounded-full bg-white/[0.08] border border-white/10 text-[10px] font-medium text-gray-300 tracking-wide mb-4">
+                    {qc.stage}
+                  </span>
+                  <h4 className="text-lg font-bold tracking-tight mb-1">{qc.title}</h4>
+                  <p className="text-[11px] text-gray-500 mb-4 tracking-tight">{qc.subtitle}</p>
+                  <p className="text-sm text-gray-400 font-light leading-relaxed mb-5">{qc.desc}</p>
+                  <div className="space-y-2">
+                    {qc.items.map((item, j) => (
+                      <div key={j} className="flex items-center gap-2.5">
+                        <div className="w-1.5 h-1.5 rounded-full bg-gray-400 shrink-0" />
+                        <span className="text-xs text-gray-400">{item}</span>
+                      </div>
+                    ))}
                   </div>
                 </motion.div>
               ))}
             </div>
           </motion.div>
 
+          {/* 핵심 역량 + 대응 카테고리 — 우상단 그라디언트 데코 제거 */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="rounded-[2rem] bg-[#0a0a0a] border border-white/5 p-8 relative overflow-hidden"
+              className="rounded-[2rem] bg-[#0a0a0a] border border-white/5 p-8"
             >
-              <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-white/[0.03] to-transparent rounded-bl-full" />
-              <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center">
-                    <Cpu size={20} strokeWidth={1.5} className="text-gray-400" />
-                  </div>
-                  <h3 className="text-xl font-bold tracking-tight">{t('process.capTitle')}</h3>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center">
+                  <Cpu size={20} strokeWidth={1.5} className="text-gray-400" />
                 </div>
-                <div className="space-y-3">
-                  {[
-                    { label: '회로 설계', desc: 'OrCAD / Altium 기반 다층 PCB 설계' },
-                    { label: '펌웨어 개발', desc: 'ARM Cortex-M 기반 임베디드 SW 자체 개발' },
-                    { label: '신뢰성 검증', desc: '온도·습도·진동 등 환경시험 대응' },
-                    { label: '양산 조립', desc: '3개 SMT 라인, 월 50만대+ 생산체제' },
-                    { label: '출하 품질관리', desc: '3-Stage QC, 100PPM 이하 불량률' },
-                  ].map((cap, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, x: -10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.4, delay: 0.2 + i * 0.08 }}
-                      className="flex items-start gap-3 p-4 rounded-xl bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.04] hover:border-white/[0.08] transition-all duration-300"
-                    >
-                      <div className="w-2 h-2 rounded-full bg-gray-400 mt-1.5 shrink-0" />
-                      <div>
-                        <span className="text-sm font-semibold text-white">{cap.label}</span>
-                        <p className="text-xs text-gray-500 mt-0.5">{cap.desc}</p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+                <h3 className="text-xl font-bold tracking-tight">{t('process.capTitle')}</h3>
+              </div>
+              <div className="space-y-3">
+                {[
+                  { label: '회로 설계', desc: 'OrCAD / Altium 기반 다층 PCB 설계' },
+                  { label: '펌웨어 개발', desc: 'ARM Cortex-M 기반 임베디드 SW 자체 개발' },
+                  { label: '신뢰성 검증', desc: '온도·습도·진동 등 환경시험 대응' },
+                  { label: '양산 조립', desc: '3개 SMT 라인, 월 50만대+ 생산체제' },
+                  { label: '출하 품질관리', desc: '3-Stage QC, 100PPM 이하 불량률' },
+                ].map((cap, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.2 + i * 0.08 }}
+                    className="flex items-start gap-3 p-4 rounded-xl bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.04] hover:border-white/[0.08] transition-all duration-300"
+                  >
+                    <div className="w-2 h-2 rounded-full bg-gray-400 mt-1.5 shrink-0" />
+                    <div>
+                      <span className="text-sm font-semibold text-white">{cap.label}</span>
+                      <p className="text-xs text-gray-500 mt-0.5">{cap.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
             </motion.div>
 
@@ -482,54 +515,51 @@ export default function Process() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="rounded-[2rem] bg-[#0a0a0a] border border-white/5 p-8 relative overflow-hidden"
+              className="rounded-[2rem] bg-[#0a0a0a] border border-white/5 p-8"
             >
-              <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-white/[0.03] to-transparent rounded-bl-full" />
-              <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center">
-                    <Layers size={20} strokeWidth={1.5} className="text-gray-400" />
-                  </div>
-                  <h3 className="text-xl font-bold tracking-tight">{t('process.catTitle')}</h3>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center">
+                  <Layers size={20} strokeWidth={1.5} className="text-gray-400" />
                 </div>
-                <div className="space-y-4">
-                  {[
-                    {
-                      title: '임베디드 컨트롤러',
-                      desc: '가전·산업용 MCU 제어보드 설계 및 양산',
-                      tags: ['ARM Cortex-M', '8/16/32bit MCU', 'RTOS'],
-                    },
-                    {
-                      title: 'HMI 솔루션',
-                      desc: '디스플레이 패널 및 터치 인터페이스 개발',
-                      tags: ['LCD/OLED', 'Touch Panel', 'GUI 개발'],
-                    },
-                    {
-                      title: '커스텀 ODM/OEM',
-                      desc: '고객 요구에 맞춘 맞춤형 제어보드 턴키 개발',
-                      tags: ['회로설계', '펌웨어', '인증 지원'],
-                    },
-                  ].map((cat, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, x: -10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.4, delay: 0.3 + i * 0.1 }}
-                      className="p-5 rounded-xl bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.04] hover:border-white/[0.08] transition-all duration-300"
-                    >
-                      <h4 className="text-sm font-bold mb-1">{cat.title}</h4>
-                      <p className="text-xs text-gray-500 mb-3">{cat.desc}</p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {cat.tags.map((tag, j) => (
-                          <span key={j} className="px-2 py-0.5 rounded-md bg-white/[0.06] border border-white/10 text-[10px] text-gray-400 font-medium">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+                <h3 className="text-xl font-bold tracking-tight">{t('process.catTitle')}</h3>
+              </div>
+              <div className="space-y-4">
+                {[
+                  {
+                    title: '임베디드 컨트롤러',
+                    desc: '가전·산업용 MCU 제어보드 설계 및 양산',
+                    tags: ['ARM Cortex-M', '8/16/32bit MCU', 'RTOS'],
+                  },
+                  {
+                    title: 'HMI 솔루션',
+                    desc: '디스플레이 패널 및 터치 인터페이스 개발',
+                    tags: ['LCD/OLED', 'Touch Panel', 'GUI 개발'],
+                  },
+                  {
+                    title: '커스텀 ODM/OEM',
+                    desc: '고객 요구에 맞춘 맞춤형 제어보드 턴키 개발',
+                    tags: ['회로설계', '펌웨어', '인증 지원'],
+                  },
+                ].map((cat, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.3 + i * 0.1 }}
+                    className="p-5 rounded-xl bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.04] hover:border-white/[0.08] transition-all duration-300"
+                  >
+                    <h4 className="text-sm font-bold mb-1">{cat.title}</h4>
+                    <p className="text-xs text-gray-500 mb-3">{cat.desc}</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {cat.tags.map((tag, j) => (
+                        <span key={j} className="px-2 py-0.5 rounded-md bg-white/[0.06] border border-white/10 text-[10px] text-gray-400 font-medium">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </motion.div>
+                ))}
               </div>
             </motion.div>
           </div>
