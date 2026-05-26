@@ -19,7 +19,7 @@ const features: Feature[] = [
   {
     title: '냉장고 Display PCB',
     desc: '냉장고 전면 디스플레이 및 온도 제어를 위한 전용 PCB 솔루션',
-    image: '/images/products/refrigerator-display.jpg',
+    image: '/images/products/fridge-display.jpg',
     details: {
       overview:
         '태승전자의 냉장고 Display PCB는 전면 터치 디스플레이와 멀티 존 온도 제어를 통합하는 핵심 제어보드입니다. 고객사 요구에 맞춘 커스텀 설계로 다양한 냉장고 라인업에 유연하게 대응하며, 저전력 설계로 에너지 효율 향상에 기여합니다.',
@@ -35,7 +35,7 @@ const features: Feature[] = [
   {
     title: '얼음정수기 제어보드',
     desc: '정수·냉각·얼음 생성을 하나의 보드로 통합 제어하는 솔루션',
-    image: '/images/products/water-purifier-main.jpg',
+    image: '/images/products/water-purifier.jpg',
     details: {
       overview:
         '정수 필터 관리, 냉각 시스템 구동, 얼음 생성 사이클을 하나의 제어보드로 통합한 솔루션입니다. UV 살균 타이밍 제어와 필터 교체 알림, 누수 감지 기능까지 내장하여 안전하고 편리한 사용 환경을 제공합니다.',
@@ -51,7 +51,7 @@ const features: Feature[] = [
   {
     title: '레인지후드 제어보드',
     desc: '흡입력 자동 조절과 LED 조명을 통합 제어하는 레인지후드 PCB',
-    image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/range-hood.jpg',
     details: {
       overview:
         'BLDC 팬 모터 구동과 조리 환경에 따른 자동 풍량 조절, LED 조명 제어를 통합한 레인지후드 전용 PCB입니다. 가스·연기 센서와 연동하여 자동으로 흡입력을 조절하며, 저소음 설계로 쾌적한 주방 환경을 만들어줍니다.',
@@ -222,9 +222,9 @@ export default function BusinessHomeAppliance() {
                 <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">주요 사양</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {selectedFeature.details.specs.map((spec, i) => (
-                    <div key={i} className="rounded-2xl bg-white/[0.03] border border-white/5 p-4">
-                      <div className="text-[11px] text-gray-500 mb-1">{spec.label}</div>
-                      <div className="text-sm font-medium">{spec.value}</div>
+                    <div key={i} className="rounded-xl bg-white/[0.03] border border-white/[0.06] p-4">
+                      <span className="text-[11px] text-gray-500 block mb-1">{spec.label}</span>
+                      <span className="text-sm font-medium">{spec.value}</span>
                     </div>
                   ))}
                 </div>
@@ -240,7 +240,7 @@ export default function BusinessHomeAppliance() {
                   {selectedFeature.details.applications.map((app, i) => (
                     <span
                       key={i}
-                      className="px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs text-gray-400"
+                      className="px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs text-gray-300"
                     >
                       {app}
                     </span>
