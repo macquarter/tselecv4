@@ -15,11 +15,13 @@ interface Feature {
   };
 }
 
+const STOCK = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=80`;
+
 const features: Feature[] = [
   {
     title: '태양광 패널 제어',
     desc: '태양광 발전 시스템의 MPPT 제어와 모니터링을 위한 솔루션',
-    image: '/images/products/solar-panel.jpg',
+    image: STOCK('photo-1509391366360-2e959784a276'),
     details: {
       overview:
         '태양광 패널에서 생산되는 DC 전력을 최적으로 관리하는 제어보드입니다. MPPT(최대전력점추적) 알고리즘으로 기상 조건 변화에 따른 최적 발전량을 확보하며, 계통 연계 보호 기능과 발전량 모니터링 기능을 내장하고 있습니다.',
@@ -35,7 +37,7 @@ const features: Feature[] = [
   {
     title: '수소 시스템 제어',
     desc: '수소 연료전지·전해조의 핵심 제어와 안전 관리 솔루션',
-    image: '/images/products/hydrogen.jpg',
+    image: STOCK('photo-1466611653911-95081537e5b7'),
     details: {
       overview:
         '수소 연료전지 스택의 출력 제어와 수전해 시스템의 운전 관리를 위한 보드입니다. 수소 누출 감지, 압력·온도 제어, 스택 전압 모니터링 등 다중 안전 기능을 내장하여 수소 에너지 시스템의 안전하고 효율적인 운영을 지원합니다.',
@@ -51,7 +53,7 @@ const features: Feature[] = [
   {
     title: '리튬이온 충전기 제어',
     desc: '리튬이온 배터리의 안전한 충방전 관리를 위한 BMS 솔루션',
-    image: '/images/products/lithium-charger.jpg',
+    image: STOCK('photo-1593941707882-a5bba14938c7'),
     details: {
       overview:
         '리튬이온 배터리 팩의 CC/CV 충전 제어, 셀 밸런싱, SOC/SOH 추정, 과충전·과방전 보호를 통합 수행하는 BMS 보드입니다. 다양한 배터리 용량과 전압에 대응하는 유연한 설계로 전기이동수단, ESS 등 폭넓은 분야에 적용됩니다.',
@@ -67,7 +69,7 @@ const features: Feature[] = [
   {
     title: '연료전지 제어',
     desc: '연료전지 발전 시스템의 스택 운전과 BoP를 통합 관리하는 솔루션',
-    image: '/images/products/fuel-cell-pbu.jpg',
+    image: STOCK('photo-1620714223084-8fcacc6dfd8d'),
     details: {
       overview:
         'PEMFC/SOFC 연료전지 스택의 출력 제어와 Balance of Plant(BoP) 장비를 통합 관리하는 제어보드입니다. 공기·연료 유량 조절, 가습기 제어, 열관리 등을 자동화하며, 부하 변동에 대한 빠른 응답 제어를 지원합니다.',
@@ -89,7 +91,6 @@ export default function BusinessRenewable() {
     <div className="min-h-screen bg-black text-white">
       <Navbar />
 
-      {/* Hero */}
       <section className="relative pt-40 pb-24 px-6">
         <div className="max-w-7xl mx-auto text-center">
           <motion.div
@@ -120,7 +121,6 @@ export default function BusinessRenewable() {
 
       <BusinessNav />
 
-      {/* Features Grid */}
       <section className="py-24 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -137,10 +137,8 @@ export default function BusinessRenewable() {
                 <img
                   src={feature.image}
                   alt={feature.title}
-                  className="absolute inset-0 w-full h-full object-cover opacity-40 transition-transform duration-1000 group-hover:scale-105"
-                  onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).style.display = 'none';
-                  }}
+                  className="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-1000 group-hover:scale-105"
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                 <div className="relative z-10 flex flex-col justify-end h-full p-8">
@@ -148,18 +146,8 @@ export default function BusinessRenewable() {
                   <p className="text-gray-400 text-sm font-light leading-relaxed">{feature.desc}</p>
                   <span className="mt-4 inline-flex items-center text-xs text-gray-500 group-hover:text-white transition-colors">
                     자세히 보기
-                    <svg
-                      className="ml-1 w-3.5 h-3.5"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        d="M5 12h14M12 5l7 7-7 7"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
+                    <svg className="ml-1 w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </span>
                 </div>
@@ -169,7 +157,6 @@ export default function BusinessRenewable() {
         </div>
       </section>
 
-      {/* Modal */}
       <AnimatePresence>
         {selectedFeature && (
           <motion.div
@@ -197,30 +184,10 @@ export default function BusinessRenewable() {
                 </svg>
               </button>
 
-              <motion.h2
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.05 }}
-                className="text-2xl font-bold tracking-tight mb-4"
-              >
-                {selectedFeature.title}
-              </motion.h2>
+              <h2 className="text-2xl font-bold tracking-tight mb-4">{selectedFeature.title}</h2>
+              <p className="text-gray-400 text-sm font-light leading-relaxed mb-8">{selectedFeature.details.overview}</p>
 
-              <motion.p
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.08 }}
-                className="text-gray-400 text-sm font-light leading-relaxed mb-8"
-              >
-                {selectedFeature.details.overview}
-              </motion.p>
-
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.12 }}
-                className="mb-8"
-              >
+              <div className="mb-8">
                 <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">주요 사양</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {selectedFeature.details.specs.map((spec, i) => (
@@ -230,25 +197,18 @@ export default function BusinessRenewable() {
                     </div>
                   ))}
                 </div>
-              </motion.div>
+              </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.16 }}
-              >
+              <div>
                 <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">적용 분야</h3>
                 <div className="flex flex-wrap gap-2">
                   {selectedFeature.details.applications.map((app, i) => (
-                    <span
-                      key={i}
-                      className="px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs text-gray-300"
-                    >
+                    <span key={i} className="px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs text-gray-300">
                       {app}
                     </span>
                   ))}
                 </div>
-              </motion.div>
+              </div>
             </motion.div>
           </motion.div>
         )}
