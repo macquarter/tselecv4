@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { useText, useImage } from '../contexts/SiteContentContext';
+import { useText } from '../contexts/SiteContentContext';
 
 export default function Greeting() {
   const badge = useText('gr-badge', 'CEO Message');
@@ -11,12 +11,11 @@ export default function Greeting() {
   const grD2 = useText('gr-d2', '고객만족 경영을 주도합니다.');
   const ceoName = useText('gr-ceo-name', '유태호');
   const ceoTitle = useText('gr-ceo-title', '태승전자(주) 대표이사');
-  const msg1 = useText('gr-msg1', '안녕하십니까?');
-  const msg2 = useText('gr-msg2', '저희 태승전자는 1989년 창립 이래 마이크로컨트롤러 설계 및 제조 분야에서 30년 이상의 경험과 전문성을 쌓아왔습니다. 가전제품, 의료기기, 태양광 에너지 등 다양한 산업 분야에서 신뢰할 수 있는 전자부품 솔루션을 제공하고 있습니다.');
-  const msg3 = useText('gr-msg3', '우리는 정밀한 품질과 고객만족을 최우선으로 삼으며, 첨단 기술과 혁신적인 제품개발을 통해 산업의 변화에 선도적으로 대응하고 있습니다.');
-  const msg4 = useText('gr-msg4', '한계에 도전하는 최고의 기술력으로 고객만족 경영을 주도하는 일류기업으로 도약하겠습니다.');
+  const msg1 = useText('gr-msg1', '홈페이지를 찾아주셔서 감사합니다.');
+  const msg2 = useText('gr-msg2', '태승전자는 1989년 시작해, 36년 동안 제어보드 한 가지에 집중해온 회사입니다. 가전·산업용·의료기기·신재생에너지 다양한 산업에 필요한 부품을 공급하고 있습니다.');
+  const msg3 = useText('gr-msg3', '좋은 부품 하나가 좋은 제품을 만든다고 믿습니다. 앞으로도 깊이 다듬어가겠습니다.');
+  const msg4 = useText('gr-msg4', '태승전자(주) 대표이사 유태호');
   const cvT = useText('gr-cv-t', '핵심 가치.');
-  const ceoImg = useImage('gr-ceo-img', 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80');
 
   const coreValues = [
     { title: useText('gr-v0t', '정밀한 품질'), desc: useText('gr-v0d', '최고의 기술력으로 정밀한 마이크로컨트롤러를 개발·제조합니다.') },
@@ -61,44 +60,26 @@ export default function Greeting() {
           </motion.p>
         </section>
 
-        <section className="max-w-6xl mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center mb-40">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className="relative"
-            >
-              <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent rounded-[2rem] transform -rotate-3 scale-105" />
-              <img 
-                src={ceoImg}
-                alt="CEO" 
-                className="w-full rounded-[2rem] shadow-2xl relative z-10"
-              />
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <h2 className="text-4xl md:text-5xl font-bold mb-3 tracking-tight">{ceoName}</h2>
-              <p className="text-gray-400 font-medium mb-10 tracking-wide uppercase text-sm">{ceoTitle}</p>
-              
-              <div className="space-y-8 text-gray-300 leading-relaxed font-light text-lg">
-                <p className="text-2xl font-medium text-white tracking-tight">
-                  {msg1}
-                </p>
-                <p>{msg2}</p>
-                <p>{msg3}</p>
-                <p className="text-white font-medium text-xl pt-6 tracking-tight">
-                  {msg4}
-                </p>
+        <section className="max-w-4xl mx-auto px-6">
+          <motion.div
+            className="mb-40"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="space-y-8 text-gray-300 leading-relaxed font-light text-lg">
+              <p className="text-2xl font-medium text-white tracking-tight">
+                {msg1}
+              </p>
+              <p>{msg2}</p>
+              <p>{msg3}</p>
+              <div className="pt-8 border-t border-white/10">
+                <h2 className="text-2xl font-bold tracking-tight">{ceoName}</h2>
+                <p className="text-gray-400 font-medium mt-1 tracking-wide uppercase text-sm">{ceoTitle}</p>
               </div>
-            </motion.div>
-          </div>
+            </div>
+          </motion.div>
 
           <motion.div 
             className="bg-[#0a0a0a] border border-white/5 rounded-[2.5rem] p-12 md:p-20 relative overflow-hidden"
