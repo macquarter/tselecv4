@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Shield, Cpu, Layers, CheckCircle2, Zap, Eye, Package, Truck, Wrench, CircuitBoard, Microchip, ThermometerSun, Factory } from 'lucide-react';
+import { Shield, Cpu, Layers, CheckCircle2, Zap, Eye, Package, Truck, Wrench, CircuitBoard, Microchip, ThermometerSun, Factory } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
@@ -96,10 +96,10 @@ export default function Process() {
   ];
 
   const kpis = [
-    { value: '100PPM', label: '이하 불량률', icon: <Shield size={24} className="text-green-400" /> },
-    { value: '99%', label: '납기준수율', icon: <Truck size={24} className="text-blue-400" /> },
-    { value: '100%', label: '검사커버리지', icon: <Eye size={24} className="text-purple-400" /> },
-    { value: '50만+', label: '월 생산능력', icon: <Factory size={24} className="text-amber-400" /> },
+    { value: '100PPM', label: '이하 불량률', icon: <Shield size={24} className="text-gray-400" /> },
+    { value: '99%', label: '납기준수율', icon: <Truck size={24} className="text-gray-400" /> },
+    { value: '100%', label: '검사커버리지', icon: <Eye size={24} className="text-gray-400" /> },
+    { value: '50만+', label: '월 생산능력', icon: <Factory size={24} className="text-gray-400" /> },
   ];
 
   return (
@@ -171,7 +171,7 @@ export default function Process() {
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-3xl font-bold tracking-tight mb-2">10단계 제조 공정</h2>
-            <p className="text-gray-500 font-light">각 단계를 클릭하면 상세 내용을 확인할 수 있습니다</p>
+            <p className="text-gray-500 font-light">각 단계에 마우스를 올리면 상세 내용을 확인할 수 있습니다</p>
           </motion.div>
 
           {/* Row 1: Steps 01-05 */}
@@ -185,28 +185,27 @@ export default function Process() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
                   className="relative group"
-                  onMouseEnter={() => setHoveredStep(step.num)}
+                  onMouseEnter={() => { setHoveredStep(step.num); setSelectedStep(step); }}
                   onMouseLeave={() => setHoveredStep(null)}
-                  onClick={() => setSelectedStep(step)}
                 >
                   <div className={`relative rounded-2xl bg-[#0a0a0a] border p-5 cursor-pointer transition-all duration-500 overflow-hidden ${
-                    hoveredStep === step.num ? 'border-purple-500/30 bg-[#111] shadow-lg shadow-purple-500/5 -translate-y-1' : 'border-white/5 hover:border-white/10'
+                    hoveredStep === step.num ? 'border-white/20 bg-[#111] shadow-lg shadow-white/5 -translate-y-1' : 'border-white/5 hover:border-white/10'
                   }`}>
                     {/* Glow effect on hover */}
-                    <div className={`absolute inset-0 bg-gradient-to-b from-purple-500/5 to-transparent transition-opacity duration-500 ${hoveredStep === step.num ? 'opacity-100' : 'opacity-0'}`} />
+                    <div className={`absolute inset-0 bg-gradient-to-b from-white/[0.03] to-transparent transition-opacity duration-500 ${hoveredStep === step.num ? 'opacity-100' : 'opacity-0'}`} />
 
                     <div className="relative z-10">
                       {/* Top row: step number + QC badge */}
                       <div className="flex items-center justify-between mb-3">
-                        <span className="text-[10px] font-mono font-bold text-purple-400 tracking-widest">STEP {step.num}</span>
+                        <span className="text-[10px] font-mono font-bold text-gray-400 tracking-widest">STEP {step.num}</span>
                         {step.qcTag && (
-                          <span className="px-2 py-0.5 rounded-full bg-purple-500 text-[9px] font-bold text-white tracking-wide">{step.qcTag}</span>
+                          <span className="px-2 py-0.5 rounded-full bg-white/20 text-[9px] font-bold text-white tracking-wide">{step.qcTag}</span>
                         )}
                       </div>
 
                       {/* Icon */}
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 transition-all duration-500 ${
-                        hoveredStep === step.num ? 'bg-purple-500/20 text-purple-400' : 'bg-white/5 text-gray-500'
+                        hoveredStep === step.num ? 'bg-white/10 text-gray-400' : 'bg-white/5 text-gray-500'
                       }`}>
                         {step.icon}
                       </div>
@@ -255,26 +254,25 @@ export default function Process() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.4 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
                   className="relative group"
-                  onMouseEnter={() => setHoveredStep(step.num)}
+                  onMouseEnter={() => { setHoveredStep(step.num); setSelectedStep(step); }}
                   onMouseLeave={() => setHoveredStep(null)}
-                  onClick={() => setSelectedStep(step)}
                 >
                   <div className={`relative rounded-2xl bg-[#0a0a0a] border p-5 cursor-pointer transition-all duration-500 overflow-hidden ${
-                    step.num === '10' ? 'bg-gradient-to-br from-[#0a0a0a] to-[#111] border-purple-500/20' :
-                    hoveredStep === step.num ? 'border-purple-500/30 bg-[#111] shadow-lg shadow-purple-500/5 -translate-y-1' : 'border-white/5 hover:border-white/10'
+                    step.num === '10' ? 'bg-gradient-to-br from-[#0a0a0a] to-[#111] border-white/10' :
+                    hoveredStep === step.num ? 'border-white/20 bg-[#111] shadow-lg shadow-white/5 -translate-y-1' : 'border-white/5 hover:border-white/10'
                   }`}>
-                    <div className={`absolute inset-0 bg-gradient-to-b from-purple-500/5 to-transparent transition-opacity duration-500 ${hoveredStep === step.num ? 'opacity-100' : 'opacity-0'}`} />
+                    <div className={`absolute inset-0 bg-gradient-to-b from-white/[0.03] to-transparent transition-opacity duration-500 ${hoveredStep === step.num ? 'opacity-100' : 'opacity-0'}`} />
 
                     <div className="relative z-10">
                       <div className="flex items-center justify-between mb-3">
-                        <span className="text-[10px] font-mono font-bold text-purple-400 tracking-widest">STEP {step.num}</span>
+                        <span className="text-[10px] font-mono font-bold text-gray-400 tracking-widest">STEP {step.num}</span>
                         {step.qcTag && (
-                          <span className="px-2 py-0.5 rounded-full bg-purple-500 text-[9px] font-bold text-white tracking-wide">{step.qcTag}</span>
+                          <span className="px-2 py-0.5 rounded-full bg-white/20 text-[9px] font-bold text-white tracking-wide">{step.qcTag}</span>
                         )}
                       </div>
 
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 transition-all duration-500 ${
-                        hoveredStep === step.num ? 'bg-purple-500/20 text-purple-400' : 'bg-white/5 text-gray-500'
+                        hoveredStep === step.num ? 'bg-white/10 text-gray-400' : 'bg-white/5 text-gray-500'
                       }`}>
                         {step.icon}
                       </div>
@@ -300,103 +298,58 @@ export default function Process() {
               ))}
             </div>
           </div>
-        </section>
 
-        {/* Step Detail Modal */}
-        <AnimatePresence>
-          {selectedStep && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="fixed inset-0 z-50 flex items-center justify-center px-6 bg-black/80 backdrop-blur-sm"
-              onClick={() => setSelectedStep(null)}
-            >
+          {/* Inline Detail Panel */}
+          <AnimatePresence mode="wait">
+            {selectedStep && (
               <motion.div
-                initial={{ opacity: 0, y: 40, scale: 0.96 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 40, scale: 0.96 }}
+                key={selectedStep.num}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                className="relative w-full max-w-lg max-h-[85vh] overflow-y-auto rounded-[2rem] bg-[#0a0a0a] border border-white/10 p-8 md:p-10"
-                onClick={(e) => e.stopPropagation()}
+                className="mt-8 rounded-2xl bg-[#0a0a0a] border border-white/10 p-8 md:p-10"
               >
-                <button
-                  onClick={() => setSelectedStep(null)}
-                  className="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition-colors"
-                >
-                  <X size={16} />
-                </button>
-
-                {/* Step badge */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.05 }}
-                  className="flex items-center gap-2 mb-5"
-                >
-                  <span className="px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-xs text-purple-400 font-mono font-bold tracking-widest">
+                <div className="flex items-center gap-3 mb-5">
+                  <span className="px-3 py-1 rounded-full bg-white/[0.06] border border-white/10 text-xs text-gray-400 font-mono font-bold tracking-widest">
                     STEP {selectedStep.num}
                   </span>
                   {selectedStep.qcTag && (
-                    <span className="px-2.5 py-1 rounded-full bg-purple-500 text-[10px] font-bold text-white tracking-wide">
+                    <span className="px-2.5 py-1 rounded-full bg-white/20 text-[10px] font-bold text-white tracking-wide">
                       {selectedStep.qcTag}
                     </span>
                   )}
-                </motion.div>
-
-                {/* Icon + Title */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.08 }}
-                  className="flex items-center gap-3 mb-2"
-                >
-                  <div className="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
+                </div>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-12 h-12 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center text-gray-400">
                     {selectedStep.icon}
                   </div>
                   <div>
                     <h2 className="text-2xl font-bold tracking-tight">{selectedStep.title}</h2>
                     <p className="text-sm text-gray-500">{selectedStep.eng}</p>
                   </div>
-                </motion.div>
-
-                {/* Description */}
-                <motion.p
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.1 }}
-                  className="text-gray-400 text-sm font-light leading-relaxed mt-5 mb-8"
-                >
+                </div>
+                <p className="text-gray-400 text-sm font-light leading-relaxed mt-5 mb-8">
                   {selectedStep.detail}
-                </motion.p>
-
-                {/* Equipment / Key Items */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.12 }}
-                >
+                </p>
+                <div>
                   <h4 className="text-xs tracking-widest text-gray-500 uppercase mb-3">주요 장비 및 시스템</h4>
-                  <div className="grid grid-cols-1 gap-2">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                     {selectedStep.equipment.map((item, i) => (
-                      <motion.div
+                      <div
                         key={i}
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.25, delay: 0.15 + i * 0.05 }}
                         className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06]"
                       >
-                        <div className="w-1.5 h-1.5 rounded-full bg-purple-400 shrink-0" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-gray-400 shrink-0" />
                         <span className="text-sm text-gray-300">{item}</span>
-                      </motion.div>
+                      </div>
                     ))}
                   </div>
-                </motion.div>
+                </div>
               </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            )}
+          </AnimatePresence>
+        </section>
 
         {/* ═══════ Bottom Sections: QC, Capabilities, Categories ═══════ */}
         <section className="max-w-7xl mx-auto px-6 mt-8 mb-32">
@@ -409,8 +362,8 @@ export default function Process() {
             className="mb-12"
           >
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
-                <Shield size={20} className="text-purple-400" />
+              <div className="w-10 h-10 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center">
+                <Shield size={20} className="text-gray-400" />
               </div>
               <div>
                 <h3 className="text-2xl font-bold tracking-tight">3-Stage 품질관리</h3>
@@ -425,9 +378,9 @@ export default function Process() {
                   title: '입고검사 (IQC)',
                   subtitle: 'Incoming Quality Control',
                   desc: '전 자재 수입검사를 통해 불량 부품의 라인 투입을 원천 차단합니다. BOM 매칭과 로트 추적으로 자재 이력을 100% 관리합니다.',
-                  color: 'from-green-500/10 to-transparent',
-                  borderColor: 'border-green-500/20',
-                  dotColor: 'bg-green-400',
+                  color: 'from-white/[0.04] to-transparent',
+                  borderColor: 'border-white/10',
+                  dotColor: 'bg-gray-400',
                   items: ['전수 외관검사', 'LCR 전기적 측정', 'BOM 자동 매칭', '로트 추적 관리'],
                 },
                 {
@@ -435,9 +388,9 @@ export default function Process() {
                   title: '기능검사 (ICT)',
                   subtitle: 'In-Circuit & Functional Test',
                   desc: 'ICT 자동 테스트와 기능검사를 통해 모든 보드의 전기적 특성과 동작 시퀀스를 100% 검증합니다.',
-                  color: 'from-blue-500/10 to-transparent',
-                  borderColor: 'border-blue-500/20',
-                  dotColor: 'bg-blue-400',
+                  color: 'from-white/[0.04] to-transparent',
+                  borderColor: 'border-white/10',
+                  dotColor: 'bg-gray-400',
                   items: ['도통·저항·전압 측정', '동작 시퀀스 검증', '오실로스코프 파형 확인', '데이터 로깅'],
                 },
                 {
@@ -445,9 +398,9 @@ export default function Process() {
                   title: '출하검사 (OQC)',
                   subtitle: 'Outgoing Quality Control',
                   desc: '출하 전 최종 외관·기능·포장 상태를 종합 점검합니다. AQL 기준 샘플링과 전수 육안 검사를 병행합니다.',
-                  color: 'from-amber-500/10 to-transparent',
-                  borderColor: 'border-amber-500/20',
-                  dotColor: 'bg-amber-400',
+                  color: 'from-white/[0.04] to-transparent',
+                  borderColor: 'border-white/10',
+                  dotColor: 'bg-gray-400',
                   items: ['AQL 샘플링 검사', '외관 3배율 검사', '라벨·시리얼 확인', '출하 판정 체크시트'],
                 },
               ].map((qc, i) => (
@@ -461,7 +414,7 @@ export default function Process() {
                 >
                   <div className={`absolute inset-0 bg-gradient-to-b ${qc.color} opacity-50`} />
                   <div className="relative z-10">
-                    <span className="inline-block px-2.5 py-1 rounded-full bg-purple-500 text-[10px] font-bold text-white tracking-wide mb-4">
+                    <span className="inline-block px-2.5 py-1 rounded-full bg-white/20 text-[10px] font-bold text-white tracking-wide mb-4">
                       {qc.stage}
                     </span>
                     <h4 className="text-lg font-bold tracking-tight mb-1">{qc.title}</h4>
@@ -491,11 +444,11 @@ export default function Process() {
               transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
               className="rounded-2xl bg-[#0a0a0a] border border-white/5 p-8 relative overflow-hidden"
             >
-              <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-cyan-500/5 to-transparent rounded-bl-full" />
+              <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-white/[0.03] to-transparent rounded-bl-full" />
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
-                    <Cpu size={20} className="text-cyan-400" />
+                  <div className="w-10 h-10 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center">
+                    <Cpu size={20} className="text-gray-400" />
                   </div>
                   <h3 className="text-xl font-bold tracking-tight">핵심 보유 역량</h3>
                 </div>
@@ -515,7 +468,7 @@ export default function Process() {
                       transition={{ duration: 0.4, delay: 0.2 + i * 0.08 }}
                       className="flex items-start gap-3 p-4 rounded-xl bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.04] hover:border-white/[0.08] transition-all duration-300"
                     >
-                      <div className="w-2 h-2 rounded-full bg-cyan-400 mt-1.5 shrink-0" />
+                      <div className="w-2 h-2 rounded-full bg-gray-400 mt-1.5 shrink-0" />
                       <div>
                         <span className="text-sm font-semibold text-white">{cap.label}</span>
                         <p className="text-xs text-gray-500 mt-0.5">{cap.desc}</p>
@@ -534,11 +487,11 @@ export default function Process() {
               transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
               className="rounded-2xl bg-[#0a0a0a] border border-white/5 p-8 relative overflow-hidden"
             >
-              <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-orange-500/5 to-transparent rounded-bl-full" />
+              <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-white/[0.03] to-transparent rounded-bl-full" />
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center">
-                    <Layers size={20} className="text-orange-400" />
+                  <div className="w-10 h-10 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center">
+                    <Layers size={20} className="text-gray-400" />
                   </div>
                   <h3 className="text-xl font-bold tracking-tight">대응 카테고리</h3>
                 </div>
@@ -572,7 +525,7 @@ export default function Process() {
                       <p className="text-xs text-gray-500 mb-3">{cat.desc}</p>
                       <div className="flex flex-wrap gap-1.5">
                         {cat.tags.map((tag, j) => (
-                          <span key={j} className="px-2 py-0.5 rounded-md bg-orange-500/10 border border-orange-500/15 text-[10px] text-orange-300 font-medium">
+                          <span key={j} className="px-2 py-0.5 rounded-md bg-white/[0.06] border border-white/10 text-[10px] text-gray-400 font-medium">
                             {tag}
                           </span>
                         ))}
