@@ -1,28 +1,17 @@
 import { motion } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 import { useText } from '../contexts/SiteContentContext';
 
 export default function History() {
-  const hisT = useText('his-t', '최근의 발자취.');
-  const kicker = useText('his-kicker', '끊임없는 혁신.');
+  const { t } = useTranslation();
+  const hisT = useText('his-t', t('history.title'));
+  const kicker = useText('his-kicker', t('history.kicker'));
 
-  // 2020s 이후만 표시 — 4개 마일스톤 (Updated: 2026-05-27)
   const historyData = [
-    {
-      year: useText('t0y', '2026'),
-      text: useText('t0t', 'AI 기반 품질검사 도입 · 사업영역 4개 카테고리(가전·산업용·의료기기·신재생에너지) 풀라인업 확립'),
-    },
-    {
-      year: useText('t1y', '2024'),
-      text: useText('t1t', '신재생에너지(태양광·수소·연료전지) 제어보드 라인업 출시 · 해외 수출 품목 확대'),
-    },
-    {
-      year: useText('t2y', '2022'),
-      text: useText('t2t', '의료기기 MCU 보드 IEC 60601 인증 · ISO 14001 환경경영 시스템 갱신'),
-    },
-    {
-      year: useText('t3y', '2020'),
-      text: useText('t3t', '인천광역시 서구 로봇랜드 신공장 이전 · 스마트팩토리 시스템(MES·SMT 3라인) 도입'),
-    },
+    { year: useText('t0y', t('history.m0y')), text: useText('t0t', t('history.m0t')) },
+    { year: useText('t1y', t('history.m1y')), text: useText('t1t', t('history.m1t')) },
+    { year: useText('t2y', t('history.m2y')), text: useText('t2t', t('history.m2t')) },
+    { year: useText('t3y', t('history.m3y')), text: useText('t3t', t('history.m3t')) },
   ];
 
   return (
