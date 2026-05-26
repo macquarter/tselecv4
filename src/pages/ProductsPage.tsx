@@ -6,95 +6,59 @@ import ProductNav from '../components/ProductNav';
 export default function ProductsPage() {
   const products = [
     {
-      id: 'freezer-main',
-      title: '냉동고 MAIN',
-      desc: '냉동고 전용 메인 컨트롤러 기판',
-      img: '/images/products/freezer-main.jpg',
-      link: '/main-controller'
-    },
-    {
-      id: 'medical-device',
-      title: '의료기기 제어보드',
-      desc: 'AC220V 전원, ATMEGA16L MCU 기반 의료기기 제어',
-      img: '/images/products/medical-device.jpg',
-      link: '/main-controller'
-    },
-    {
-      id: 'water-purifier-main',
-      title: '정수기 MAIN',
-      desc: '24VDC, Renesas MCU 기반 정수기 메인 제어보드',
-      img: '/images/products/water-purifier-main.jpg',
-      link: '/main-controller'
-    },
-    {
-      id: 'air-purifier-main',
-      title: '공기청정기 MAIN',
-      desc: '12VDC, BLDC/STEPPING 모터 제어 및 LCD 디스플레이',
-      img: '/images/products/air-purifier-main.jpg',
-      link: '/main-controller'
-    },
-    {
-      id: 'refrigerator-main',
-      title: '냉장고 MAIN',
-      desc: 'AC220V 전원, 압축기·FAN·RGB LED·센서 통합 제어',
-      img: '/images/products/refrigerator-main.jpg',
-      link: '/main-controller'
-    },
-    {
-      id: 'smart-booth',
-      title: '스마트부스',
-      desc: 'ESP32 기반 Wi-Fi 연동형 스마트 부스 제어 시스템',
-      img: '/images/products/smart-booth.jpg',
-      link: '/main-controller'
-    },
-    {
-      id: 'fuel-cell-pbu',
-      title: '연료전지 PBU',
-      desc: '연료전지 Power Board Unit 제어 기판',
-      img: '/images/products/fuel-cell-pbu.jpg',
-      link: '/others'
-    },
-    {
-      id: 'smps-25v',
-      title: 'SMPS 25V/2.0A',
-      desc: '25V 2.0A 출력 스위칭 모드 전원공급장치',
-      img: '/images/products/smps-25v.jpg',
-      link: '/others'
-    },
-    {
-      id: 'smps-120w',
-      title: 'SMPS 120W',
-      desc: '120W급 고출력 스위칭 모드 전원공급장치',
-      img: '/images/products/smps-120w.jpg',
-      link: '/others'
-    },
-    {
-      id: 'air-purifier-power',
-      title: '공기청정기 POWER',
-      desc: '220VAC 전원, 모터 구동 전용 파워보드',
-      img: '/images/products/air-purifier-power.jpg',
-      link: '/others'
-    },
-    {
-      id: 'refrigerator-display',
-      title: '냉장고 DISPLAY',
-      desc: '냉장고 전면 디스플레이 제어 모듈',
-      img: '/images/products/refrigerator-display.jpg',
+      id: 'display',
+      title: '가전 디스플레이',
+      desc: '냉장고, 세탁기 등 다양한 가전제품의 LCD/OLED 디스플레이',
+      img: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&w=800&q=80',
+      fallback: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&w=800&q=80',
       link: '/display'
     },
     {
-      id: 'water-purifier-power',
-      title: '정수기 POWER',
-      desc: '정수기 전용 파워 서플라이 보드',
-      img: '/images/products/water-purifier-power.jpg',
+      id: 'medical',
+      title: '의료기기 MCU',
+      desc: '높은 신뢰성의 의료 전자기기 제어용 마이크로컨트롤러',
+      img: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=800&q=80',
+      fallback: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=800&q=80',
+      link: '/main-controller'
+    },
+    {
+      id: 'solar',
+      title: '태양광 인버터',
+      desc: '태양광 발전 시스템의 전력 변환 제어 기술',
+      img: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80',
+      fallback: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80',
       link: '/others'
     },
+    {
+      id: 'module',
+      title: '디스플레이 모듈',
+      desc: '터치기능이 통합된 고급형 디스플레이 모듈',
+      img: 'https://images.unsplash.com/photo-1526406915894-7bcd65f60845?auto=format&fit=crop&w=800&q=80',
+      fallback: 'https://images.unsplash.com/photo-1526406915894-7bcd65f60845?auto=format&fit=crop&w=800&q=80',
+      link: '/display'
+    },
+    {
+      id: 'temp',
+      title: '디지털 온도제어기',
+      desc: '산업용 및 가전용 고정밀 온도 제어',
+      img: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=80',
+      fallback: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=80',
+      link: '/others'
+    },
+    {
+      id: 'iot',
+      title: 'IoT 스마트제어',
+      desc: 'IoT 기술 기반 스마트 제어 솔루션',
+      img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80',
+      fallback: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80',
+      link: '/main-controller'
+    }
   ];
 
   return (
     <div className="bg-black min-h-screen text-white selection:bg-white/30 selection:text-white">
       <Navbar />
-
+      
       <main className="pt-32 pb-20">
         {/* Hero Section */}
         <section className="relative flex flex-col items-center justify-center text-center px-6 mb-32">
@@ -106,7 +70,7 @@ export default function ProductsPage() {
           >
             Products
           </motion.div>
-          <motion.h1
+          <motion.h1 
             className="text-5xl md:text-7xl font-bold mb-8 tracking-tighter"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -117,14 +81,14 @@ export default function ProductsPage() {
               태승전자 제어 솔루션.
             </span>
           </motion.h1>
-          <motion.p
+          <motion.p 
             className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto font-light tracking-tight"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
-            가전·의료·산업용 장비까지,<br className="hidden md:block" />
-            실제 양산 중인 제어 기판 라인업.
+            가전부터 산업용 장비까지,<br className="hidden md:block" />
+            완벽한 제어를 위한 마이크로컨트롤러 라인업.
           </motion.p>
         </section>
 
@@ -133,39 +97,29 @@ export default function ProductsPage() {
           <ProductNav />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.map((product, i) => (
-              <motion.a
+              <motion.a 
                 href={product.link}
                 key={product.id}
-                className="group relative rounded-[2rem] overflow-hidden bg-[#0a0a0a] border border-white/5 block h-[420px]"
+                className="group relative rounded-[2rem] overflow-hidden bg-[#0a0a0a] border border-white/5 block flex flex-col h-[450px]"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.8, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
               >
-                {/* Product image - centered board photo */}
-                <div className="absolute inset-0 flex items-center justify-center p-8 pt-20">
-                  <img
-                    src={product.img}
-                    alt={product.title}
-                    className="max-w-full max-h-full object-contain transition-transform duration-700 group-hover:scale-110"
+                <div className="p-10 z-10 relative">
+                  <h3 className="text-3xl font-bold mb-3 tracking-tight group-hover:text-white transition-colors">{product.title}</h3>
+                  <p className="text-gray-400 text-sm leading-relaxed font-light max-w-[80%]">{product.desc}</p>
+                </div>
+                <div className="absolute inset-0 top-1/3 mt-4 overflow-hidden rounded-b-[2rem]">
+                  <img 
+                    src={product.img} 
+                    alt={product.title} 
+                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-60 group-hover:opacity-90"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/80" />
-
-                {/* Top label */}
-                <div className="absolute top-6 left-6 z-10">
-                  <span className="text-[10px] font-semibold tracking-widest text-gray-500 uppercase">PCB Module</span>
-                </div>
-
-                {/* Bottom info */}
-                <div className="absolute bottom-0 left-0 right-0 p-8 z-10">
-                  <h3 className="text-xl font-bold mb-1.5 tracking-tight group-hover:text-white transition-colors">{product.title}</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed font-light">{product.desc}</p>
-                </div>
-
-                {/* Arrow */}
-                <div className="absolute bottom-8 right-8 z-20 w-9 h-9 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <div className="absolute bottom-8 right-8 z-20 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 12h14M12 5l7 7-7 7"/>
                   </svg>
                 </div>
