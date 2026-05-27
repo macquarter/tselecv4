@@ -36,7 +36,9 @@
     "specs": "Key Specifications",
     "applications": "Applications",
     "overview": "Overview",
-    "close": "Close"
+    "close": "Close",
+    "detail": "View Details",
+    "productImage": "Product Image"
   },
   "home": {
     "heroTag": "Since 1989",
@@ -79,13 +81,7 @@
     "renewableTitle2": "Renewable Energy Control Solutions.",
     "renewableDesc": "We provide control technology for eco-friendly energy systems including solar, hydrogen, and lithium-ion charging applications."
   },
-  "lang": {
-    "ko": "한국어",
-    "en": "English",
-    "zh": "中文",
-    "ja": "日本語",
-    "vi": "Tiếng Việt"
-  },
+  "lang": { "ko": "한국어", "en": "English", "zh": "中文", "ja": "日本語", "vi": "Tiếng Việt" },
   "greeting": {
     "badge": "CEO Message",
     "t1": "Our promise",
@@ -109,43 +105,25 @@
     "v2d": "In-house R&D from circuit design to firmware to mass production. We create new value through digital convergence.",
     "v3t": "Sustainable Growth",
     "v3d": "Full lineup across 4 business areas, expanding exports. We elevate brand value and pursue sustainable growth.",
-    "v0stat": "100PPM",
-    "v1stat": "99%",
-    "v2stat": "R&D",
-    "v3stat": "4",
-    "v0statLabel": "Defect rate",
-    "v1statLabel": "On-time delivery",
-    "v2statLabel": "In-house R&D",
-    "v3statLabel": "Business areas"
+    "v0stat": "100PPM", "v1stat": "99%", "v2stat": "R&D", "v3stat": "4",
+    "v0statLabel": "Defect rate", "v1statLabel": "On-time delivery", "v2statLabel": "In-house R&D", "v3statLabel": "Business areas"
   },
   "history": {
     "kicker": "Endless innovation.",
     "title": "Recent milestones.",
-    "m0y": "2026",
-    "m0t": "AI-based quality inspection introduced · 4 business categories (home appliance · industrial · medical · renewable) full lineup established",
-    "m1y": "2024",
-    "m1t": "Launched renewable energy (solar · hydrogen · fuel cell) control board lineup · expanded export categories",
-    "m2y": "2022",
-    "m2t": "Medical MCU board IEC 60601 certified · ISO 14001 environmental management renewed",
-    "m3y": "2020",
-    "m3t": "Relocated to new factory at Robot Land, Incheon · Smart factory (MES + 3 SMT lines) deployed"
+    "m0y": "2026", "m0t": "AI-based quality inspection introduced · 4 business categories full lineup established",
+    "m1y": "2024", "m1t": "Launched renewable energy (solar · hydrogen · fuel cell) control board lineup · expanded export categories",
+    "m2y": "2022", "m2t": "Medical MCU board IEC 60601 certified · ISO 14001 environmental management renewed",
+    "m3y": "2020", "m3t": "Relocated to new factory at Robot Land, Incheon · Smart factory deployed"
   },
   "process": {
     "badge": "Manufacturing Process",
-    "t1": "A journey to perfection.",
-    "t2": "Manufacturing process.",
-    "desc1": "From design to shipping — a systematic 10-step process",
-    "desc2": "produces defect-free products.",
-    "stagesTitle": "10-step manufacturing process.",
-    "stagesHint": "Hover over each step to view the details.",
-    "kpi0label": "Defect rate",
-    "kpi1label": "On-time delivery",
-    "kpi2label": "Inspection coverage",
-    "kpi3label": "Monthly capacity",
-    "qcTitle": "3-Stage Quality Control.",
-    "qcSubtitle": "Triple quality gate from incoming to shipping.",
-    "capTitle": "Core capabilities.",
-    "catTitle": "Response categories."
+    "t1": "A journey to perfection.", "t2": "Manufacturing process.",
+    "desc1": "From design to shipping — a systematic 10-step process", "desc2": "produces defect-free products.",
+    "stagesTitle": "10-step manufacturing process.", "stagesHint": "Hover over each step to view the details.",
+    "kpi0label": "Defect rate", "kpi1label": "On-time delivery", "kpi2label": "Inspection coverage", "kpi3label": "Monthly capacity",
+    "qcTitle": "3-Stage Quality Control.", "qcSubtitle": "Triple quality gate from incoming to shipping.",
+    "capTitle": "Core capabilities.", "catTitle": "Response categories."
   },
   "about": {
     "kicker": "Trust built on technology —",
@@ -153,14 +131,10 @@
     "desc": "Since our founding in 1989, TSELEC has built customer trust through consistent quality and technology in MCU-based control board design and manufacturing. From our facility in Robot Land, Incheon, we supply core electronic components to diverse industries at home and abroad.",
     "smartLabel": "Smart Factory",
     "smartTitle": "Advanced Production Facility at Incheon Robot Land",
-    "stat0v": "36+",
-    "stat0l": "Years",
-    "stat1v": "100+",
-    "stat1l": "Product models",
-    "stat2v": "4",
-    "stat2l": "Business areas",
-    "stat3v": "ISO",
-    "stat3l": "Quality certified"
+    "stat0v": "36+", "stat0l": "Years",
+    "stat1v": "100+", "stat1l": "Product models",
+    "stat2v": "4", "stat2l": "Business areas",
+    "stat3v": "ISO", "stat3l": "Quality certified"
   },
   "hero": {
     "t1": "Precise control,",
@@ -178,29 +152,18 @@
     "e2d": "Solar inverter controllers with 99%+ MPPT efficiency. Grid-tie/off-grid switching, remote monitoring supported."
   },
   "contact": {
-    "t1": "Any time,",
-    "t2": "feel free to contact us.",
+    "t1": "Any time,", "t2": "feel free to contact us.",
     "s": "We respond promptly to product inquiries, technical consultations, and quote requests.",
-    "formTitle": "Leave an inquiry",
-    "formSub": "Our team will reach out shortly.",
+    "formTitle": "Leave an inquiry", "formSub": "Our team will reach out shortly.",
     "address": "62-8, Robot Land-ro 249beon-gil, Seo-gu, Incheon",
-    "phone": "032-329-7600 ~ 7603",
-    "fax": "032-329-7604",
+    "phone": "032-329-7600 ~ 7603", "fax": "032-329-7604",
     "hours": "Weekdays 09:00 – 18:00 (closed on weekends/holidays)",
-    "iAddress": "Address",
-    "iPhone": "Telephone",
-    "iFax": "Fax",
-    "iHours": "Business Hours",
-    "nameLabel": "Company / Name *",
-    "namePh": "TSELEC / Your name",
-    "phoneLabel": "Phone",
-    "phonePh": "010-0000-0000",
-    "emailLabel": "Email *",
-    "emailPh": "example@company.com",
-    "msgLabel": "Message *",
-    "msgPh": "Please write your product name and inquiry.",
-    "submit": "Send Inquiry",
-    "sending": "Sending…",
+    "iAddress": "Address", "iPhone": "Telephone", "iFax": "Fax", "iHours": "Business Hours",
+    "nameLabel": "Company / Name *", "namePh": "TSELEC / Your name",
+    "phoneLabel": "Phone", "phonePh": "010-0000-0000",
+    "emailLabel": "Email *", "emailPh": "example@company.com",
+    "msgLabel": "Message *", "msgPh": "Please write your product name and inquiry.",
+    "submit": "Send Inquiry", "sending": "Sending…",
     "successTitle": "Your inquiry has been received",
     "successSub": "Our team will get back to you shortly.",
     "successAgain": "Submit another"
@@ -220,10 +183,80 @@
   "news": {
     "t": "News & Announcements.",
     "s": "Latest updates from TSELEC.",
-    "viewAll": "View all",
-    "newBadge": "NEW"
+    "viewAll": "View all", "newBadge": "NEW"
   },
-  "kpi": {
-    "monthly": "300K+/mo"
+  "kpi": { "monthly": "300K+/mo" },
+  "homeProducts": {
+    "t1": "Electronic solutions for",
+    "t2": "diverse industries.",
+    "p0n": "Refrigerator Control Board",
+    "p0d": "Inverter compressor control & temperature MCU module",
+    "p1n": "Dishwasher Controller",
+    "p1d": "Automatic temperature & humidity control",
+    "p2n": "Ventilation Controller",
+    "p2d": "Fan speed control & filter status detection",
+    "p3n": "Medical MCU Board",
+    "p3d": "Precision sensor interface & reliable design",
+    "p4n": "Solar Inverter Controller",
+    "p4d": "Maximum power tracking via MPPT algorithm"
+  },
+  "productsPage": {
+    "badge": "Products",
+    "t1": "Center of every innovation.",
+    "t2": "TSELEC Control Solutions.",
+    "d1": "From home appliances to industrial equipment —",
+    "d2": "a microcontroller lineup for perfect control.",
+    "p0n": "Home Appliance Display",
+    "p0d": "LCD/OLED displays for refrigerators, washers, and more",
+    "p1n": "Medical MCU",
+    "p1d": "High-reliability microcontrollers for medical electronics",
+    "p2n": "Solar Inverter",
+    "p2d": "Power conversion control for solar generation systems",
+    "p3n": "Display Module",
+    "p3d": "Premium display modules with integrated touch",
+    "p4n": "Digital Temperature Controller",
+    "p4d": "High-precision temperature control for industrial & home",
+    "p5n": "IoT Smart Control",
+    "p5d": "IoT-powered smart control solutions"
+  },
+  "bizHome": {
+    "f0n": "Refrigerator Display PCB",
+    "f0d": "Dedicated PCB for refrigerator front display & temperature control",
+    "f1n": "Ice Maker Water Purifier Control",
+    "f1d": "All-in-one board for water purification, cooling, and ice making",
+    "f2n": "Range Hood Control PCB",
+    "f2d": "Range hood PCB integrating suction auto-control & LED lighting",
+    "f3n": "Air Purifier Control PCB",
+    "f3d": "PCB linking PM sensors with multi-stage filter systems"
+  },
+  "bizIndustrial": {
+    "f0n": "Industrial Dishwasher",
+    "f0d": "Industrial solution for high-temp wash, rinse, and dry cycles",
+    "f1n": "Industrial Temperature Controller",
+    "f1d": "Industrial temperature management with precision PID algorithms",
+    "f2n": "Pump Control Board",
+    "f2d": "Pump control integrating level sensing & inverter motor drive",
+    "f3n": "Private Booth (Single)",
+    "f3d": "Smart control of lighting, ventilation, and power for single-person booths",
+    "f4n": "Meeting Booth",
+    "f4d": "Smart control of lighting, AV, and HVAC for meeting rooms"
+  },
+  "bizMedical": {
+    "f0n": "Centrifuge Control Board",
+    "f0d": "Core board for high-speed RPM control & safety interlocks",
+    "f1n": "Diagnostic Instrument Control",
+    "f1d": "IVD instrument control for sample transfer, reaction, and measurement",
+    "f2n": "Dental Scaler Control",
+    "f2d": "Precision control of ultrasonic transducer output and frequency"
+  },
+  "bizRenewable": {
+    "f0n": "Solar Panel Control",
+    "f0d": "MPPT control and monitoring for solar power systems",
+    "f1n": "Hydrogen System Control",
+    "f1d": "Core control & safety management for fuel cells and electrolyzers",
+    "f2n": "Lithium-Ion Charger Control",
+    "f2d": "BMS solution for safe lithium-ion charge/discharge management",
+    "f3n": "Fuel Cell Control",
+    "f3d": "Integrated stack and BoP management for fuel cell power systems"
   }
 }
