@@ -7,9 +7,8 @@ import BusinessNav from '../components/BusinessNav';
 
 interface Feature {
   key: string;
-  image: string;        // 카드 썸네일 (Unsplash 스톡)
-  modalImage: string;   // 모달 내부 제품 이미지 (로컬 제품군 폴더)
-  fallback?: string;    // 모달 이미지 폴백
+  image: string;
+  fallback?: string;
   specs: { label: string; value: string }[];
   applications: string[];
 }
@@ -19,9 +18,8 @@ const STOCK = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit
 const features: Feature[] = [
   {
     key: 'f0',
-    image: STOCK('photo-1571175443880-49e1d25b2bc5'),
-    modalImage: '/images/products/refrigerator-display.jpg',
-    fallback: '/images/products/fridge-display.jpg',
+    image: '/images/products/refrigerator-display.jpg',
+    fallback: STOCK('photo-1571175443880-49e1d25b2bc5'),
     specs: [
       { label: '프로세서', value: '32-bit ARM Cortex-M' },
       { label: '온도 정밀도', value: '±0.3°C' },
@@ -32,9 +30,8 @@ const features: Feature[] = [
   },
   {
     key: 'f1',
-    image: STOCK('photo-1548839140-29a749e1cf4d'),
-    modalImage: '/images/products/water-purifier-ice.jpg',
-    fallback: '/images/products/water-purifier.jpg',
+    image: '/images/products/water-purifier-ice.jpg',
+    fallback: STOCK('photo-1548839140-29a749e1cf4d'),
     specs: [
       { label: '냉각 제어', value: '인버터 컴프레서 구동' },
       { label: '필터 관리', value: '자동 교체 알림' },
@@ -45,8 +42,8 @@ const features: Feature[] = [
   },
   {
     key: 'f2',
-    image: STOCK('photo-1556909114-f6e7ad7d3136'),
-    modalImage: '/images/products/range-hood.jpg',
+    image: '/images/products/range-hood.jpg',
+    fallback: STOCK('photo-1556909114-f6e7ad7d3136'),
     specs: [
       { label: '모터 제어', value: 'BLDC 3단 풍량' },
       { label: '센서 연동', value: '가스·연기 자동 감지' },
@@ -57,8 +54,8 @@ const features: Feature[] = [
   },
   {
     key: 'f3',
-    image: STOCK('photo-1585771724684-38269d6639fd'),
-    modalImage: '/images/products/air-purifier-main.jpg',
+    image: '/images/products/air-purifier-main.jpg',
+    fallback: STOCK('photo-1585771724684-38269d6639fd'),
     specs: [
       { label: '센서', value: 'PM2.5, PM10, VOC, CO2' },
       { label: '모터 제어', value: 'BLDC 인버터' },
@@ -79,11 +76,7 @@ export default function BusinessHomeAppliance() {
 
       <section className="relative pt-40 pb-24 px-6">
         <div className="max-w-7xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
             <span className="inline-block px-4 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs tracking-widest text-gray-400 uppercase mb-8">
               {t('business.homeApplianceTag')}
             </span>
@@ -119,8 +112,12 @@ export default function BusinessHomeAppliance() {
                 <img
                   src={feature.image}
                   alt={t(`bizHome.${feature.key}n`)}
-                  className="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-1000 group-hover:scale-105"
+                  className="absolute inset-0 w-full h-full object-cover opacity-60 transition-transform duration-1000 group-hover:scale-105 group-hover:opacity-80"
                   loading="lazy"
+                  onError={(e) => {
+                    const img = e.currentTarget as HTMLImageElement;
+                    if (feature.fallback && !img.src.includes('unsplash')) img.src = feature.fallback;
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                 <div className="relative z-10 flex flex-col justify-end h-full p-8">
@@ -128,9 +125,7 @@ export default function BusinessHomeAppliance() {
                   <p className="text-gray-400 text-sm font-light leading-relaxed">{t(`bizHome.${feature.key}d`)}</p>
                   <span className="mt-4 inline-flex items-center text-xs text-gray-500 group-hover:text-white transition-colors">
                     {t('common.detail')}
-                    <svg className="ml-1 w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
+                    <svg className="ml-1 w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" /></svg>
                   </span>
                 </div>
               </motion.div>
@@ -141,46 +136,14 @@ export default function BusinessHomeAppliance() {
 
       <AnimatePresence>
         {selected && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-50 flex items-center justify-center px-6 bg-black/80 backdrop-blur-sm"
-            onClick={() => setSelected(null)}
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 40, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 40, scale: 0.96 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[2rem] bg-[#0a0a0a] border border-white/10 p-8 md:p-10"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                onClick={() => setSelected(null)}
-                className="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition-colors z-10"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className="fixed inset-0 z-50 flex items-center justify-center px-6 bg-black/80 backdrop-blur-sm" onClick={() => setSelected(null)}>
+            <motion.div initial={{ opacity: 0, y: 40, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 40, scale: 0.96 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }} className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[2rem] bg-[#0a0a0a] border border-white/10 p-8 md:p-10" onClick={(e) => e.stopPropagation()}>
+              <button onClick={() => setSelected(null)} className="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition-colors z-10">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" /></svg>
               </button>
 
-              {/* 제품 이미지 (모달 상단) */}
               <div className="mb-6 rounded-2xl overflow-hidden aspect-video bg-[#111] border border-white/5">
-                <img
-                  src={selected.modalImage}
-                  alt={t(`bizHome.${selected.key}n`)}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    const img = e.currentTarget as HTMLImageElement;
-                    if (selected.fallback && img.src !== window.location.origin + selected.fallback) {
-                      img.src = selected.fallback;
-                    } else {
-                      img.style.display = 'none';
-                    }
-                  }}
-                />
+                <img src={selected.image} alt={t(`bizHome.${selected.key}n`)} className="w-full h-full object-cover" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
               </div>
 
               <h2 className="text-2xl font-bold tracking-tight mb-2">{t(`bizHome.${selected.key}n`)}</h2>
@@ -202,9 +165,7 @@ export default function BusinessHomeAppliance() {
                 <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">{t('common.applications')}</h3>
                 <div className="flex flex-wrap gap-2">
                   {selected.applications.map((app, i) => (
-                    <span key={i} className="px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs text-gray-300">
-                      {app}
-                    </span>
+                    <span key={i} className="px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs text-gray-300">{app}</span>
                   ))}
                 </div>
               </div>
