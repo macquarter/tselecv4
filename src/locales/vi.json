@@ -41,14 +41,14 @@
   "home": {
     "heroTag": "Since 1989",
     "heroTitle1": "Công nghệ thúc đẩy công nghiệp.",
-    "heroTitle2": "태승전자 tạo ra công nghệ đó.",
+    "heroTitle2": "TSELEC tạo ra công nghệ đó.",
     "heroDesc": "Chuyên gia thiết kế và sản xuất hàng loạt vi điều khiển",
     "contactBtn": "Liên hệ",
     "expertiseTag": "EXPERTISE",
     "expertiseTitle": "Kết nối các ngành công nghiệp bằng công nghệ và uy tín.",
     "expertiseDesc": "Với 36 năm kinh nghiệm tích lũy trong công nghệ vi điều khiển, chúng tôi cung cấp giải pháp điều khiển cốt lõi cho các lĩnh vực gia dụng, công nghiệp, y tế và năng lượng tái tạo.",
     "aboutTag": "ABOUT US",
-    "aboutTitle": "Về 태승전자",
+    "aboutTitle": "Về TSELEC",
     "aboutDesc": "Kể từ khi thành lập năm 1989, chúng tôi đã không ngừng phát triển cùng khách hàng với tư cách là doanh nghiệp chuyên thiết kế và sản xuất vi điều khiển.",
     "faqTitle": "Câu hỏi thường gặp",
     "newsTitle": "Thông báo",
@@ -146,5 +146,84 @@
     "qcSubtitle": "Ba lớp kiểm soát chất lượng từ đầu vào đến đầu ra.",
     "capTitle": "Năng lực cốt lõi.",
     "catTitle": "Danh mục đáp ứng."
+  },
+  "about": {
+    "kicker": "Niềm tin xây dựng bằng công nghệ —",
+    "title": "36 năm hành trình.",
+    "desc": "Kể từ khi thành lập năm 1989, TSELEC đã xây dựng niềm tin của khách hàng nhờ chất lượng và công nghệ ổn định trong thiết kế và sản xuất bo mạch điều khiển dựa trên vi điều khiển. Từ cơ sở sản xuất tại Robot Land, Incheon, chúng tôi cung cấp linh kiện điện tử cốt lõi cho nhiều ngành trong và ngoài nước.",
+    "smartLabel": "Smart Factory",
+    "smartTitle": "Cơ sở sản xuất tiên tiến tại Robot Land Incheon",
+    "stat0v": "36+",
+    "stat0l": "Năm hoạt động",
+    "stat1v": "100+",
+    "stat1l": "Mẫu sản phẩm",
+    "stat2v": "4",
+    "stat2l": "Lĩnh vực kinh doanh",
+    "stat3v": "ISO",
+    "stat3l": "Chứng nhận chất lượng"
+  },
+  "hero": {
+    "t1": "Điều khiển chính xác,",
+    "t2": "khả năng vô hạn",
+    "sub": "Từ thiết kế đến sản xuất vi điều khiển,\nTSELEC đặt ra chuẩn mực cho các giải pháp tự động hóa đổi mới."
+  },
+  "expertise": {
+    "t1": "Gia dụng · Y tế · Năng lượng mặt trời",
+    "t2": "Giải pháp tùy chỉnh cho 3 ngành cốt lõi",
+    "e0t": "Thiết bị gia dụng",
+    "e0d": "Chúng tôi thiết kế và sản xuất bo mạch điều khiển dựa trên MCU và màn hình LED cảm ứng cho tủ lạnh, máy sấy bát và hệ thống thông gió.",
+    "e1t": "Thiết bị y tế",
+    "e1d": "Bo mạch MCU y tế chính xác cao dựa trên ARM Cortex-M4. Tuân thủ IEC 60601, thiết kế mạch an toàn kép.",
+    "e2t": "Năng lượng mặt trời",
+    "e2d": "Bộ điều khiển inverter mặt trời với hiệu suất MPPT 99%+. Hỗ trợ chuyển đổi hòa lưới/độc lập và giám sát từ xa."
+  },
+  "contact": {
+    "t1": "Bất cứ lúc nào,",
+    "t2": "hãy liên hệ với chúng tôi.",
+    "s": "Chúng tôi phản hồi nhanh chóng các yêu cầu về sản phẩm, tư vấn kỹ thuật và báo giá.",
+    "formTitle": "Gửi yêu cầu",
+    "formSub": "Đội ngũ của chúng tôi sẽ liên hệ sớm.",
+    "address": "62-8, Robot Land-ro 249beon-gil, Seo-gu, Incheon",
+    "phone": "032-329-7600 ~ 7603",
+    "fax": "032-329-7604",
+    "hours": "Thứ Hai – Sáu 09:00 – 18:00 (nghỉ cuối tuần/lễ)",
+    "iAddress": "Địa chỉ",
+    "iPhone": "Điện thoại",
+    "iFax": "Fax",
+    "iHours": "Giờ làm việc",
+    "nameLabel": "Công ty / Họ tên *",
+    "namePh": "Công ty / Họ tên",
+    "phoneLabel": "Số điện thoại",
+    "phonePh": "010-0000-0000",
+    "emailLabel": "Email *",
+    "emailPh": "example@company.com",
+    "msgLabel": "Nội dung *",
+    "msgPh": "Vui lòng nhập tên sản phẩm và nội dung.",
+    "submit": "Gửi yêu cầu",
+    "sending": "Đang gửi…",
+    "successTitle": "Yêu cầu đã được tiếp nhận",
+    "successSub": "Đội ngũ của chúng tôi sẽ phản hồi sớm.",
+    "successAgain": "Gửi yêu cầu mới"
+  },
+  "faq": {
+    "t": "Câu hỏi thường gặp",
+    "s": "Khám phá câu trả lời về công nghệ và dịch vụ của TSELEC.",
+    "q0": "TSELEC là công ty như thế nào?",
+    "a0": "Thành lập năm 1989, TSELEC khởi đầu với thiết kế và sản xuất vi điều khiển. Ngày nay chúng tôi cung cấp hệ thống điều khiển cốt lõi cho các ngành gia dụng, công nghiệp, y tế và năng lượng tái tạo.",
+    "q1": "Các sản phẩm và giải pháp chính là gì?",
+    "a1": "Sản phẩm chính bao gồm Bộ điều khiển nhúng (dòng MC), giải pháp HMI (LCD/LED/OLED/TFT) và các bo mạch điều khiển chuyên dụng cho 4 lĩnh vực kinh doanh. Chúng tôi cũng hỗ trợ phát triển hệ thống điều khiển trọn gói tùy chỉnh.",
+    "q2": "Có thể đặt phát triển hệ thống điều khiển tùy chỉnh không?",
+    "a2": "Có. Với 36 năm kinh nghiệm thiết kế tích lũy, chúng tôi cung cấp giải pháp trọn gói tùy chỉnh phù hợp hoàn hảo với yêu cầu của khách hàng.",
+    "q3": "Quy trình hỗ trợ kỹ thuật và bảo hành như thế nào?",
+    "a3": "Gọi đến số đại diện 032-329-7600, các kỹ sư của chúng tôi sẽ phân tích vấn đề và cung cấp giải pháp nhanh chóng."
+  },
+  "news": {
+    "t": "Tin tức & Thông báo.",
+    "s": "Tin tức mới nhất từ TSELEC.",
+    "viewAll": "Xem tất cả",
+    "newBadge": "NEW"
+  },
+  "kpi": {
+    "monthly": "300K+/tháng"
   }
 }
