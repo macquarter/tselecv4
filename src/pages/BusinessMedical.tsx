@@ -8,6 +8,7 @@ interface Feature {
   title: string;
   desc: string;
   image: string;
+  fallback?: string;
   details: {
     overview: string;
     specs: { label: string; value: string }[];
@@ -21,7 +22,8 @@ const features: Feature[] = [
   {
     title: '원심분리기 제어보드',
     desc: '고속 회전체의 정밀 RPM 제어와 안전 인터록을 담당하는 핵심 보드',
-    image: STOCK('photo-1576091160550-2173dba999ef'),
+    image: '/images/products/centrifuge.jpg',
+    fallback: STOCK('photo-1576091160550-2173dba999ef'),
     details: {
       overview:
         '의료·연구용 원심분리기의 BLDC 모터 속도 제어, 온도 관리, 안전 인터록 기능을 통합한 제어보드입니다. 최대 15,000RPM 정밀 속도 제어와 가속·감속 프로파일 설정, 불균형 감지 자동 정지 기능으로 안전하고 재현성 높은 분리 결과를 보장합니다.',
@@ -37,7 +39,8 @@ const features: Feature[] = [
   {
     title: '진단기 제어보드',
     desc: '체외진단 장비의 시료 이송·반응·측정을 통합 제어하는 솔루션',
-    image: STOCK('photo-1579154204601-01588f351e67'),
+    image: '/images/products/medical-device.jpg',
+    fallback: STOCK('photo-1579154204601-01588f351e67'),
     details: {
       overview:
         '혈액 분석기, 면역 분석기 등 체외진단(IVD) 장비의 시료 이송, 시약 분주, 반응 제어, 광학 측정을 통합 제어하는 솔루션입니다. 마이크로리터 단위의 정밀 분주와 정확한 온도·시간 제어로 재현성 높은 검사 결과를 보장합니다.',
@@ -53,7 +56,8 @@ const features: Feature[] = [
   {
     title: '치과 스케일러 제어보드',
     desc: '초음파 진동자의 출력과 주파수를 정밀 제어하는 치과 장비 솔루션',
-    image: STOCK('photo-1606811971618-4486d14f3f99'),
+    image: '/images/products/dental-scaler.jpg',
+    fallback: STOCK('photo-1606811971618-4486d14f3f99'),
     details: {
       overview:
         '치과용 초음파 스케일러의 피에조 진동자 구동 주파수와 출력 파워를 정밀하게 제어하는 보드입니다. 다단계 출력 조절과 자동 주파수 추적으로 다양한 시술 상황에 대응하며, 환자 안전을 위한 과출력 자동 차단 기능을 내장하고 있습니다.',
@@ -123,6 +127,12 @@ export default function BusinessMedical() {
                   alt={feature.title}
                   className="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-1000 group-hover:scale-105"
                   loading="lazy"
+                  onError={(e) => {
+                    const img = e.currentTarget as HTMLImageElement;
+                    if (feature.fallback && img.src !== feature.fallback) {
+                      img.src = feature.fallback;
+                    }
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                 <div className="relative z-10 flex flex-col justify-end h-full p-8">
