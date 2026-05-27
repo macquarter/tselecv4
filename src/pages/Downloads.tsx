@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Search, ChevronLeft, Download, FileText, Paperclip } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useBoardOpt } from '../contexts/SiteContentContext';
@@ -29,9 +30,11 @@ const staticDownloads: DownloadItem[] = [
   { id: 'd7', cat: '소프트웨어', title: 'TSELEC 모니터링 소프트웨어 v3.0', content: '태승전자 제품 원격 모니터링 소프트웨어 최신 버전입니다.\n\n시스템 요구사항: Windows 10 이상', date: '2025.08.25', views: 312, file: 'TSELEC_Monitor_v3.0.zip' },
 ];
 
-const categories = ['전체', '카탈로그', '데이터시트', '인증서', '매뉴얼', '소프트웨어'];
+const CAT_KEYS = ['전체', '카탈로그', '데이터시트', '인증서', '매뉴얼', '소프트웨어'];
+const CAT_LABEL: Record<string, string> = { '전체': 'catAll', '카탈로그': 'catCat', '데이터시트': 'catDS', '인증서': 'catCert', '매뉴얼': 'catManual', '소프트웨어': 'catSW' };
 
 export default function Downloads() {
+  const { t } = useTranslation();
   const boardOpt = useBoardOpt('dl');
   const [downloadItems, setDownloadItems] = useState<DownloadItem[]>(staticDownloads);
   const [filter, setFilter] = useState('전체');
@@ -89,7 +92,7 @@ export default function Downloads() {
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             className="inline-block mb-6 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-sm font-medium text-gray-300"
           >
-            Downloads
+            {t('dlPage.badge')}
           </motion.div>
           <motion.h1
             className="text-5xl md:text-7xl font-bold mb-8 tracking-tighter"
@@ -97,23 +100,22 @@ export default function Downloads() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           >
-            자료실.
+            {t('dlPage.title')}
           </motion.h1>
           <motion.p
-            className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto font-light tracking-tight"
+            className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto font-light tracking-tight whitespace-pre-line"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
-            카탈로그, 데이터시트, 인증서 등<br className="hidden md:block" />
-            필요한 자료를 다운로드하세요.
+            {t('dlPage.sub')}
           </motion.p>
         </section>
 
         {/* Board Section */}
         <section className="max-w-4xl mx-auto px-6">
           {loading ? (
-            <div className="py-20 text-center text-gray-500">불러오는 중...</div>
+            <div className="py-20 text-center text-gray-500">{t('dlPage.loading')}</div>
           ) : (
           <AnimatePresence mode="wait">
             {openItem ? (
@@ -130,15 +132,15 @@ export default function Downloads() {
                   className="flex items-center gap-2 px-4 py-2 mb-6 rounded-lg bg-white/5 border border-white/10 text-gray-400 text-sm hover:bg-white/10 hover:text-white transition-colors"
                 >
                   <ChevronLeft size={16} />
-                  목록으로
+                  {t('dlPage.back')}
                 </button>
 
                 <div className="bg-[#0a0a0a] border border-white/5 rounded-2xl overflow-hidden">
                   <div className="p-8 border-b border-white/5">
                     <div className="flex items-center gap-3 mb-4">
-                      <span className="text-xs font-semibold px-3 py-1 rounded-full bg-sky-400/10 text-sky-400">{openItem.cat}</span>
+                      <span className="text-xs font-semibold px-3 py-1 rounded-full bg-sky-400/10 text-sky-400">{t(`dlPage.${CAT_LABEL[openItem.cat] || 'catCat'}`)}</span>
                       {boardOpt.showDate && <span className="text-xs text-gray-500 font-mono">{openItem.date}</span>}
-                      {boardOpt.showViews && <span className="text-xs text-gray-500">조회 {openItem.views}</span>}
+                      {boardOpt.showViews && <span className="text-xs text-gray-500">{t('dlPage.views')} {openItem.views}</span>}
                     </div>
                     <h2 className="text-2xl font-bold tracking-tight">{openItem.title}</h2>
                   </div>
@@ -166,7 +168,7 @@ export default function Downloads() {
                         className="flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-400/10 border border-sky-400/20 text-sky-400 text-sm font-semibold hover:bg-sky-400/20 transition-colors"
                       >
                         <Download size={14} />
-                        다운로드
+                        {t('dlPage.downloadBtn')}
                       </button>
                     </div>
                   )}
@@ -187,7 +189,7 @@ export default function Downloads() {
                     <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                     <input
                       type="text"
-                      placeholder="검색어 입력..."
+                      placeholder={t('dlPage.searchPh')}
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
                       className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-gray-500 outline-none focus:border-white/20 transition-colors"
@@ -197,7 +199,7 @@ export default function Downloads() {
 
                 {/* Category Tabs */}
                 <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
-                  {categories.map(cat => (
+                  {CAT_KEYS.map(cat => (
                     <button
                       key={cat}
                       onClick={() => setFilter(cat)}
@@ -207,7 +209,7 @@ export default function Downloads() {
                           : 'bg-white/[0.02] border-white/5 text-gray-500 hover:text-gray-300 hover:bg-white/5'
                       }`}
                     >
-                      {cat}
+                      {t(`dlPage.${CAT_LABEL[cat]}`)}
                     </button>
                   ))}
                 </div>
@@ -216,7 +218,7 @@ export default function Downloads() {
                 <div className="bg-[#0a0a0a] border border-white/5 rounded-2xl overflow-hidden">
                   {filtered.length === 0 ? (
                     <div className="py-16 text-center text-gray-500 text-sm">
-                      {search ? '검색 결과가 없습니다' : '등록된 자료가 없습니다'}
+                      {t('dlPage.empty')}
                     </div>
                   ) : (
                     <div className="divide-y divide-white/5">
@@ -231,7 +233,7 @@ export default function Downloads() {
                           transition={{ duration: 0.4, delay: i * 0.05 }}
                         >
                           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-5">
-                            <span className="text-xs font-medium px-2.5 py-1 rounded-md bg-white/5 text-gray-400 w-fit">{item.cat}</span>
+                            <span className="text-xs font-medium px-2.5 py-1 rounded-md bg-white/5 text-gray-400 w-fit">{t(`dlPage.${CAT_LABEL[item.cat] || 'catCat'}`)}</span>
                             <h3 className="text-sm sm:text-base font-medium text-gray-200 group-hover:text-white transition-colors flex items-center gap-2">
                               {item.title}
                               {i === 0 && (
@@ -247,18 +249,12 @@ export default function Downloads() {
                               </span>
                             )}
                             {boardOpt.showDate && <span className="font-mono">{item.date}</span>}
-                            {boardOpt.showViews && <span>조회 {item.views}</span>}
+                            {boardOpt.showViews && <span>{t('dlPage.views')} {item.views}</span>}
                           </div>
                         </motion.div>
                       ))}
                     </div>
                   )}
-                </div>
-
-                {/* Summary */}
-                <div className="flex justify-between items-center mt-4 text-xs text-gray-500">
-                  <span>전체 {downloadItems.length}건{filter !== '전체' ? ` / 필터: ${filter}` : ''}{search ? ` / 검색: "${search}"` : ''}</span>
-                  <span>표시 {filtered.length}건</span>
                 </div>
               </motion.div>
             )}
