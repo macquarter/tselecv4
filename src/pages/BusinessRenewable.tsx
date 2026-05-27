@@ -9,8 +9,8 @@ interface Feature {
   key: string;
   image: string;
   fallback?: string;
-  specs: { label: string; value: string }[];
-  applications: string[];
+  solutions: string[];
+  boards: string[];
 }
 
 const STOCK = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=80`;
@@ -18,39 +18,51 @@ const STOCK = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit
 const features: Feature[] = [
   {
     key: 'f0',
-    image: '/images/products/renewable-solar-panel.jpg',
-    fallback: STOCK('photo-1509391366360-2e959784a276'),
-    specs: [
-      { label: 'MPPT 효율', value: '99.5%+ (CEC)' },
-      { label: '입력 전압', value: 'DC 60V ~ 1500V' },
-      { label: '통신', value: 'Modbus RTU / Wi-Fi' },
-      { label: '인증', value: 'KC, CE, RoHS' },
+    image: '/images/products/renewable-fuel-cell.jpg',
+    fallback: STOCK('photo-1518709268805-4e9042af2176'),
+    solutions: [
+      '스택 전압·전류·온도 멀티 채널 모니터링',
+      '수소·공기 공급계 BOP 시퀀스 제어',
+      '비상 정지·누설 감지 안전 인터록',
+      'CAN / Modbus 기반 상위 EMS 연동',
     ],
-    applications: ['주택용 태양광', '상업용 발전소', 'PV+ESS 하이브리드', '영농형 태양광'],
+    boards: ['Main PCB', 'POWER PCB', 'SMPS', '무선모듈 (옵션)'],
   },
   {
     key: 'f1',
-    image: '/images/products/renewable-hydrogen-cabinet.jpg',
-    fallback: STOCK('photo-1518709268805-4e9042af2176'),
-    specs: [
-      { label: '제어 대상', value: '전해조 / 연료전지 스택' },
-      { label: '안전 시스템', value: 'H2 누설 감지 + 자동 차단' },
-      { label: 'BoP 인터페이스', value: '4-20mA / CAN' },
-      { label: '인증', value: 'KGS, ATEX, IECEx' },
+    image: '/images/products/renewable-hydrogen-drone.jpg',
+    fallback: STOCK('photo-1473968512647-3e447244af8f'),
+    solutions: [
+      '연료전지 ↔ 비행 컨트롤러 인터페이스',
+      '전력 분배·DC/DC 변환 제어',
+      '스택 상태·잔류 수소·온도 텔레메트리',
+      '무선 모니터링·OTA 펌웨어 업데이트',
     ],
-    applications: ['수소 충전소', '수전해 시스템', '연료전지 분산발전', '수소 모빌리티 BoP'],
+    boards: ['Main PCB', 'POWER PCB', '무선모듈'],
   },
   {
     key: 'f2',
     image: '/images/products/renewable-liion-charger.jpg',
     fallback: STOCK('photo-1620714223084-8fcacc6dfd8d'),
-    specs: [
-      { label: '셀 모니터링', value: '4S~16S 직렬 구성' },
-      { label: '전류 정밀도', value: '±0.5% Full Scale' },
-      { label: '보호', value: 'OV/UV/OC/OT 4중' },
-      { label: '통신', value: 'CAN 2.0B / UART' },
+    solutions: [
+      'CC-CV 충전 프로파일·다단 충전 제어',
+      'BMS 통신(CAN/UART) 및 셀 모니터링',
+      '과전압·과전류·과열·역전 보호',
+      '충전 상태 표시 UI / 원격 모니터링 옵션',
     ],
-    applications: ['전동 모빌리티', 'ESS 배터리팩', '산업용 BMS', '의료 백업 전원'],
+    boards: ['Main PCB', 'POWER PCB', 'SMPS', 'Display (HMI)'],
+  },
+  {
+    key: 'f3',
+    image: '/images/products/renewable-solar-panel.jpg',
+    fallback: STOCK('photo-1509391366360-2e959784a276'),
+    solutions: [
+      'MPPT 알고리즘 기반 발전 최적화 제어',
+      '전압·전류·온도 멀티 채널 모니터링',
+      '인버터·ESS·EMS 시스템 통신 연동',
+      '이상 진단·원격 모니터링 옵션',
+    ],
+    boards: ['Main PCB', 'POWER PCB', '무선모듈'],
   },
 ];
 
@@ -146,27 +158,24 @@ export default function BusinessRenewable() {
               <p className="text-gray-400 text-sm font-light leading-relaxed mb-8">{t(`bizRenewable.${selected.key}d`)}</p>
 
               <div className="mb-8">
-                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">{t('common.specs')}</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  {selected.specs.map((spec, i) => (
-                    <div key={i} className="rounded-xl bg-white/[0.03] border border-white/[0.06] p-4">
-                      <span className="text-[11px] text-gray-500 block mb-1">{spec.label}</span>
-                      <span className="text-sm font-medium">{spec.value}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">{t('common.applications')}</h3>
-                <ul className="grid grid-cols-2 gap-2">
-                  {selected.applications.map((app, i) => (
-                    <li key={i} className="flex items-center gap-2 text-sm text-gray-300">
-                      <span className="w-1 h-1 rounded-full bg-gray-600" />
-                      {app}
+                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">태승전자가 제공하는 솔루션</h3>
+                <ul className="space-y-2">
+                  {selected.solutions.map((s, i) => (
+                    <li key={i} className="flex items-start gap-3 text-sm text-gray-300 leading-relaxed">
+                      <span className="mt-2 w-1 h-1 rounded-full bg-gray-500 shrink-0" />
+                      <span>{s}</span>
                     </li>
                   ))}
                 </ul>
+              </div>
+
+              <div>
+                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">적용 보드 / 모듈</h3>
+                <div className="flex flex-wrap gap-2">
+                  {selected.boards.map((b, i) => (
+                    <span key={i} className="text-xs px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-gray-300">{b}</span>
+                  ))}
+                </div>
               </div>
             </motion.div>
           </motion.div>
