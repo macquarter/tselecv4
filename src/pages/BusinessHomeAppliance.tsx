@@ -9,8 +9,8 @@ interface Feature {
   key: string;
   image: string;
   fallback?: string;
-  specs: { label: string; value: string }[];
-  applications: string[];
+  solutions: string[];
+  boards: string[];
 }
 
 const STOCK = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=80`;
@@ -20,37 +20,49 @@ const features: Feature[] = [
     key: 'f0',
     image: '/images/products/home-refrigerator-4door.jpg',
     fallback: STOCK('photo-1571175443880-49e1d25b2bc5'),
-    specs: [
-      { label: '프로세서', value: '32-bit ARM Cortex-M' },
-      { label: '온도 정밀도', value: '±0.3°C' },
-      { label: '제어 채널', value: '최대 4존 독립 제어' },
-      { label: '통신', value: 'UART, I2C, Wi-Fi 모듈 지원' },
+    solutions: [
+      '인버터 컴프레서 구동 및 정온 제어 알고리즘',
+      '냉장·냉동·특냉실 멀티존 온도 제어',
+      '도어 알람·자동 제상·에너지 절약 로직',
+      '터치 디스플레이 기반 UI / 다국어 메뉴',
     ],
-    applications: ['양문형 냉장고', '김치냉장고', '업소용 냉장·냉동고', '와인셀러'],
+    boards: ['Main PCB', 'POWER PCB', 'Display (HMI)'],
   },
   {
     key: 'f1',
     image: '/images/products/home-ice-purifier.jpg',
     fallback: STOCK('photo-1610822546219-c100ce40f7a3'),
-    specs: [
-      { label: '냉각 제어', value: '인버터 컴프레서 구동' },
-      { label: '필터 관리', value: '자동 교체 알림' },
-      { label: '안전 기능', value: '누수 감지, UV 살균' },
-      { label: '인터페이스', value: '터치 패널, LED 표시' },
+    solutions: [
+      '냉수·온수·얼음 모듈 통합 제어',
+      '유량 센서 기반 추출량 정밀 제어',
+      '필터 교체 알림·자가 위생 사이클',
+      '터치 UI / 음성 안내·다국어 메뉴 지원',
     ],
-    applications: ['직수형 정수기', '얼음정수기', '냉온정수기', '업소용 정수기'],
+    boards: ['Main PCB', 'POWER PCB', 'Display (HMI)', '무선모듈 (옵션)'],
   },
   {
     key: 'f2',
     image: '/images/products/home-range-hood.jpg',
     fallback: STOCK('photo-1556909114-f6e7ad7d3136'),
-    specs: [
-      { label: '모터 제어', value: 'BLDC 3단 풍량' },
-      { label: '센서 연동', value: '가스·연기 자동 감지' },
-      { label: '소음 레벨', value: '< 35dB (저속)' },
-      { label: '조명', value: 'LED 디밍 제어' },
+    solutions: [
+      'BLDC 모터 다단 풍량 제어',
+      '가스·연기 센서 연동 자동 운전',
+      'LED 조명 디밍 / 타이머 / 필터 알림',
+      '정전식 터치 UI · 슬림 디스플레이',
     ],
-    applications: ['빌트인 레인지후드', '벽걸이형 후드', '아일랜드 후드', '업소용 환기설비'],
+    boards: ['Main PCB', 'POWER PCB', 'Display (HMI)'],
+  },
+  {
+    key: 'f3',
+    image: '/images/products/home-air-purifier.jpg',
+    fallback: STOCK('photo-1585771724684-38269d6639fd'),
+    solutions: [
+      'PM2.5·VOC·온습도 멀티 센서 신호 처리',
+      'BLDC 팬 정밀 풍량 / 저소음 제어',
+      '자동 모드·취침 모드·필터 수명 알림',
+      'Wi-Fi / BLE 기반 모바일 앱 연동 (옵션)',
+    ],
+    boards: ['Main PCB', 'POWER PCB', 'Display (HMI)', '무선모듈'],
   },
 ];
 
@@ -146,27 +158,24 @@ export default function BusinessHomeAppliance() {
               <p className="text-gray-400 text-sm font-light leading-relaxed mb-8">{t(`bizHome.${selected.key}d`)}</p>
 
               <div className="mb-8">
-                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">{t('common.specs')}</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  {selected.specs.map((spec, i) => (
-                    <div key={i} className="rounded-xl bg-white/[0.03] border border-white/[0.06] p-4">
-                      <span className="text-[11px] text-gray-500 block mb-1">{spec.label}</span>
-                      <span className="text-sm font-medium">{spec.value}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">{t('common.applications')}</h3>
-                <ul className="grid grid-cols-2 gap-2">
-                  {selected.applications.map((app, i) => (
-                    <li key={i} className="flex items-center gap-2 text-sm text-gray-300">
-                      <span className="w-1 h-1 rounded-full bg-gray-600" />
-                      {app}
+                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">태승전자가 제공하는 솔루션</h3>
+                <ul className="space-y-2">
+                  {selected.solutions.map((s, i) => (
+                    <li key={i} className="flex items-start gap-3 text-sm text-gray-300 leading-relaxed">
+                      <span className="mt-2 w-1 h-1 rounded-full bg-gray-500 shrink-0" />
+                      <span>{s}</span>
                     </li>
                   ))}
                 </ul>
+              </div>
+
+              <div>
+                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">적용 보드 / 모듈</h3>
+                <div className="flex flex-wrap gap-2">
+                  {selected.boards.map((b, i) => (
+                    <span key={i} className="text-xs px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-gray-300">{b}</span>
+                  ))}
+                </div>
               </div>
             </motion.div>
           </motion.div>
