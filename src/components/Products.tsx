@@ -1,60 +1,59 @@
 import { motion } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 import { Product } from '../types';
-import { useText, useImage } from '../contexts/SiteContentContext';
 
 interface ProductsProps {
   onSelectProduct: (product: Product) => void;
 }
 
 export default function Products({ onSelectProduct }: ProductsProps) {
-  const pT1 = useText('p-t1', '다양한 산업을 위한');
-  const pT2 = useText('p-t2', '전자부품 솔루션.');
+  const { t } = useTranslation();
 
   const products: Product[] = [
-    { 
-      id: 'fridge', 
-      name: useText('p0n', '냉장고 제어기판'), 
-      desc: useText('p0d', '인버터 압축기 제어 및 온도 관리 MCU 모듈'), 
-      img: useImage('prod-img-0', 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=1200&q=80'), 
-      colSpan: 'md:col-span-2', 
+    {
+      id: 'fridge',
+      name: t('homeProducts.p0n'),
+      desc: t('homeProducts.p0d'),
+      img: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=1200&q=80',
+      colSpan: 'md:col-span-2',
       rowSpan: 'md:row-span-2',
-      details: ['인버터 압축기 BLDC 모터 구동 제어', '멀티 존 독립 온도 제어', '자동 제상 알고리즘 내장', '이상 과열·전류 초과 시 자동 안전 차단']
+      details: ['인버터 압축기 BLDC 모터 구동 제어', '멀티 존 독립 온도 제어', '자동 제상 알고리즘 내장', '이상 과열·전류 초과 시 자동 안전 차단'],
     },
-    { 
-      id: 'dish', 
-      name: useText('p1n', '식기건조기 제어기'), 
-      desc: useText('p1d', '건조 온도·습도 자동 제어'), 
-      img: useImage('prod-img-1', 'https://images.unsplash.com/photo-1585659722983-3a675dabf23d?auto=format&fit=crop&w=800&q=80'), 
-      colSpan: 'md:col-span-1', 
+    {
+      id: 'dish',
+      name: t('homeProducts.p1n'),
+      desc: t('homeProducts.p1d'),
+      img: 'https://images.unsplash.com/photo-1585659722983-3a675dabf23d?auto=format&fit=crop&w=800&q=80',
+      colSpan: 'md:col-span-1',
       rowSpan: 'md:row-span-1',
-      details: ['PTC 히터 PWM 정밀 온도 제어', '다중 건조 모드 (쾌속/표준/절전)', '차일드락 안전 기능', '도어 스위치 인터록 안전장치']
+      details: ['PTC 히터 PWM 정밀 온도 제어', '다중 건조 모드 (쾌속/표준/절전)', '차일드락 안전 기능', '도어 스위치 인터록 안전장치'],
     },
-    { 
-      id: 'vent', 
-      name: useText('p2n', '환기시스템 제어기'), 
-      desc: useText('p2d', '팬 속도 제어 및 필터 상태 감지'), 
-      img: useImage('prod-img-2', 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=800&q=80'), 
-      colSpan: 'md:col-span-1', 
+    {
+      id: 'vent',
+      name: t('homeProducts.p2n'),
+      desc: t('homeProducts.p2d'),
+      img: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=800&q=80',
+      colSpan: 'md:col-span-1',
       rowSpan: 'md:row-span-1',
-      details: ['BLDC 팬 정밀 속도 제어', 'CO2/습도 센서 자동 연동', '필터 상태 경고 알림', 'IoT 연동 (Wi-Fi/BLE)']
+      details: ['BLDC 팬 정밀 속도 제어', 'CO2/습도 센서 자동 연동', '필터 상태 경고 알림', 'IoT 연동 (Wi-Fi/BLE)'],
     },
-    { 
-      id: 'med', 
-      name: useText('p3n', '의료기기 MCU 보드'), 
-      desc: useText('p3d', '정밀 센서 인터페이스 및 신뢰성 설계'), 
-      img: useImage('prod-img-3', 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=800&q=80'), 
-      colSpan: 'md:col-span-1', 
+    {
+      id: 'med',
+      name: t('homeProducts.p3n'),
+      desc: t('homeProducts.p3d'),
+      img: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=800&q=80',
+      colSpan: 'md:col-span-1',
       rowSpan: 'md:row-span-1',
-      details: ['고정밀 ADC 16bit+ 센서 인터페이스', '이중 안전 회로 (Fail-safe)', 'IEC 60601 의료등급 설계', 'EMC 인증 완료']
+      details: ['고정밀 ADC 16bit+ 센서 인터페이스', '이중 안전 회로 (Fail-safe)', 'IEC 60601 의료등급 설계', 'EMC 인증 완료'],
     },
-    { 
-      id: 'solar', 
-      name: useText('p4n', '태양광 인버터 제어기'), 
-      desc: useText('p4d', 'MPPT 알고리즘 기반 최대 전력 추적'), 
-      img: useImage('prod-img-4', 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80'), 
-      colSpan: 'md:col-span-1', 
+    {
+      id: 'solar',
+      name: t('homeProducts.p4n'),
+      desc: t('homeProducts.p4d'),
+      img: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80',
+      colSpan: 'md:col-span-1',
       rowSpan: 'md:row-span-1',
-      details: ['MPPT 효율 99% 이상', '계통연계 / 독립형 모드 전환', '역전력 방지 (Anti-islanding)', '원격 모니터링 연동']
+      details: ['MPPT 효율 99% 이상', '계통연계 / 독립형 모드 전환', '역전력 방지 (Anti-islanding)', '원격 모니터링 연동'],
     },
   ];
 
@@ -62,15 +61,15 @@ export default function Products({ onSelectProduct }: ProductsProps) {
     <section id="products" className="py-16 md:py-32 bg-black">
       <div className="max-w-7xl mx-auto px-6">
         <div className="mb-10 md:mb-20">
-          <motion.h2 
+          <motion.h2
             className="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-white"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            {pT1} <br />
-            {pT2}
+            {t('homeProducts.t1')} <br />
+            {t('homeProducts.t2')}
           </motion.h2>
         </div>
 
@@ -90,14 +89,12 @@ export default function Products({ onSelectProduct }: ProductsProps) {
                 whileHover="hover"
                 className="relative w-full h-full rounded-[2rem] overflow-hidden bg-[#0a0a0a] border border-white/5 cursor-pointer group"
               >
-                <motion.img 
+                <motion.img
                   layoutId={`img-${product.id}`}
-                  src={product.img} 
-                  alt={product.name} 
+                  src={product.img}
+                  alt={product.name}
                   className="absolute inset-0 w-full h-full object-cover opacity-60"
-                  variants={{
-                    hover: { scale: 1.05, opacity: 0.8 }
-                  }}
+                  variants={{ hover: { scale: 1.05, opacity: 0.8 } }}
                   transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none"></div>
