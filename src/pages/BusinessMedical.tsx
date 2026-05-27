@@ -9,8 +9,8 @@ interface Feature {
   key: string;
   image: string;
   fallback?: string;
-  specs: { label: string; value: string }[];
-  applications: string[];
+  solutions: string[];
+  boards: string[];
 }
 
 const STOCK = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=80`;
@@ -20,25 +20,37 @@ const features: Feature[] = [
     key: 'f0',
     image: '/images/products/medical-centrifuge.jpg',
     fallback: STOCK('photo-1576091160550-2173dba999ef'),
-    specs: [
-      { label: 'RPM 범위', value: '300 ~ 15,000 RPM' },
-      { label: '제어 정밀도', value: '±10 RPM' },
-      { label: '안전 인터록', value: '뚜껑·진동·과열 3중' },
-      { label: '인증', value: 'IEC 60601-1 / MDD' },
+    solutions: [
+      'BLDC 모터 정밀 속도(RPM/RCF) 제어',
+      '불균형 감지·도어 인터록·과속 보호',
+      '프로토콜 저장·자동 사이클 운영',
+      '터치 디스플레이 UI / 운영 로그 기록',
     ],
-    applications: ['혈액 원심분리', '체외진단(IVD)', '연구 실험실', '소형 임상시험'],
+    boards: ['Main PCB', 'POWER PCB', 'Display (HMI)'],
+  },
+  {
+    key: 'f1',
+    image: '/images/products/medical-diagnostic.jpg',
+    fallback: STOCK('photo-1530026405186-ed1f139313f8'),
+    solutions: [
+      '정밀 아날로그 신호 처리 / ADC 회로',
+      '측정 시퀀스 자동화 및 결과 데이터 산출',
+      'USB / Ethernet / 시리얼 결과 전송',
+      '의료기기 환경 대응 EMC·안전 설계',
+    ],
+    boards: ['Main PCB', 'POWER PCB', 'Display (HMI)', 'SMPS'],
   },
   {
     key: 'f2',
     image: '/images/products/medical-dental-scaler.jpg',
     fallback: STOCK('photo-1606811971618-4486d14f3f99'),
-    specs: [
-      { label: '주파수', value: '24kHz ~ 32kHz 가변' },
-      { label: '출력 제어', value: '10단계 미세 조정' },
-      { label: '워터 펌프', value: '0~200ml/min PWM' },
-      { label: '인증', value: 'IEC 60601-1-2 / KGMP' },
+    solutions: [
+      '초음파 핸드피스 주파수·출력 정밀 제어',
+      '워터 라인 솔레노이드 / 풋스위치 연동',
+      '출력 단계 가변·과부하 보호 회로',
+      '의료기기 안전 규격 대응 설계',
     ],
-    applications: ['치과의원', '대학병원 치과', '예방치과', '치주 클리닉'],
+    boards: ['Main PCB', 'POWER PCB', 'Display (HMI)'],
   },
 ];
 
@@ -134,27 +146,24 @@ export default function BusinessMedical() {
               <p className="text-gray-400 text-sm font-light leading-relaxed mb-8">{t(`bizMedical.${selected.key}d`)}</p>
 
               <div className="mb-8">
-                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">{t('common.specs')}</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  {selected.specs.map((spec, i) => (
-                    <div key={i} className="rounded-xl bg-white/[0.03] border border-white/[0.06] p-4">
-                      <span className="text-[11px] text-gray-500 block mb-1">{spec.label}</span>
-                      <span className="text-sm font-medium">{spec.value}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">{t('common.applications')}</h3>
-                <ul className="grid grid-cols-2 gap-2">
-                  {selected.applications.map((app, i) => (
-                    <li key={i} className="flex items-center gap-2 text-sm text-gray-300">
-                      <span className="w-1 h-1 rounded-full bg-gray-600" />
-                      {app}
+                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">태승전자가 제공하는 솔루션</h3>
+                <ul className="space-y-2">
+                  {selected.solutions.map((s, i) => (
+                    <li key={i} className="flex items-start gap-3 text-sm text-gray-300 leading-relaxed">
+                      <span className="mt-2 w-1 h-1 rounded-full bg-gray-500 shrink-0" />
+                      <span>{s}</span>
                     </li>
                   ))}
                 </ul>
+              </div>
+
+              <div>
+                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">적용 보드 / 모듈</h3>
+                <div className="flex flex-wrap gap-2">
+                  {selected.boards.map((b, i) => (
+                    <span key={i} className="text-xs px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-gray-300">{b}</span>
+                  ))}
+                </div>
               </div>
             </motion.div>
           </motion.div>
