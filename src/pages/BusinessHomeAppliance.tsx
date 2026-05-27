@@ -8,6 +8,7 @@ interface Feature {
   title: string;
   desc: string;
   image: string;
+  fallback?: string;
   details: {
     overview: string;
     specs: { label: string; value: string }[];
@@ -15,13 +16,15 @@ interface Feature {
   };
 }
 
+// 로컬 우선, Unsplash 폴백 (이미지 누락 방지)
 const STOCK = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=80`;
 
 const features: Feature[] = [
   {
     title: '냉장고 Display PCB',
     desc: '냉장고 전면 디스플레이 및 온도 제어를 위한 전용 PCB 솔루션',
-    image: STOCK('photo-1571175443880-49e1d25b2bc5'),
+    image: '/images/products/refrigerator-display.jpg',
+    fallback: STOCK('photo-1571175443880-49e1d25b2bc5'),
     details: {
       overview:
         '태승전자의 냉장고 Display PCB는 전면 터치 디스플레이와 멀티 존 온도 제어를 통합하는 핵심 제어보드입니다. 고객사 요구에 맞춘 커스텀 설계로 다양한 냉장고 라인업에 유연하게 대응하며, 저전력 설계로 에너지 효율 향상에 기여합니다.',
@@ -37,7 +40,8 @@ const features: Feature[] = [
   {
     title: '얼음정수기 제어보드',
     desc: '정수·냉각·얼음 생성을 하나의 보드로 통합 제어하는 솔루션',
-    image: STOCK('photo-1548839140-29a749e1cf4d'),
+    image: '/images/products/water-purifier.jpg',
+    fallback: STOCK('photo-1548839140-29a749e1cf4d'),
     details: {
       overview:
         '정수 필터 관리, 냉각 시스템 구동, 얼음 생성 사이클을 하나의 제어보드로 통합한 솔루션입니다. UV 살균 타이밍 제어와 필터 교체 알림, 누수 감지 기능까지 내장하여 안전하고 편리한 사용 환경을 제공합니다.',
@@ -53,7 +57,8 @@ const features: Feature[] = [
   {
     title: '레인지후드 제어보드',
     desc: '흡입력 자동 조절과 LED 조명을 통합 제어하는 레인지후드 PCB',
-    image: STOCK('photo-1556909114-f6e7ad7d3136'),
+    image: '/images/products/range-hood.jpg',
+    fallback: STOCK('photo-1556909114-f6e7ad7d3136'),
     details: {
       overview:
         'BLDC 팬 모터 구동과 조리 환경에 따른 자동 풍량 조절, LED 조명 제어를 통합한 레인지후드 전용 PCB입니다. 가스·연기 센서와 연동하여 자동으로 흡입력을 조절하며, 저소음 설계로 쾌적한 주방 환경을 만들어줍니다.',
@@ -69,7 +74,8 @@ const features: Feature[] = [
   {
     title: '공기청정기 제어보드',
     desc: '미세먼지 센서 연동과 다단 필터 시스템을 제어하는 PCB 솔루션',
-    image: STOCK('photo-1585771724684-38269d6639fd'),
+    image: '/images/products/air-purifier-main.jpg',
+    fallback: STOCK('photo-1585771724684-38269d6639fd'),
     details: {
       overview:
         'PM2.5/PM10 미세먼지 센서, VOC 센서와 연동하여 실내 공기질을 실시간으로 모니터링하고, HEPA 필터 팬 속도를 자동 조절하는 제어보드입니다. 필터 수명 관리와 IoT 연동을 통한 원격 제어 기능을 지원합니다.',
@@ -139,6 +145,12 @@ export default function BusinessHomeAppliance() {
                   alt={feature.title}
                   className="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-1000 group-hover:scale-105"
                   loading="lazy"
+                  onError={(e) => {
+                    const img = e.currentTarget as HTMLImageElement;
+                    if (feature.fallback && img.src !== feature.fallback) {
+                      img.src = feature.fallback;
+                    }
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                 <div className="relative z-10 flex flex-col justify-end h-full p-8">
