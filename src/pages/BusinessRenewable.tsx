@@ -8,6 +8,7 @@ interface Feature {
   title: string;
   desc: string;
   image: string;
+  fallback?: string;
   details: {
     overview: string;
     specs: { label: string; value: string }[];
@@ -21,7 +22,8 @@ const features: Feature[] = [
   {
     title: '태양광 패널 제어',
     desc: '태양광 발전 시스템의 MPPT 제어와 모니터링을 위한 솔루션',
-    image: STOCK('photo-1509391366360-2e959784a276'),
+    image: '/images/products/solar-panel.jpg',
+    fallback: STOCK('photo-1509391366360-2e959784a276'),
     details: {
       overview:
         '태양광 패널에서 생산되는 DC 전력을 최적으로 관리하는 제어보드입니다. MPPT(최대전력점추적) 알고리즘으로 기상 조건 변화에 따른 최적 발전량을 확보하며, 계통 연계 보호 기능과 발전량 모니터링 기능을 내장하고 있습니다.',
@@ -37,7 +39,8 @@ const features: Feature[] = [
   {
     title: '수소 시스템 제어',
     desc: '수소 연료전지·전해조의 핵심 제어와 안전 관리 솔루션',
-    image: STOCK('photo-1466611653911-95081537e5b7'),
+    image: '/images/products/hydrogen.jpg',
+    fallback: STOCK('photo-1466611653911-95081537e5b7'),
     details: {
       overview:
         '수소 연료전지 스택의 출력 제어와 수전해 시스템의 운전 관리를 위한 보드입니다. 수소 누출 감지, 압력·온도 제어, 스택 전압 모니터링 등 다중 안전 기능을 내장하여 수소 에너지 시스템의 안전하고 효율적인 운영을 지원합니다.',
@@ -53,7 +56,8 @@ const features: Feature[] = [
   {
     title: '리튬이온 충전기 제어',
     desc: '리튬이온 배터리의 안전한 충방전 관리를 위한 BMS 솔루션',
-    image: STOCK('photo-1593941707882-a5bba14938c7'),
+    image: '/images/products/lithium-charger.jpg',
+    fallback: STOCK('photo-1593941707882-a5bba14938c7'),
     details: {
       overview:
         '리튬이온 배터리 팩의 CC/CV 충전 제어, 셀 밸런싱, SOC/SOH 추정, 과충전·과방전 보호를 통합 수행하는 BMS 보드입니다. 다양한 배터리 용량과 전압에 대응하는 유연한 설계로 전기이동수단, ESS 등 폭넓은 분야에 적용됩니다.',
@@ -69,7 +73,8 @@ const features: Feature[] = [
   {
     title: '연료전지 제어',
     desc: '연료전지 발전 시스템의 스택 운전과 BoP를 통합 관리하는 솔루션',
-    image: STOCK('photo-1620714223084-8fcacc6dfd8d'),
+    image: '/images/products/fuel-cell-pbu.jpg',
+    fallback: STOCK('photo-1620714223084-8fcacc6dfd8d'),
     details: {
       overview:
         'PEMFC/SOFC 연료전지 스택의 출력 제어와 Balance of Plant(BoP) 장비를 통합 관리하는 제어보드입니다. 공기·연료 유량 조절, 가습기 제어, 열관리 등을 자동화하며, 부하 변동에 대한 빠른 응답 제어를 지원합니다.',
@@ -139,6 +144,12 @@ export default function BusinessRenewable() {
                   alt={feature.title}
                   className="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-1000 group-hover:scale-105"
                   loading="lazy"
+                  onError={(e) => {
+                    const img = e.currentTarget as HTMLImageElement;
+                    if (feature.fallback && img.src !== feature.fallback) {
+                      img.src = feature.fallback;
+                    }
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                 <div className="relative z-10 flex flex-col justify-end h-full p-8">
