@@ -41,14 +41,14 @@
   "home": {
     "heroTag": "Since 1989",
     "heroTitle1": "Technology drives industry.",
-    "heroTitle2": "태승전자 makes that technology.",
+    "heroTitle2": "TSELEC makes that technology.",
     "heroDesc": "Specialists in Microcontroller Design & Mass Production",
     "contactBtn": "Contact Us",
     "expertiseTag": "EXPERTISE",
     "expertiseTitle": "Connecting industries through technology and trust.",
     "expertiseDesc": "With 36 years of accumulated microcontroller expertise, we deliver core control solutions across home appliance, industrial, medical, and renewable energy sectors.",
     "aboutTag": "ABOUT US",
-    "aboutTitle": "About 태승전자",
+    "aboutTitle": "About TSELEC",
     "aboutDesc": "Since our establishment in 1989, we have grown alongside our customers as a specialist in microcontroller design and manufacturing.",
     "faqTitle": "Frequently Asked Questions",
     "newsTitle": "News & Announcements",
@@ -146,5 +146,84 @@
     "qcSubtitle": "Triple quality gate from incoming to shipping.",
     "capTitle": "Core capabilities.",
     "catTitle": "Response categories."
+  },
+  "about": {
+    "kicker": "Trust built on technology —",
+    "title": "36 years of history.",
+    "desc": "Since our founding in 1989, TSELEC has built customer trust through consistent quality and technology in MCU-based control board design and manufacturing. From our facility in Robot Land, Incheon, we supply core electronic components to diverse industries at home and abroad.",
+    "smartLabel": "Smart Factory",
+    "smartTitle": "Advanced Production Facility at Incheon Robot Land",
+    "stat0v": "36+",
+    "stat0l": "Years",
+    "stat1v": "100+",
+    "stat1l": "Product models",
+    "stat2v": "4",
+    "stat2l": "Business areas",
+    "stat3v": "ISO",
+    "stat3l": "Quality certified"
+  },
+  "hero": {
+    "t1": "Precise control,",
+    "t2": "Infinite possibilities",
+    "sub": "From microcontroller design to manufacturing,\nTSELEC sets the standard for innovative automation solutions."
+  },
+  "expertise": {
+    "t1": "Home · Medical · Solar",
+    "t2": "Tailored solutions for 3 key industries",
+    "e0t": "Home Appliance",
+    "e0d": "We design and manufacture MCU-based control boards and touch LED displays for refrigerators, dishwashers, and ventilation systems.",
+    "e1t": "Medical Devices",
+    "e1d": "High-precision medical MCU boards based on ARM Cortex-M4. IEC 60601 compliant, dual-safety circuit design.",
+    "e2t": "Solar Energy",
+    "e2d": "Solar inverter controllers with 99%+ MPPT efficiency. Grid-tie/off-grid switching, remote monitoring supported."
+  },
+  "contact": {
+    "t1": "Any time,",
+    "t2": "feel free to contact us.",
+    "s": "We respond promptly to product inquiries, technical consultations, and quote requests.",
+    "formTitle": "Leave an inquiry",
+    "formSub": "Our team will reach out shortly.",
+    "address": "62-8, Robot Land-ro 249beon-gil, Seo-gu, Incheon",
+    "phone": "032-329-7600 ~ 7603",
+    "fax": "032-329-7604",
+    "hours": "Weekdays 09:00 – 18:00 (closed on weekends/holidays)",
+    "iAddress": "Address",
+    "iPhone": "Telephone",
+    "iFax": "Fax",
+    "iHours": "Business Hours",
+    "nameLabel": "Company / Name *",
+    "namePh": "TSELEC / Your name",
+    "phoneLabel": "Phone",
+    "phonePh": "010-0000-0000",
+    "emailLabel": "Email *",
+    "emailPh": "example@company.com",
+    "msgLabel": "Message *",
+    "msgPh": "Please write your product name and inquiry.",
+    "submit": "Send Inquiry",
+    "sending": "Sending…",
+    "successTitle": "Your inquiry has been received",
+    "successSub": "Our team will get back to you shortly.",
+    "successAgain": "Submit another"
+  },
+  "faq": {
+    "t": "Frequently Asked Questions",
+    "s": "Explore answers about TSELEC's technology and services.",
+    "q0": "What kind of company is TSELEC?",
+    "a0": "Founded in 1989, TSELEC began with microcontroller design and manufacturing. Today we provide core control systems and automation solutions for home appliance, industrial, medical, and renewable energy sectors.",
+    "q1": "What are the main products and solutions?",
+    "a1": "Our main products include Embedded Controllers (MC series), HMI solutions (LCD/LED/OLED/TFT), and specialized control boards for 4 business areas. We also support custom turnkey control system development.",
+    "q2": "Can we request custom control system development?",
+    "a2": "Yes — leveraging 36 years of accumulated design know-how, we deliver custom turnkey solutions that perfectly match customer requirements.",
+    "q3": "What is the after-sales and technical support process?",
+    "a3": "Call our main line 032-329-7600 and our engineers will analyze the issue and provide solutions promptly."
+  },
+  "news": {
+    "t": "News & Announcements.",
+    "s": "Latest updates from TSELEC.",
+    "viewAll": "View all",
+    "newBadge": "NEW"
+  },
+  "kpi": {
+    "monthly": "300K+/mo"
   }
 }
