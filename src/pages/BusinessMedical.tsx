@@ -8,7 +8,7 @@ import BusinessNav from '../components/BusinessNav';
 interface Feature {
   key: string;
   image: string;
-  modalImage: string;
+  fallback?: string;
   specs: { label: string; value: string }[];
   applications: string[];
 }
@@ -17,9 +17,7 @@ const STOCK = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit
 
 const features: Feature[] = [
   {
-    key: 'f0',
-    image: STOCK('photo-1576091160550-2173dba999ef'),
-    modalImage: '/images/products/centrifuge.jpg',
+    key: 'f0', image: '/images/products/centrifuge.jpg', fallback: STOCK('photo-1576091160550-2173dba999ef'),
     specs: [
       { label: '최대 회전수', value: '15,000 RPM' },
       { label: '속도 정밀도', value: '±10 RPM' },
@@ -29,9 +27,7 @@ const features: Feature[] = [
     applications: ['혈액 원심분리기', '마이크로 원심분리기', '대용량 연구용', '산업용 원심분리기'],
   },
   {
-    key: 'f1',
-    image: STOCK('photo-1579154204601-01588f351e67'),
-    modalImage: '/images/products/medical-device.jpg',
+    key: 'f1', image: '/images/products/medical-device.jpg', fallback: STOCK('photo-1579154204601-01588f351e67'),
     specs: [
       { label: '분주 정밀도', value: '±1% (1μL 이상)' },
       { label: '온도 제어', value: '±0.1°C (반응 챔버)' },
@@ -41,9 +37,7 @@ const features: Feature[] = [
     applications: ['자동 혈액 분석기', '면역 분석기', '생화학 분석기', 'PCR 장비'],
   },
   {
-    key: 'f2',
-    image: STOCK('photo-1606811971618-4486d14f3f99'),
-    modalImage: '/images/products/dental-scaler.jpg',
+    key: 'f2', image: '/images/products/dental-scaler.jpg', fallback: STOCK('photo-1606811971618-4486d14f3f99'),
     specs: [
       { label: '구동 주파수', value: '25~36kHz' },
       { label: '출력 단계', value: '10단 세밀 조절' },
@@ -64,24 +58,13 @@ export default function BusinessMedical() {
 
       <section className="relative pt-40 pb-24 px-6">
         <div className="max-w-7xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <span className="inline-block px-4 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs tracking-widest text-gray-400 uppercase mb-8">
-              {t('business.medicalTag')}
-            </span>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
+            <span className="inline-block px-4 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs tracking-widest text-gray-400 uppercase mb-8">{t('business.medicalTag')}</span>
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] mb-6">
-              {t('business.medicalTitle1')}
-              <br />
-              <span className="bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent">
-                {t('business.medicalTitle2')}
-              </span>
+              {t('business.medicalTitle1')}<br />
+              <span className="bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent">{t('business.medicalTitle2')}</span>
             </h1>
-            <p className="text-lg text-gray-400 font-light max-w-2xl mx-auto leading-relaxed">
-              {t('business.medicalDesc')}
-            </p>
+            <p className="text-lg text-gray-400 font-light max-w-2xl mx-auto leading-relaxed">{t('business.medicalDesc')}</p>
           </motion.div>
         </div>
       </section>
@@ -92,16 +75,8 @@ export default function BusinessMedical() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {features.map((feature, i) => (
-              <motion.div
-                key={feature.key}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="relative rounded-[2rem] bg-[#0a0a0a] border border-white/5 overflow-hidden group aspect-[4/3] cursor-pointer"
-                onClick={() => setSelected(feature)}
-              >
-                <img src={feature.image} alt={t(`bizMedical.${feature.key}n`)} className="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-1000 group-hover:scale-105" loading="lazy" />
+              <motion.div key={feature.key} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }} className="relative rounded-[2rem] bg-[#0a0a0a] border border-white/5 overflow-hidden group aspect-[4/3] cursor-pointer" onClick={() => setSelected(feature)}>
+                <img src={feature.image} alt={t(`bizMedical.${feature.key}n`)} className="absolute inset-0 w-full h-full object-cover opacity-60 transition-transform duration-1000 group-hover:scale-105 group-hover:opacity-80" loading="lazy" onError={(e) => { const img = e.currentTarget as HTMLImageElement; if (feature.fallback && !img.src.includes('unsplash')) img.src = feature.fallback; }} />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                 <div className="relative z-10 flex flex-col justify-end h-full p-8">
                   <h3 className="text-2xl font-bold mb-2 tracking-tight">{t(`bizMedical.${feature.key}n`)}</h3>
@@ -126,7 +101,7 @@ export default function BusinessMedical() {
               </button>
 
               <div className="mb-6 rounded-2xl overflow-hidden aspect-video bg-[#111] border border-white/5">
-                <img src={selected.modalImage} alt={t(`bizMedical.${selected.key}n`)} className="w-full h-full object-cover" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
+                <img src={selected.image} alt={t(`bizMedical.${selected.key}n`)} className="w-full h-full object-cover" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
               </div>
 
               <h2 className="text-2xl font-bold tracking-tight mb-2">{t(`bizMedical.${selected.key}n`)}</h2>
