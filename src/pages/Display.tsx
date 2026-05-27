@@ -3,6 +3,23 @@ import { useTranslation } from 'react-i18next';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductNav from '../components/ProductNav';
+import ModuleCatalog, { CatalogCard } from '../components/ModuleCatalog';
+
+const HMI_CARDS: CatalogCard[] = [
+  {
+    tag: 'HMI · DISPLAY',
+    name: 'Display',
+    lede: '터치 디스플레이 모듈과 UI 펌웨어를 통합 공급. 컨트롤 보드와의 연동까지 한 번에 설계되어, 별도 인터페이스 개발 부담을 줄입니다.',
+    specs: [
+      { k: '디스플레이', v: 'TFT LCD · 정전식 터치 패널' },
+      { k: '사이즈 옵션', v: '요구사양별 사이즈/해상도 대응' },
+      { k: 'UI 펌웨어', v: '메뉴 구성 · 다국어 · 커스텀 그래픽' },
+      { k: '통신', v: 'UART · SPI · I²C (메인 보드 연동)' },
+    ],
+    chips: ['터치 UI', '다국어 메뉴', '커스텀 그래픽', '메인 보드 연동'],
+    accent: 'from-blue-500/15 to-blue-700/5',
+  },
+];
 
 export default function Display() {
   const { t } = useTranslation();
@@ -53,6 +70,14 @@ export default function Display() {
             ))}
           </div>
         </section>
+
+        <ModuleCatalog
+          badge="HMI Module"
+          title1="HMI 솔루션"
+          title2="라인업 상세."
+          sub="터치 디스플레이 + UI 펌웨어 + 메인 보드 연동을 한 번에 공급합니다."
+          cards={HMI_CARDS}
+        />
       </main>
 
       <Footer />
