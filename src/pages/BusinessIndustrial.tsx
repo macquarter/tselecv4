@@ -8,7 +8,7 @@ import BusinessNav from '../components/BusinessNav';
 interface Feature {
   key: string;
   image: string;
-  modalImage: string;
+  fallback?: string;
   specs: { label: string; value: string }[];
   applications: string[];
 }
@@ -17,9 +17,7 @@ const STOCK = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit
 
 const features: Feature[] = [
   {
-    key: 'f0',
-    image: STOCK('photo-1581244277943-fe4a9c777189'),
-    modalImage: '/images/products/dishwasher.jpg',
+    key: 'f0', image: '/images/products/dishwasher.jpg', fallback: STOCK('photo-1581244277943-fe4a9c777189'),
     specs: [
       { label: '온도 제어', value: '최대 90°C 정밀 제어' },
       { label: '세척 모드', value: '최대 8가지 프로그램' },
@@ -29,9 +27,7 @@ const features: Feature[] = [
     applications: ['업소용 식기세척기', '컨베이어형 세척기', '글라스워셔', '산업용 부품세척기'],
   },
   {
-    key: 'f1',
-    image: STOCK('photo-1581092334651-ddf26d9a09d0'),
-    modalImage: '/images/products/temp-controller.jpg',
+    key: 'f1', image: '/images/products/temp-controller.jpg', fallback: STOCK('photo-1581092334651-ddf26d9a09d0'),
     specs: [
       { label: '제어 정밀도', value: '±0.1°C' },
       { label: '센서 입력', value: 'K/J/T TC, Pt100 RTD' },
@@ -41,9 +37,7 @@ const features: Feature[] = [
     applications: ['열처리 로', '사출 성형기', '반도체 공정', '식품 가공 라인'],
   },
   {
-    key: 'f2',
-    image: STOCK('photo-1581092160562-40aa08e78837'),
-    modalImage: '/images/products/pump.jpg',
+    key: 'f2', image: '/images/products/pump.jpg', fallback: STOCK('photo-1581092160562-40aa08e78837'),
     specs: [
       { label: '모터 제어', value: '인버터 0.4~15kW' },
       { label: '센서', value: '수위·압력·유량·진동' },
@@ -53,9 +47,7 @@ const features: Feature[] = [
     applications: ['급수·배수 펌프', '순환 펌프', '가압 펌프', '소방 펌프'],
   },
   {
-    key: 'f3',
-    image: STOCK('photo-1497366216548-37526070297c'),
-    modalImage: '/images/products/booth-single.jpg',
+    key: 'f3', image: '/images/products/booth-single.jpg', fallback: STOCK('photo-1497366216548-37526070297c'),
     specs: [
       { label: '조명', value: 'LED 디밍 3단계' },
       { label: '환기', value: 'DC 팬 자동 제어' },
@@ -65,9 +57,7 @@ const features: Feature[] = [
     applications: ['오피스 1인 부스', '도서관 집중석', '공유오피스 포커스룸', '공항·역사 워크스테이션'],
   },
   {
-    key: 'f4',
-    image: STOCK('photo-1497366811353-6870744d04b2'),
-    modalImage: '/images/products/booth-meeting.jpg',
+    key: 'f4', image: '/images/products/booth-meeting.jpg', fallback: STOCK('photo-1497366811353-6870744d04b2'),
     specs: [
       { label: '조명', value: 'LED 시나리오 4모드' },
       { label: '공조', value: 'CO2 센서 연동 환기' },
@@ -88,24 +78,13 @@ export default function BusinessIndustrial() {
 
       <section className="relative pt-40 pb-24 px-6">
         <div className="max-w-7xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <span className="inline-block px-4 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs tracking-widest text-gray-400 uppercase mb-8">
-              {t('business.industrialTag')}
-            </span>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
+            <span className="inline-block px-4 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs tracking-widest text-gray-400 uppercase mb-8">{t('business.industrialTag')}</span>
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] mb-6">
-              {t('business.industrialTitle1')}
-              <br />
-              <span className="bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent">
-                {t('business.industrialTitle2')}
-              </span>
+              {t('business.industrialTitle1')}<br />
+              <span className="bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent">{t('business.industrialTitle2')}</span>
             </h1>
-            <p className="text-lg text-gray-400 font-light max-w-2xl mx-auto leading-relaxed">
-              {t('business.industrialDesc')}
-            </p>
+            <p className="text-lg text-gray-400 font-light max-w-2xl mx-auto leading-relaxed">{t('business.industrialDesc')}</p>
           </motion.div>
         </div>
       </section>
@@ -116,30 +95,15 @@ export default function BusinessIndustrial() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {features.map((feature, i) => (
-              <motion.div
-                key={feature.key}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="relative rounded-[2rem] bg-[#0a0a0a] border border-white/5 overflow-hidden group aspect-[4/3] cursor-pointer"
-                onClick={() => setSelected(feature)}
-              >
-                <img
-                  src={feature.image}
-                  alt={t(`bizIndustrial.${feature.key}n`)}
-                  className="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-1000 group-hover:scale-105"
-                  loading="lazy"
-                />
+              <motion.div key={feature.key} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }} className="relative rounded-[2rem] bg-[#0a0a0a] border border-white/5 overflow-hidden group aspect-[4/3] cursor-pointer" onClick={() => setSelected(feature)}>
+                <img src={feature.image} alt={t(`bizIndustrial.${feature.key}n`)} className="absolute inset-0 w-full h-full object-cover opacity-60 transition-transform duration-1000 group-hover:scale-105 group-hover:opacity-80" loading="lazy" onError={(e) => { const img = e.currentTarget as HTMLImageElement; if (feature.fallback && !img.src.includes('unsplash')) img.src = feature.fallback; }} />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                 <div className="relative z-10 flex flex-col justify-end h-full p-8">
                   <h3 className="text-2xl font-bold mb-2 tracking-tight">{t(`bizIndustrial.${feature.key}n`)}</h3>
                   <p className="text-gray-400 text-sm font-light leading-relaxed">{t(`bizIndustrial.${feature.key}d`)}</p>
                   <span className="mt-4 inline-flex items-center text-xs text-gray-500 group-hover:text-white transition-colors">
                     {t('common.detail')}
-                    <svg className="ml-1 w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
+                    <svg className="ml-1 w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" /></svg>
                   </span>
                 </div>
               </motion.div>
@@ -150,35 +114,14 @@ export default function BusinessIndustrial() {
 
       <AnimatePresence>
         {selected && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-50 flex items-center justify-center px-6 bg-black/80 backdrop-blur-sm"
-            onClick={() => setSelected(null)}
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 40, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 40, scale: 0.96 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[2rem] bg-[#0a0a0a] border border-white/10 p-8 md:p-10"
-              onClick={(e) => e.stopPropagation()}
-            >
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className="fixed inset-0 z-50 flex items-center justify-center px-6 bg-black/80 backdrop-blur-sm" onClick={() => setSelected(null)}>
+            <motion.div initial={{ opacity: 0, y: 40, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 40, scale: 0.96 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }} className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[2rem] bg-[#0a0a0a] border border-white/10 p-8 md:p-10" onClick={(e) => e.stopPropagation()}>
               <button onClick={() => setSelected(null)} className="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition-colors z-10">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" /></svg>
               </button>
 
               <div className="mb-6 rounded-2xl overflow-hidden aspect-video bg-[#111] border border-white/5">
-                <img
-                  src={selected.modalImage}
-                  alt={t(`bizIndustrial.${selected.key}n`)}
-                  className="w-full h-full object-cover"
-                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
-                />
+                <img src={selected.image} alt={t(`bizIndustrial.${selected.key}n`)} className="w-full h-full object-cover" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
               </div>
 
               <h2 className="text-2xl font-bold tracking-tight mb-2">{t(`bizIndustrial.${selected.key}n`)}</h2>
