@@ -9,8 +9,8 @@ interface Feature {
   key: string;
   image: string;
   fallback?: string;
-  specs: { label: string; value: string }[];
-  applications: string[];
+  solutions: string[];
+  boards: string[];
 }
 
 const STOCK = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=80`;
@@ -20,61 +20,61 @@ const features: Feature[] = [
     key: 'f0',
     image: '/images/products/industrial-dishwasher.jpg',
     fallback: STOCK('photo-1581622558663-b2e33377dfb2'),
-    specs: [
-      { label: '세척 온도', value: '60~85°C 단계 제어' },
-      { label: '시간 설정', value: '60s ~ 240s 가변' },
-      { label: '제어 방식', value: 'PID + 시퀀스 로직' },
-      { label: '소비 전력', value: '6kW급 부하 제어' },
+    solutions: [
+      '세척·헹굼·건조 사이클 시퀀스 제어',
+      '히터/펌프/솔레노이드 통합 제어',
+      '도어 인터록·과부하 보호 안전 회로',
+      '방수 사양 디스플레이·다국어 UI',
     ],
-    applications: ['업소 주방', '단체급식 시설', '호텔·리조트', '병원 식기 처리'],
+    boards: ['Main PCB', 'POWER PCB', 'Display (HMI)'],
   },
   {
     key: 'f1',
-    image: '/images/products/industrial-temp-controller.jpg',
-    fallback: STOCK('photo-1581094794326-c0a7060a4b48'),
-    specs: [
-      { label: '온도 범위', value: '-50°C ~ +400°C' },
-      { label: '정밀도', value: '±0.2°C' },
-      { label: '제어 알고리즘', value: 'Fuzzy + PID Hybrid' },
-      { label: '입출력', value: 'RTD, T/C, Relay, SSR' },
+    image: '/images/products/industrial-ice-maker.jpg',
+    fallback: STOCK('photo-1499636136210-6f4ee915583e'),
+    solutions: [
+      '컴프레서·핫가스 밸브 자동 사이클 제어',
+      '저수조 수위·증발기 온도 센서 처리',
+      '위생 모드·잔수 배수·세척 알림',
+      '고장 진단 로그 / 원격 모니터링 (옵션)',
     ],
-    applications: ['반도체 공정', '플라스틱 사출', '식품 가공', '화학 공정'],
+    boards: ['Main PCB', 'POWER PCB', 'Display (HMI)', '무선모듈 (옵션)'],
   },
   {
     key: 'f2',
     image: '/images/products/industrial-pump.jpg',
     fallback: STOCK('photo-1581094794326-c0a7060a4b48'),
-    specs: [
-      { label: '모터 구동', value: 'BLDC 인버터' },
-      { label: '센서', value: '수위·압력·유량 통합' },
-      { label: '제어', value: '회전수 PID 가변' },
-      { label: '보호 기능', value: '공운전·과부하 차단' },
+    solutions: [
+      'BLDC / 인버터 모터 구동 제어',
+      '압력·유량 센서 피드백 PID 제어',
+      '건운전·과부하·과열 보호 시퀀스',
+      'RS-485 / Modbus 통신으로 상위 시스템 연동',
     ],
-    applications: ['상수도 부스터', '난방·온수 순환', '농업용 양수기', '산업 냉각수'],
+    boards: ['Main PCB', 'POWER PCB', 'SMPS'],
   },
   {
     key: 'f3',
-    image: '/images/products/industrial-booth-single.jpg',
+    image: '/images/products/industrial-booth.jpg',
     fallback: STOCK('photo-1497366216548-37526070297c'),
-    specs: [
-      { label: '조명 제어', value: 'LED 디밍 + 색온도' },
-      { label: '환기', value: 'CO2 센서 연동 자동' },
-      { label: '전원', value: 'USB-C / 220V 듀얼' },
-      { label: '점유 감지', value: 'PIR + 도어 센서' },
+    solutions: [
+      '환기팬·조명·공조 통합 자동 제어',
+      'CO₂·온습도 센서 기반 자동 환기',
+      '터치 패널 UI · 예약/사용 상태 표시',
+      '네트워크 연동 시설 통합 관제(옵션)',
     ],
-    applications: ['공유 오피스', '도서관·스터디카페', '병원 진료실', '재택 워크부스'],
+    boards: ['Main PCB', 'POWER PCB', 'Display (HMI)', '무선모듈'],
   },
   {
     key: 'f4',
-    image: '/images/products/industrial-booth-meeting.jpg',
-    fallback: STOCK('photo-1497366754035-f200968a6e72'),
-    specs: [
-      { label: '조명 시나리오', value: '회의·집중·휴식 모드' },
-      { label: 'AV 제어', value: 'HDMI + 사운드바' },
-      { label: '공조', value: '4ZONE 균등 환기' },
-      { label: '예약 연동', value: '캘린더 API 지원' },
+    image: '/images/products/industrial-temp-controller.jpg',
+    fallback: STOCK('photo-1581094289810-adf5d25690e3'),
+    solutions: [
+      'PT100·열전대(K/J/T 타입) 등 다채널 센서 입력',
+      'PID 오토튜닝 / 다단 프로파일(램프·소크) 제어',
+      '알람·인터록·과열 방지 안전 시퀀스',
+      '데이터 로깅·이력 관리 / RS-485·Modbus 통신',
     ],
-    applications: ['기업 회의실', '코워킹 스페이스', '교육 기관 그룹실', '컨퍼런스 라운지'],
+    boards: ['Main PCB', 'POWER PCB', 'Display (HMI)'],
   },
 ];
 
@@ -170,27 +170,24 @@ export default function BusinessIndustrial() {
               <p className="text-gray-400 text-sm font-light leading-relaxed mb-8">{t(`bizIndustrial.${selected.key}d`)}</p>
 
               <div className="mb-8">
-                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">{t('common.specs')}</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  {selected.specs.map((spec, i) => (
-                    <div key={i} className="rounded-xl bg-white/[0.03] border border-white/[0.06] p-4">
-                      <span className="text-[11px] text-gray-500 block mb-1">{spec.label}</span>
-                      <span className="text-sm font-medium">{spec.value}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">{t('common.applications')}</h3>
-                <ul className="grid grid-cols-2 gap-2">
-                  {selected.applications.map((app, i) => (
-                    <li key={i} className="flex items-center gap-2 text-sm text-gray-300">
-                      <span className="w-1 h-1 rounded-full bg-gray-600" />
-                      {app}
+                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">태승전자가 제공하는 솔루션</h3>
+                <ul className="space-y-2">
+                  {selected.solutions.map((s, i) => (
+                    <li key={i} className="flex items-start gap-3 text-sm text-gray-300 leading-relaxed">
+                      <span className="mt-2 w-1 h-1 rounded-full bg-gray-500 shrink-0" />
+                      <span>{s}</span>
                     </li>
                   ))}
                 </ul>
+              </div>
+
+              <div>
+                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">적용 보드 / 모듈</h3>
+                <div className="flex flex-wrap gap-2">
+                  {selected.boards.map((b, i) => (
+                    <span key={i} className="text-xs px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-gray-300">{b}</span>
+                  ))}
+                </div>
               </div>
             </motion.div>
           </motion.div>
