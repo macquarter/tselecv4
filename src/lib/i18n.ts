@@ -19,13 +19,20 @@ i18n
       ja: { translation: ja },
       vi: { translation: vi },
     },
+    // 디폴트 언어: 한국어 강제
+    lng: 'ko',
     fallbackLng: 'ko',
+    supportedLngs: ['ko', 'en', 'zh', 'ja', 'vi'],
+    nonExplicitSupportedLngs: true, // en-US → en 자동 매핑
+    load: 'languageOnly', // ko-KR → ko로 단순화
     interpolation: {
       escapeValue: false,
     },
     detection: {
-      order: ['localStorage', 'navigator'],
+      // localStorage에 저장된 사용자 선택값만 존중, 브라우저 언어는 무시 (한국어 디폴트 유지)
+      order: ['localStorage'],
       caches: ['localStorage'],
+      lookupLocalStorage: 'i18nextLng',
     },
   });
 
