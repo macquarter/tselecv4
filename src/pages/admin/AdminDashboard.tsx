@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from 'react';
-import { motion } from 'motion/react';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import {
   LogOut,
@@ -10,27 +10,60 @@ import {
   Users,
   FileText,
   Brain,
-  Search,
-  Tag,
-  Clock,
+  Send,
+  Bot,
+  User,
+  Sparkles,
+  RotateCcw,
 } from 'lucide-react';
 import {
   CHATBOT_MEMORY,
   MEMORY_STATS,
+  findBestMatch,
   type MemoryCategory,
   type MemoryEntry,
 } from '../../data/chatbotMemory';
 
-type TabId = 'products' | 'news' | 'users' | 'memory';
+type TabId = 'memory' | 'products' | 'news' | 'users';
+
+interface ChatTurn {
+  role: 'user' | 'bot';
+  text: string;
+  matchedId?: string;
+  matchedCategory?: MemoryCategory;
+  followUp?: string;
+  time: string;
+}
+
+const SUGGESTED_QUESTIONS = [
+  '회사 소개해 주세요',
+  '기능 사양서만 드리면 회로 설계부터 전부 진행해 주시나요?',
+  '월간 또는 연간 최대 생산 능력(Capa)은 어떻게 되나요?',
+  '거버 파일과 BOM 없이 샘플 PCB만 있어도 제작 가능한가요?',
+  'MOQ가 어떻게 되나요?',
+  '회로도와 거버 파일 소유권(IP)은 이관되나요?',
+  'KC·CE 인증 대행이 가능한가요?',
+];
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabId>('memory');
 
-  // 챗봇 메모리 탭 상태
-  const [search, setSearch] = useState('');
-  const [activeCategory, setActiveCategory] = useState<MemoryCategory | 'ALL'>('ALL');
-  const [expanded, setExpanded] = useState<string | null>(null);
+  // 챗봇 시뮬레이션 상태
+  const [messages, setMessages] = useState<ChatTurn[]>([
+    {
+      role: 'bot',
+      text:
+        '안녕하세요! 태승전자(주) 학습 챗봇입니다. 회사·제품·신규개발·양산이관·인증 등 무엇이든 물어보세요.',
+      followUp:
+        '아래 추천 질문을 눌러보시거나 직접 입력해 주세요.',
+      time: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+    },
+  ]);
+  const [input, setInput] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [activeCategoryFilter, setActiveCategoryFilter] = useState<MemoryCategory | 'ALL'>('ALL');
+  const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const isAdmin = localStorage.getItem('isAdmin');
@@ -39,36 +72,76 @@ export default function AdminDashboard() {
     }
   }, [navigate]);
 
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isTyping]);
+
   const handleLogout = () => {
     localStorage.removeItem('isAdmin');
     navigate('/admin');
   };
 
-  // 필터링된 메모리 엔트리
-  const filteredMemory: MemoryEntry[] = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    return CHATBOT_MEMORY.filter((m) => {
-      if (activeCategory !== 'ALL' && m.category !== activeCategory) return false;
-      if (!q) return true;
-      return (
-        m.id.toLowerCase().includes(q) ||
-        m.answer.toLowerCase().includes(q) ||
-        m.keywords.some((k) => k.toLowerCase().includes(q)) ||
-        m.category.toLowerCase().includes(q)
-      );
-    });
-  }, [search, activeCategory]);
+  const handleSend = (text?: string) => {
+    const userText = (text ?? input).trim();
+    if (!userText) return;
+
+    const now = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+    setMessages((prev) => [...prev, { role: 'user', text: userText, time: now }]);
+    setInput('');
+    setIsTyping(true);
+
+    // 챗봇 응답 시뮬레이션 (typing latency 500~900ms)
+    const latency = 500 + Math.random() * 400;
+    setTimeout(() => {
+      const match = findBestMatch(userText);
+      const botReply: ChatTurn = match
+        ? {
+            role: 'bot',
+            text: match.answer,
+            matchedId: match.id,
+            matchedCategory: match.category,
+            followUp: match.followUp,
+            time: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+          }
+        : {
+            role: 'bot',
+            text:
+              '죄송합니다, 해당 질문에 대한 답변이 학습되어 있지 않습니다.\n\n태승전자(주) 영업팀(032-329-7600)으로 문의 주시거나, 아래 추천 질문을 참고해 주세요.',
+            time: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+          };
+      setMessages((prev) => [...prev, botReply]);
+      setIsTyping(false);
+    }, latency);
+  };
+
+  const handleResetChat = () => {
+    setMessages([
+      {
+        role: 'bot',
+        text:
+          '대화가 초기화되었습니다. 다시 질문을 시작해 주세요!',
+        time: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+      },
+    ]);
+  };
+
+  // KB browser (사이드 패널)
+  const filteredKB: MemoryEntry[] = useMemo(() => {
+    if (activeCategoryFilter === 'ALL') return CHATBOT_MEMORY;
+    return CHATBOT_MEMORY.filter((m) => m.category === activeCategoryFilter);
+  }, [activeCategoryFilter]);
 
   const categories: Array<MemoryCategory | 'ALL'> = [
     'ALL',
     '회사소개',
     '연락처',
     '제품',
+    '신규개발',
+    '양산이관',
     '서비스',
     '인증',
     '시설',
     '조직',
-    '신규개발',
     '기타',
   ];
 
@@ -110,14 +183,22 @@ export default function AdminDashboard() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-10 overflow-y-auto">
-        <div className="flex justify-between items-center mb-10">
-          <h1 className="text-3xl font-bold tracking-tighter">
-            {activeTab === 'memory' && '챗봇 메모리.'}
-            {activeTab === 'products' && '제품 관리'}
-            {activeTab === 'news' && '뉴스/공지 관리'}
-            {activeTab === 'users' && '문의 내역'}
-          </h1>
+      <div className="flex-1 overflow-hidden flex flex-col">
+        <div className="px-10 pt-10 pb-6 border-b border-white/5 flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tighter">
+              {activeTab === 'memory' && '챗봇 메모리.'}
+              {activeTab === 'products' && '제품 관리'}
+              {activeTab === 'news' && '뉴스/공지 관리'}
+              {activeTab === 'users' && '문의 내역'}
+            </h1>
+            {activeTab === 'memory' && (
+              <p className="text-sm text-gray-500 mt-1 font-light">
+                {MEMORY_STATS.total}개 학습 항목 · {MEMORY_STATS.version} · 마지막 갱신{' '}
+                {MEMORY_STATS.lastUpdated}
+              </p>
+            )}
+          </div>
           {activeTab !== 'memory' && (
             <button className="bg-white text-black px-6 py-2.5 rounded-full font-medium flex items-center gap-2 hover:bg-gray-200 transition-colors">
               <Plus size={18} />
@@ -125,202 +206,261 @@ export default function AdminDashboard() {
             </button>
           )}
           {activeTab === 'memory' && (
-            <span className="text-xs font-mono tracking-widest text-gray-500">
-              {MEMORY_STATS.version} · 마지막 갱신 {MEMORY_STATS.lastUpdated}
-            </span>
+            <button
+              onClick={handleResetChat}
+              className="text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 hover:border-white/30"
+            >
+              <RotateCcw size={14} />
+              대화 초기화
+            </button>
           )}
         </div>
 
-        {/* ─────── 챗봇 메모리 탭 ─────── */}
+        {/* ─────── 챗봇 메모리 (실제 챗봇 시뮬레이션 UI) ─────── */}
         {activeTab === 'memory' && (
-          <div className="space-y-6">
-            {/* Stats Strip */}
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-              <div className="rounded-2xl bg-[#0a0a0a] border border-white/5 p-5">
-                <div className="text-xs tracking-widest uppercase text-gray-500 mb-2">전체 엔트리</div>
-                <div className="text-3xl font-bold tracking-tighter">{MEMORY_STATS.total}</div>
+          <div className="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_320px] overflow-hidden">
+            {/* 챗봇 대화창 */}
+            <div className="flex flex-col overflow-hidden">
+              <div className="flex-1 overflow-y-auto px-10 py-8 space-y-6">
+                <AnimatePresence initial={false}>
+                  {messages.map((msg, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                      className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                    >
+                      {msg.role === 'bot' && (
+                        <div className="w-9 h-9 rounded-full bg-white/[0.08] border border-white/10 flex items-center justify-center shrink-0 mt-1">
+                          <Bot size={16} className="text-gray-300" />
+                        </div>
+                      )}
+
+                      <div className={`max-w-[600px] ${msg.role === 'user' ? 'order-1' : ''}`}>
+                        <div
+                          className={`rounded-2xl px-5 py-4 ${
+                            msg.role === 'user'
+                              ? 'bg-white text-black'
+                              : 'bg-[#0a0a0a] border border-white/10 text-gray-200'
+                          }`}
+                        >
+                          <p className="whitespace-pre-line text-sm leading-relaxed">{msg.text}</p>
+                          {msg.followUp && (
+                            <p className="mt-3 pt-3 border-t border-white/10 text-xs text-gray-400 italic leading-relaxed whitespace-pre-line">
+                              {msg.followUp}
+                            </p>
+                          )}
+                        </div>
+                        <div
+                          className={`mt-1 flex items-center gap-2 text-[10px] text-gray-600 ${
+                            msg.role === 'user' ? 'justify-end' : 'justify-start'
+                          }`}
+                        >
+                          <span>{msg.time}</span>
+                          {msg.matchedCategory && (
+                            <>
+                              <span>·</span>
+                              <span className="px-1.5 py-0.5 rounded bg-white/[0.06] border border-white/10 font-mono">
+                                {msg.matchedCategory} / {msg.matchedId}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+
+                      {msg.role === 'user' && (
+                        <div className="w-9 h-9 rounded-full bg-white/[0.08] border border-white/10 flex items-center justify-center shrink-0 mt-1 order-2">
+                          <User size={16} className="text-gray-300" />
+                        </div>
+                      )}
+                    </motion.div>
+                  ))}
+
+                  {isTyping && (
+                    <motion.div
+                      key="typing"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="flex gap-3"
+                    >
+                      <div className="w-9 h-9 rounded-full bg-white/[0.08] border border-white/10 flex items-center justify-center shrink-0">
+                        <Bot size={16} className="text-gray-300" />
+                      </div>
+                      <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl px-5 py-4 flex items-center gap-1.5">
+                        {[0, 1, 2].map((i) => (
+                          <motion.div
+                            key={i}
+                            className="w-1.5 h-1.5 rounded-full bg-gray-400"
+                            animate={{ y: [0, -4, 0] }}
+                            transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.15 }}
+                          />
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                <div ref={chatEndRef} />
               </div>
-              {Object.entries(MEMORY_STATS.byCategory)
-                .slice(0, 4)
-                .map(([cat, n]) => (
-                  <div
-                    key={cat}
-                    className="rounded-2xl bg-[#0a0a0a] border border-white/5 p-5"
-                  >
-                    <div className="text-xs tracking-widest uppercase text-gray-500 mb-2">{cat}</div>
-                    <div className="text-3xl font-bold tracking-tighter">{n}</div>
+
+              {/* Suggested questions */}
+              {messages.length <= 2 && (
+                <div className="px-10 pb-4 border-t border-white/5 pt-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Sparkles size={14} className="text-gray-500" />
+                    <span className="text-xs tracking-widest uppercase text-gray-500">
+                      추천 질문
+                    </span>
                   </div>
-                ))}
-            </div>
-
-            {/* Description Card */}
-            <div className="rounded-2xl bg-[#0a0a0a] border border-white/5 p-6">
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center shrink-0">
-                  <Brain size={20} strokeWidth={1.5} className="text-gray-300" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-sm font-bold tracking-tight text-white mb-1">
-                    챗봇이 학습한 회사·제품·공정·인증·연락처 정보입니다.
-                  </h3>
-                  <p className="text-xs text-gray-500 leading-relaxed font-light">
-                    아래 카드들은 <code className="px-1 py-0.5 rounded bg-white/[0.06] font-mono text-[10px]">src/data/chatbotMemory.ts</code>에 저장된
-                    단일 소스이며, <code className="px-1 py-0.5 rounded bg-white/[0.06] font-mono text-[10px]">ChatBot.tsx</code>와 Gemini AI 폴백이 동일한 메모리를 참조합니다.
-                    수정은 코드 PR을 통해 진행됩니다.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Search + Category Filter */}
-            <div className="flex flex-col md:flex-row gap-3">
-              <div className="relative flex-1">
-                <Search
-                  size={16}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"
-                  strokeWidth={1.5}
-                />
-                <input
-                  type="text"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="키워드, 답변 텍스트, 카테고리로 검색…"
-                  className="w-full pl-11 pr-4 py-3 rounded-full bg-[#0a0a0a] border border-white/10 text-sm placeholder-gray-600 focus:outline-none focus:border-white/30 transition-colors"
-                />
-              </div>
-              <div className="flex overflow-x-auto gap-2 scrollbar-hide">
-                {categories.map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => setActiveCategory(cat)}
-                    className={`px-4 py-2 rounded-full text-xs font-medium whitespace-nowrap transition-colors border ${
-                      activeCategory === cat
-                        ? 'bg-white text-black border-white'
-                        : 'bg-[#0a0a0a] text-gray-400 border-white/10 hover:border-white/30 hover:text-white'
-                    }`}
-                  >
-                    {cat === 'ALL' ? '전체' : cat}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Memory Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {filteredMemory.length === 0 && (
-                <div className="col-span-full text-center py-16 text-gray-500 text-sm">
-                  검색 결과가 없습니다.
+                  <div className="flex flex-wrap gap-2">
+                    {SUGGESTED_QUESTIONS.map((q, i) => (
+                      <button
+                        key={i}
+                        onClick={() => handleSend(q)}
+                        className="px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-xs text-gray-300 hover:bg-white/[0.08] hover:text-white transition-colors"
+                      >
+                        {q}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
-              {filteredMemory.map((m, i) => {
-                const isOpen = expanded === m.id;
-                return (
-                  <motion.div
-                    key={m.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: Math.min(i * 0.02, 0.3), ease: [0.16, 1, 0.3, 1] }}
-                    className="rounded-2xl bg-[#0a0a0a] border border-white/5 p-5 hover:border-white/15 transition-colors"
+
+              {/* Input */}
+              <div className="px-10 py-6 border-t border-white/5">
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSend();
+                  }}
+                  className="flex gap-3"
+                >
+                  <input
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder="학습된 내용을 질문해 보세요…  (예: 회사 소개, MOQ, IP 이관 가능?)"
+                    className="flex-1 bg-[#0a0a0a] border border-white/10 rounded-full px-5 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-white/30 transition-colors"
+                  />
+                  <button
+                    type="submit"
+                    disabled={!input.trim() || isTyping}
+                    className="bg-white text-black rounded-full w-12 h-12 flex items-center justify-center hover:bg-gray-200 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                   >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center gap-2">
-                        <span className="px-2 py-0.5 rounded-full bg-white/[0.06] border border-white/10 text-[10px] font-medium tracking-wide text-gray-300">
-                          {m.category}
-                        </span>
-                        <code className="text-[10px] font-mono tracking-wide text-gray-600">{m.id}</code>
-                      </div>
-                      <div className="flex items-center gap-1.5 text-[10px] text-gray-600">
-                        <Clock size={11} strokeWidth={1.5} />
-                        {m.updatedAt}
-                      </div>
-                    </div>
+                    <Send size={16} />
+                  </button>
+                </form>
+              </div>
+            </div>
 
-                    <div className="flex flex-wrap gap-1 mb-3">
-                      {m.keywords.slice(0, isOpen ? m.keywords.length : 5).map((k) => (
-                        <span
-                          key={k}
-                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/[0.04] border border-white/[0.06] text-[10px] text-gray-400"
-                        >
-                          <Tag size={9} strokeWidth={1.5} />
-                          {k}
-                        </span>
-                      ))}
-                      {!isOpen && m.keywords.length > 5 && (
-                        <span className="text-[10px] text-gray-600 px-2 py-0.5">
-                          +{m.keywords.length - 5}
-                        </span>
-                      )}
-                    </div>
+            {/* KB Browser (사이드 패널) */}
+            <div className="border-l border-white/5 bg-[#080808] overflow-y-auto px-6 py-8 hidden lg:block">
+              <div className="text-xs tracking-widest uppercase text-gray-500 mb-4">
+                Knowledge Base
+              </div>
 
-                    <p
-                      className={`text-sm text-gray-400 leading-relaxed font-light whitespace-pre-line ${
-                        isOpen ? '' : 'line-clamp-3'
-                      }`}
-                    >
-                      {m.answer}
-                    </p>
+              {/* Stats */}
+              <div className="space-y-2 mb-6">
+                {Object.entries(MEMORY_STATS.byCategory).map(([cat, n]) => (
+                  <button
+                    key={cat}
+                    onClick={() => setActiveCategoryFilter(cat as MemoryCategory)}
+                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-colors ${
+                      activeCategoryFilter === cat
+                        ? 'bg-white text-black font-medium'
+                        : 'text-gray-400 hover:bg-white/[0.04] hover:text-white'
+                    }`}
+                  >
+                    <span>{cat}</span>
+                    <span className="font-mono">{n}</span>
+                  </button>
+                ))}
+                <button
+                  onClick={() => setActiveCategoryFilter('ALL')}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-colors border-t border-white/5 mt-2 pt-3 ${
+                    activeCategoryFilter === 'ALL'
+                      ? 'text-white font-semibold'
+                      : 'text-gray-500 hover:text-white'
+                  }`}
+                >
+                  <span>전체</span>
+                  <span className="font-mono">{MEMORY_STATS.total}</span>
+                </button>
+              </div>
 
-                    {isOpen && m.followUp && (
-                      <div className="mt-3 pt-3 border-t border-white/5">
-                        <p className="text-xs tracking-widest uppercase text-gray-600 mb-1">Follow-up</p>
-                        <p className="text-xs text-gray-500 leading-relaxed">{m.followUp}</p>
-                      </div>
-                    )}
-
+              {/* Entry list */}
+              <div className="text-xs tracking-widest uppercase text-gray-500 mb-3">
+                {activeCategoryFilter === 'ALL' ? '전체 항목' : activeCategoryFilter}
+              </div>
+              <div className="space-y-2">
+                {filteredKB.slice(0, 50).map((m) => {
+                  const firstKw = m.keywords[0] ?? m.id;
+                  return (
                     <button
-                      onClick={() => setExpanded(isOpen ? null : m.id)}
-                      className="mt-3 text-xs text-gray-500 hover:text-white transition-colors"
+                      key={m.id}
+                      onClick={() => handleSend(firstKw)}
+                      className="w-full text-left rounded-lg p-3 bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.05] hover:border-white/10 transition-colors group"
                     >
-                      {isOpen ? '닫기 ↑' : '자세히 보기 ↓'}
+                      <div className="flex items-center justify-between mb-1">
+                        <code className="text-[10px] font-mono text-gray-500">{m.id}</code>
+                        <span className="text-[9px] text-gray-600">{m.updatedAt}</span>
+                      </div>
+                      <p className="text-xs text-gray-300 line-clamp-2 group-hover:text-white">
+                        {m.answer.split('\n')[0]}
+                      </p>
                     </button>
-                  </motion.div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </div>
         )}
 
         {/* ─────── 제품 관리 탭 ─────── */}
         {activeTab === 'products' && (
-          <div className="bg-[#111] rounded-3xl border border-white/10 overflow-hidden">
-            <table className="w-full text-left">
-              <thead className="bg-white/5 border-b border-white/10">
-                <tr>
-                  <th className="px-6 py-4 font-medium text-gray-400">제품명</th>
-                  <th className="px-6 py-4 font-medium text-gray-400">카테고리</th>
-                  <th className="px-6 py-4 font-medium text-gray-400">등록일</th>
-                  <th className="px-6 py-4 font-medium text-gray-400 text-right">관리</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/10">
-                {[
-                  { name: 'TS-MCU-2024', category: '제어기판', date: '2024-03-15' },
-                  { name: 'Smart Sensor Node', category: '센서모듈', date: '2024-03-10' },
-                  { name: 'Industrial Gateway', category: '통신장비', date: '2024-02-28' },
-                ].map((product, idx) => (
-                  <tr key={idx} className="hover:bg-white/5 transition-colors">
-                    <td className="px-6 py-4 font-medium">{product.name}</td>
-                    <td className="px-6 py-4 text-gray-400">{product.category}</td>
-                    <td className="px-6 py-4 text-gray-400">{product.date}</td>
-                    <td className="px-6 py-4 text-right space-x-3">
-                      <button className="text-gray-400 hover:text-white transition-colors">
-                        <Edit2 size={18} />
-                      </button>
-                      <button className="text-red-500 hover:text-red-400 transition-colors">
-                        <Trash2 size={18} />
-                      </button>
-                    </td>
+          <div className="px-10 py-8 overflow-y-auto">
+            <div className="bg-[#111] rounded-3xl border border-white/10 overflow-hidden">
+              <table className="w-full text-left">
+                <thead className="bg-white/5 border-b border-white/10">
+                  <tr>
+                    <th className="px-6 py-4 font-medium text-gray-400">제품명</th>
+                    <th className="px-6 py-4 font-medium text-gray-400">카테고리</th>
+                    <th className="px-6 py-4 font-medium text-gray-400">등록일</th>
+                    <th className="px-6 py-4 font-medium text-gray-400 text-right">관리</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-white/10">
+                  {[
+                    { name: 'TS-MCU-2024', category: '제어기판', date: '2024-03-15' },
+                    { name: 'Smart Sensor Node', category: '센서모듈', date: '2024-03-10' },
+                    { name: 'Industrial Gateway', category: '통신장비', date: '2024-02-28' },
+                  ].map((product, idx) => (
+                    <tr key={idx} className="hover:bg-white/5 transition-colors">
+                      <td className="px-6 py-4 font-medium">{product.name}</td>
+                      <td className="px-6 py-4 text-gray-400">{product.category}</td>
+                      <td className="px-6 py-4 text-gray-400">{product.date}</td>
+                      <td className="px-6 py-4 text-right space-x-3">
+                        <button className="text-gray-400 hover:text-white transition-colors">
+                          <Edit2 size={18} />
+                        </button>
+                        <button className="text-red-500 hover:text-red-400 transition-colors">
+                          <Trash2 size={18} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 
-        {/* ─────── 뉴스/공지 / 문의 — placeholder ─────── */}
         {(activeTab === 'news' || activeTab === 'users') && (
-          <div className="bg-[#111] rounded-3xl border border-white/10 p-12 text-center text-gray-500 text-sm">
-            준비 중입니다.
+          <div className="px-10 py-8">
+            <div className="bg-[#111] rounded-3xl border border-white/10 p-12 text-center text-gray-500 text-sm">
+              준비 중입니다.
+            </div>
           </div>
         )}
       </div>
