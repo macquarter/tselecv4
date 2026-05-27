@@ -8,7 +8,7 @@ import BusinessNav from '../components/BusinessNav';
 interface Feature {
   key: string;
   image: string;
-  modalImage: string;
+  fallback?: string;
   specs: { label: string; value: string }[];
   applications: string[];
 }
@@ -17,9 +17,7 @@ const STOCK = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit
 
 const features: Feature[] = [
   {
-    key: 'f0',
-    image: STOCK('photo-1509391366360-2e959784a276'),
-    modalImage: '/images/products/solar-panel.jpg',
+    key: 'f0', image: '/images/products/solar-panel.jpg', fallback: STOCK('photo-1509391366360-2e959784a276'),
     specs: [
       { label: '변환 효율', value: '최대 98.5%' },
       { label: 'MPPT 트래커', value: '최대 4채널 독립' },
@@ -29,9 +27,7 @@ const features: Feature[] = [
     applications: ['주택용 태양광', '상업용 태양광', '대규모 발전소', '건물 일체형(BIPV)'],
   },
   {
-    key: 'f1',
-    image: STOCK('photo-1466611653911-95081537e5b7'),
-    modalImage: '/images/products/hydrogen.jpg',
+    key: 'f1', image: '/images/products/hydrogen.jpg', fallback: STOCK('photo-1466611653911-95081537e5b7'),
     specs: [
       { label: '스택 모니터링', value: '셀 전압 개별 측정' },
       { label: '안전 감지', value: '수소 누출·압력·온도' },
@@ -41,9 +37,7 @@ const features: Feature[] = [
     applications: ['수소 연료전지 발전', '수소 드론', '수소 지게차', '수전해 시스템'],
   },
   {
-    key: 'f2',
-    image: STOCK('photo-1593941707882-a5bba14938c7'),
-    modalImage: '/images/products/lithium-charger.jpg',
+    key: 'f2', image: '/images/products/lithium-charger.jpg', fallback: STOCK('photo-1593941707882-a5bba14938c7'),
     specs: [
       { label: '셀 모니터링', value: '최대 16S' },
       { label: 'SOC 정확도', value: '±2%' },
@@ -53,9 +47,7 @@ const features: Feature[] = [
     applications: ['전동 킥보드', '전기자전거', '소형 ESS', '산업용 배터리 팩'],
   },
   {
-    key: 'f3',
-    image: STOCK('photo-1620714223084-8fcacc6dfd8d'),
-    modalImage: '/images/products/fuel-cell-pbu.jpg',
+    key: 'f3', image: '/images/products/fuel-cell-pbu.jpg', fallback: STOCK('photo-1620714223084-8fcacc6dfd8d'),
     specs: [
       { label: '출력 범위', value: '1kW ~ 100kW' },
       { label: 'BoP 제어', value: '블로워, 밸브, 펌프, 가습기' },
@@ -77,19 +69,12 @@ export default function BusinessRenewable() {
       <section className="relative pt-40 pb-24 px-6">
         <div className="max-w-7xl mx-auto text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
-            <span className="inline-block px-4 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs tracking-widest text-gray-400 uppercase mb-8">
-              {t('business.renewableTag')}
-            </span>
+            <span className="inline-block px-4 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs tracking-widest text-gray-400 uppercase mb-8">{t('business.renewableTag')}</span>
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] mb-6">
-              {t('business.renewableTitle1')}
-              <br />
-              <span className="bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent">
-                {t('business.renewableTitle2')}
-              </span>
+              {t('business.renewableTitle1')}<br />
+              <span className="bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent">{t('business.renewableTitle2')}</span>
             </h1>
-            <p className="text-lg text-gray-400 font-light max-w-2xl mx-auto leading-relaxed">
-              {t('business.renewableDesc')}
-            </p>
+            <p className="text-lg text-gray-400 font-light max-w-2xl mx-auto leading-relaxed">{t('business.renewableDesc')}</p>
           </motion.div>
         </div>
       </section>
@@ -100,16 +85,8 @@ export default function BusinessRenewable() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {features.map((feature, i) => (
-              <motion.div
-                key={feature.key}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="relative rounded-[2rem] bg-[#0a0a0a] border border-white/5 overflow-hidden group aspect-[4/3] cursor-pointer"
-                onClick={() => setSelected(feature)}
-              >
-                <img src={feature.image} alt={t(`bizRenewable.${feature.key}n`)} className="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-1000 group-hover:scale-105" loading="lazy" />
+              <motion.div key={feature.key} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }} className="relative rounded-[2rem] bg-[#0a0a0a] border border-white/5 overflow-hidden group aspect-[4/3] cursor-pointer" onClick={() => setSelected(feature)}>
+                <img src={feature.image} alt={t(`bizRenewable.${feature.key}n`)} className="absolute inset-0 w-full h-full object-cover opacity-60 transition-transform duration-1000 group-hover:scale-105 group-hover:opacity-80" loading="lazy" onError={(e) => { const img = e.currentTarget as HTMLImageElement; if (feature.fallback && !img.src.includes('unsplash')) img.src = feature.fallback; }} />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                 <div className="relative z-10 flex flex-col justify-end h-full p-8">
                   <h3 className="text-2xl font-bold mb-2 tracking-tight">{t(`bizRenewable.${feature.key}n`)}</h3>
@@ -134,7 +111,7 @@ export default function BusinessRenewable() {
               </button>
 
               <div className="mb-6 rounded-2xl overflow-hidden aspect-video bg-[#111] border border-white/5">
-                <img src={selected.modalImage} alt={t(`bizRenewable.${selected.key}n`)} className="w-full h-full object-cover" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
+                <img src={selected.image} alt={t(`bizRenewable.${selected.key}n`)} className="w-full h-full object-cover" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
               </div>
 
               <h2 className="text-2xl font-bold tracking-tight mb-2">{t(`bizRenewable.${selected.key}n`)}</h2>
