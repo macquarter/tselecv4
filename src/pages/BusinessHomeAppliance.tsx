@@ -18,7 +18,7 @@ const STOCK = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit
 const features: Feature[] = [
   {
     key: 'f0',
-    image: '/images/products/refrigerator-display.jpg',
+    image: '/images/products/home-refrigerator-4door.jpg',
     fallback: STOCK('photo-1571175443880-49e1d25b2bc5'),
     specs: [
       { label: '프로세서', value: '32-bit ARM Cortex-M' },
@@ -30,8 +30,8 @@ const features: Feature[] = [
   },
   {
     key: 'f1',
-    image: '/images/products/water-purifier-ice.jpg',
-    fallback: STOCK('photo-1548839140-29a749e1cf4d'),
+    image: '/images/products/home-ice-purifier.jpg',
+    fallback: STOCK('photo-1610822546219-c100ce40f7a3'),
     specs: [
       { label: '냉각 제어', value: '인버터 컴프레서 구동' },
       { label: '필터 관리', value: '자동 교체 알림' },
@@ -42,7 +42,7 @@ const features: Feature[] = [
   },
   {
     key: 'f2',
-    image: '/images/products/range-hood.jpg',
+    image: '/images/products/home-range-hood.jpg',
     fallback: STOCK('photo-1556909114-f6e7ad7d3136'),
     specs: [
       { label: '모터 제어', value: 'BLDC 3단 풍량' },
@@ -51,18 +51,6 @@ const features: Feature[] = [
       { label: '조명', value: 'LED 디밍 제어' },
     ],
     applications: ['빌트인 레인지후드', '벽걸이형 후드', '아일랜드 후드', '업소용 환기설비'],
-  },
-  {
-    key: 'f3',
-    image: '/images/products/air-purifier-main.jpg',
-    fallback: STOCK('photo-1585771724684-38269d6639fd'),
-    specs: [
-      { label: '센서', value: 'PM2.5, PM10, VOC, CO2' },
-      { label: '모터 제어', value: 'BLDC 인버터' },
-      { label: '필터 관리', value: '수명 자동 산출' },
-      { label: '연결', value: 'Wi-Fi, BLE' },
-    ],
-    applications: ['가정용 공기청정기', '차량용 공기청정기', '상업용 공기청정기', '공기청정 에어컨'],
   },
 ];
 
@@ -98,7 +86,7 @@ export default function BusinessHomeAppliance() {
 
       <section className="py-24 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, i) => (
               <motion.div
                 key={feature.key}
@@ -143,7 +131,15 @@ export default function BusinessHomeAppliance() {
               </button>
 
               <div className="mb-6 rounded-2xl overflow-hidden aspect-video bg-[#111] border border-white/5">
-                <img src={selected.image} alt={t(`bizHome.${selected.key}n`)} className="w-full h-full object-cover" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
+                <img
+                  src={selected.image}
+                  alt={t(`bizHome.${selected.key}n`)}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    const img = e.currentTarget as HTMLImageElement;
+                    if (selected.fallback && !img.src.includes('unsplash')) img.src = selected.fallback;
+                  }}
+                />
               </div>
 
               <h2 className="text-2xl font-bold tracking-tight mb-2">{t(`bizHome.${selected.key}n`)}</h2>
@@ -163,11 +159,14 @@ export default function BusinessHomeAppliance() {
 
               <div>
                 <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">{t('common.applications')}</h3>
-                <div className="flex flex-wrap gap-2">
+                <ul className="grid grid-cols-2 gap-2">
                   {selected.applications.map((app, i) => (
-                    <span key={i} className="px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs text-gray-300">{app}</span>
+                    <li key={i} className="flex items-center gap-2 text-sm text-gray-300">
+                      <span className="w-1 h-1 rounded-full bg-gray-600" />
+                      {app}
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
             </motion.div>
           </motion.div>
