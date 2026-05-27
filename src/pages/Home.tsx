@@ -5,6 +5,7 @@ import Hero from '../components/Hero';
 // Clients removed per 2026-05-14 revision (경쟁사 정보누출 방지)
 import About from '../components/About';
 import Expertise from '../components/Expertise';
+import KpiStats from '../components/KpiStats';
 import Products from '../components/Products';
 import FAQ from '../components/FAQ';
 import News from '../components/News';
@@ -54,6 +55,7 @@ export default function Home() {
           <Hero />
           <Expertise />
           <About />
+          <KpiStats />
           <Products onSelectProduct={setSelectedProduct} />
           <FAQ />
           <News />
