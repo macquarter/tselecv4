@@ -36,7 +36,10 @@ interface ChatTurn {
 }
 
 const SUGGESTED_QUESTIONS = [
-  '회사 소개해 주세요',
+  '태승전자 16개 제품 라인업을 알려주세요',
+  'Main PCB와 POWER PCB 차이가 뭐예요?',
+  'HMI Display 솔루션은 어떤 사양이 가능한가요?',
+  '수소드론 / 연료전지 제어보드도 만드시나요?',
   '기능 사양서만 드리면 회로 설계부터 전부 진행해 주시나요?',
   '월간 또는 연간 최대 생산 능력(Capa)은 어떻게 되나요?',
   '거버 파일과 BOM 없이 샘플 PCB만 있어도 제작 가능한가요?',
@@ -432,9 +435,27 @@ export default function AdminDashboard() {
                 </thead>
                 <tbody className="divide-y divide-white/10">
                   {[
-                    { name: 'TS-MCU-2024', category: '제어기판', date: '2024-03-15' },
-                    { name: 'Smart Sensor Node', category: '센서모듈', date: '2024-03-10' },
-                    { name: 'Industrial Gateway', category: '통신장비', date: '2024-02-28' },
+                    { name: '냉장고 제어보드', category: '가전', date: '2026-05-27' },
+                    { name: '정수기 제어보드', category: '가전', date: '2026-05-27' },
+                    { name: '레인지후드 제어보드', category: '가전', date: '2026-05-27' },
+                    { name: '공기청정기 제어보드', category: '가전', date: '2026-05-27' },
+                    { name: '식기세척기 제어보드', category: '산업용', date: '2026-05-27' },
+                    { name: '제빙기 제어보드', category: '산업용', date: '2026-05-27' },
+                    { name: '펌프 제어보드', category: '산업용', date: '2026-05-27' },
+                    { name: '회의부스 제어보드', category: '산업용', date: '2026-05-27' },
+                    { name: '산업용 온도제어기', category: '산업용', date: '2026-05-27' },
+                    { name: '원심분리기 제어보드', category: '의료기기', date: '2026-05-27' },
+                    { name: '진단기 제어보드', category: '의료기기', date: '2026-05-27' },
+                    { name: '치과용 스케일러 제어보드', category: '의료기기', date: '2026-05-27' },
+                    { name: '연료전지 제어보드', category: '신재생에너지', date: '2026-05-27' },
+                    { name: '수소드론 제어보드', category: '신재생에너지', date: '2026-05-27' },
+                    { name: '리튬이온 배터리충전 제어', category: '신재생에너지', date: '2026-05-27' },
+                    { name: '태양광패널 제어보드', category: '신재생에너지', date: '2026-05-27' },
+                    { name: 'Main PCB', category: '임베디드', date: '2026-05-27' },
+                    { name: 'POWER PCB', category: '임베디드', date: '2026-05-27' },
+                    { name: 'Display (HMI)', category: 'HMI', date: '2026-05-27' },
+                    { name: 'SMPS', category: '주변기기', date: '2026-05-27' },
+                    { name: '무선모듈 (Wi-Fi/BLE)', category: '주변기기', date: '2026-05-27' },
                   ].map((product, idx) => (
                     <tr key={idx} className="hover:bg-white/5 transition-colors">
                       <td className="px-6 py-4 font-medium">{product.name}</td>
