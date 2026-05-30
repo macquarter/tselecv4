@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useText } from '../contexts/SiteContentContext';
+import { useText, useImage } from '../contexts/SiteContentContext';
 
 interface FooterProps {
   /** 페이지 고유 메타 라벨 (예: "Manufacturing Process · v6.0 · ISO 9001 인증 라인"). */
@@ -11,6 +11,7 @@ export default function Footer({ pageBadge }: FooterProps) {
   const { t } = useTranslation();
   const logo1 = useText('logo-1', 'TSE');
   const logo2 = useText('logo-2', 'LEC');
+  const logoImg = useImage('logo-img', '');
   const ftB1 = useText('ft-b1', 'ISO 9001');
   const ftB2 = useText('ft-b2', 'CE');
   const ftB3 = useText('ft-b3', 'KC');
@@ -21,10 +22,14 @@ export default function Footer({ pageBadge }: FooterProps) {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8 mb-12 md:mb-16">
           <div className="col-span-2">
             <Link to="/" className="inline-block mb-6">
-              <div className="flex flex-col leading-[0.85] font-black text-[20px] tracking-[-0.12em] uppercase text-white">
-                <span>{logo1}</span>
-                <span>{logo2}</span>
-              </div>
+              {logoImg ? (
+                <img src={logoImg} alt={logo1+logo2} className="h-10 w-auto object-contain" />
+              ) : (
+                <div className="flex flex-col leading-[0.85] font-black text-[20px] tracking-[-0.12em] uppercase text-white">
+                  <span>{logo1}</span>
+                  <span>{logo2}</span>
+                </div>
+              )}
             </Link>
             <p className="text-sm text-gray-500 leading-relaxed">
               {t('footer.description')}
