@@ -1,22 +1,22 @@
 /**
- * CmsEditOverlay
+ * CmsEditOverlay v10
  *
  * Activated when the page URL has ?edit=1 (admin embeds the site this way).
  *
- * What it does
- *  - Builds a reverse map of every i18n value → key from the ko bundle.
- *  - Walks the DOM, finds text nodes whose value matches uniquely, and
- *    decorates the nearest element with a click handler that postMessage's
- *    `{ type: 'cms-edit', key, currentValue }` to window.parent (the admin).
- *  - Hover shows a cyan dashed outline; click triggers edit instead of
- *    following any link/button.
- *  - Re-runs on DOM mutations so dynamic content also becomes editable.
- *  - Listens for `{ type: 'cms-reload' }` from parent to reload after a save.
- *
- * No effect when ?edit=1 is absent — completely inert in normal browsing.
+ * v10 additions:
+ *  - Image click editing: <img> elements whose src matches the Firestore
+ *    image registry (siteContent/media.images) become clickable. Posts
+ *    {type:'cms-edit-image', key, currentSrc} to the admin.
+ *  - Live image overrides: if Firestore image map has an override for an
+ *    image's original src, swap it in automatically (works even when the
+ *    React component still hardcodes src='/images/...').
+ *  - Trailing-punctuation tolerant text matching: "솔루션." vs "솔루션!"
+ *    will match the same i18n key.
  */
 import { useEffect } from 'react';
+import { doc, getDoc } from 'firebase/firestore';
 import i18n from '../lib/i18n';
+import { db } from '../lib/firebase';
 
 function flatten(obj: any, prefix = ''): Record<string, string> {
   const out: Record<string, string> = {};
@@ -29,29 +29,92 @@ function flatten(obj: any, prefix = ''): Record<string, string> {
   return out;
 }
 
+function stripTrailingPunct(s: string): string {
+  return s.replace(/[.!?。！？,;:·…\s]+$/g, '').trim();
+}
+
+function basename(url: string): string {
+  try {
+    const u = new URL(url, window.location.origin);
+    return u.pathname.split('/').pop() || '';
+  } catch {
+    return url.split('?')[0].split('/').pop() || '';
+  }
+}
+
 export default function CmsEditOverlay() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('edit') !== '1') return;
 
-    let reverse: Record<string, string> = {};
-    function rebuildReverse() {
+    // ===== TEXT MATCHING =====
+    let textReverse: Record<string, string> = {};
+    let textReverseLoose: Record<string, string> = {};
+    function rebuildTextReverse() {
       try {
         const bundle = i18n.getResourceBundle('ko', 'translation') || {};
         const flat = flatten(bundle);
-        reverse = {};
+        textReverse = {};
+        textReverseLoose = {};
         for (const [k, v] of Object.entries(flat)) {
           if (typeof v !== 'string' || !v.trim()) continue;
-          if (reverse[v]) reverse[v] = '__AMBIGUOUS__';
-          else reverse[v] = k;
+          if (textReverse[v]) textReverse[v] = '__AMBIGUOUS__';
+          else textReverse[v] = k;
+          // Loose key — strip trailing punctuation/whitespace differences
+          const loose = stripTrailingPunct(v);
+          if (loose && loose !== v) {
+            if (textReverseLoose[loose]) textReverseLoose[loose] = '__AMBIGUOUS__';
+            else textReverseLoose[loose] = k;
+          }
         }
       } catch (e) {
-        console.warn('[CMS] rebuildReverse failed', e);
+        console.warn('[CMS] text reverse failed', e);
       }
     }
-    rebuildReverse();
+    rebuildTextReverse();
 
-    function onEditClick(this: HTMLElement, e: Event) {
+    // ===== IMAGE REGISTRY =====
+    // Reverse map: img-src/basename → key from siteContent/media.images
+    let imageMap: Record<string, string> = {};       // key → url
+    let imageReverse: Record<string, string> = {};   // url → key  (also basename → key)
+    async function loadImageRegistry() {
+      try {
+        const snap = await getDoc(doc(db, 'siteContent', 'media'));
+        if (!snap.exists()) return;
+        const data = snap.data();
+        imageMap = (data.images || {}) as Record<string, string>;
+        imageReverse = {};
+        for (const [key, url] of Object.entries(imageMap)) {
+          if (typeof url !== 'string' || !url) continue;
+          imageReverse[url] = key;
+          const bn = basename(url);
+          if (bn) imageReverse[bn] = key;
+        }
+        // Apply overrides + decorate after registry loads
+        applyImageOverrides();
+        decorate();
+      } catch (e) {
+        console.warn('[CMS] image registry load failed', e);
+      }
+    }
+    loadImageRegistry();
+
+    function applyImageOverrides() {
+      document.querySelectorAll('img').forEach((img) => {
+        const el = img as HTMLImageElement & { dataset: any };
+        if (!el.dataset.cmsOrigSrc) el.dataset.cmsOrigSrc = el.getAttribute('src') || '';
+        const orig = el.dataset.cmsOrigSrc;
+        const bn = basename(orig);
+        const key = imageReverse[orig] || imageReverse[bn];
+        if (key && imageMap[key] && imageMap[key] !== orig) {
+          // The registry override differs from current src — swap.
+          el.src = imageMap[key];
+        }
+      });
+    }
+
+    // ===== CLICK HANDLERS =====
+    function onTextEditClick(this: HTMLElement, e: Event) {
       e.preventDefault();
       e.stopPropagation();
       const key = this.dataset.cmsKey;
@@ -60,14 +123,34 @@ export default function CmsEditOverlay() {
       window.parent.postMessage({ type: 'cms-edit', key, currentValue: value }, '*');
     }
 
+    function onImageEditClick(this: HTMLElement, e: Event) {
+      e.preventDefault();
+      e.stopPropagation();
+      const img = this as HTMLImageElement;
+      const key = img.dataset.cmsImgKey;
+      if (!key) return;
+      window.parent.postMessage({
+        type: 'cms-edit-image',
+        key,
+        currentSrc: img.src,
+        alt: img.alt || '',
+      }, '*');
+    }
+
     function decorate() {
+      // -- Text nodes --
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
       let node: Node | null;
       // eslint-disable-next-line no-cond-assign
       while ((node = walker.nextNode())) {
         const text = (node.nodeValue || '').trim();
         if (!text || text.length < 2) continue;
-        const key = reverse[text];
+        let key = textReverse[text];
+        if (!key) {
+          // Fallback: match by stripped-trailing-punctuation
+          const looseKey = textReverseLoose[stripTrailingPunct(text)];
+          if (looseKey && looseKey !== '__AMBIGUOUS__') key = looseKey;
+        }
         if (!key || key === '__AMBIGUOUS__') continue;
         const parent = node.parentElement as HTMLElement | null;
         if (!parent) continue;
@@ -79,12 +162,29 @@ export default function CmsEditOverlay() {
         parent.style.outlineOffset = '2px';
         parent.style.cursor = 'pointer';
         parent.title = '✏️ Edit: ' + key;
-        parent.addEventListener('click', onEditClick, true);
+        parent.addEventListener('click', onTextEditClick, true);
       }
+
+      // -- Images --
+      document.querySelectorAll('img').forEach((img) => {
+        const el = img as HTMLImageElement & { dataset: any };
+        if (el.dataset.cmsImgKey) return;
+        const orig = el.dataset.cmsOrigSrc || el.getAttribute('src') || '';
+        const bn = basename(orig);
+        const curBn = basename(el.src);
+        const key = imageReverse[orig] || imageReverse[bn] || imageReverse[el.src] || imageReverse[curBn];
+        if (!key) return;
+        el.dataset.cmsImgKey = key;
+        el.style.outline = '2px dashed rgba(251,191,36,.55)';
+        el.style.outlineOffset = '2px';
+        el.style.cursor = 'pointer';
+        el.title = '🖼️ 이미지 변경: ' + key;
+        el.addEventListener('click', onImageEditClick, true);
+      });
     }
 
     const initialTimer = setTimeout(() => {
-      rebuildReverse();
+      rebuildTextReverse();
       decorate();
     }, 800);
 
@@ -93,6 +193,7 @@ export default function CmsEditOverlay() {
       if (pending) return;
       pending = window.setTimeout(() => {
         pending = null;
+        applyImageOverrides();
         decorate();
       }, 300);
     });
@@ -106,14 +207,14 @@ export default function CmsEditOverlay() {
     window.addEventListener('message', onMessage);
 
     function onLngChanged() {
-      rebuildReverse();
+      rebuildTextReverse();
       decorate();
     }
     i18n.on('languageChanged', onLngChanged);
 
     const banner = document.createElement('div');
     banner.id = '__cms_edit_banner';
-    banner.textContent = '✏️ CMS 편집 모드 — 텍스트 클릭 시 어드민에서 편집됩니다';
+    banner.textContent = '✏️ CMS 편집 모드 — 텍스트/이미지 클릭 시 어드민에서 편집됩니다';
     Object.assign(banner.style, {
       position: 'fixed',
       top: '0',
