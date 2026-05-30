@@ -5,6 +5,7 @@
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { SiteContentProvider } from './contexts/SiteContentContext';
+import CmsEditOverlay from './components/CmsEditOverlay';
 import Home from './pages/Home';
 import Greeting from './pages/Greeting';
 import HistoryPage from './pages/HistoryPage';
@@ -31,6 +32,7 @@ export default function App() {
   return (
     <SiteContentProvider>
       <Router>
+        <CmsEditOverlay />
         <ChatBot />
         <Routes>
           <Route path="/" element={<Home />} />
