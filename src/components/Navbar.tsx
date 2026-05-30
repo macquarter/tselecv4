@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
-import { useText } from '../contexts/SiteContentContext';
+import { useText, useImage } from '../contexts/SiteContentContext';
 import LanguageSwitcher from './LanguageSwitcher';
 
 export default function Navbar() {
@@ -16,6 +16,7 @@ export default function Navbar() {
 
   const logo1 = useText('logo-1', 'TSE');
   const logo2 = useText('logo-2', 'LEC');
+  const logoImg = useImage('logo-img', '');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -85,10 +86,14 @@ export default function Navbar() {
       >
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <div className="flex flex-col leading-[0.85] font-black text-[22px] tracking-[-0.12em] uppercase text-white">
-              <span>{logo1}</span>
-              <span>{logo2}</span>
-            </div>
+            {logoImg ? (
+              <img src={logoImg} alt={logo1+logo2} className="h-10 w-auto object-contain" />
+            ) : (
+              <div className="flex flex-col leading-[0.85] font-black text-[22px] tracking-[-0.12em] uppercase text-white">
+                <span>{logo1}</span>
+                <span>{logo2}</span>
+              </div>
+            )}
           </Link>
 
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300 tracking-wide">
@@ -189,10 +194,14 @@ export default function Navbar() {
             {/* Header */}
             <div className="flex items-center justify-between px-6 h-16 shrink-0">
               <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2">
-                <div className="flex flex-col leading-[0.85] font-black text-[22px] tracking-[-0.12em] uppercase text-white">
-                  <span>{logo1}</span>
-                  <span>{logo2}</span>
-                </div>
+                {logoImg ? (
+                  <img src={logoImg} alt={logo1+logo2} className="h-10 w-auto object-contain" />
+                ) : (
+                  <div className="flex flex-col leading-[0.85] font-black text-[22px] tracking-[-0.12em] uppercase text-white">
+                    <span>{logo1}</span>
+                    <span>{logo2}</span>
+                  </div>
+                )}
               </Link>
               <div className="flex items-center gap-2">
                 <LanguageSwitcher />
