@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import i18n from '../lib/i18n';
 
 interface BoardOpt {
   showDate: boolean;
@@ -31,7 +32,7 @@ export function useSiteContent() {
   return useContext(SiteContentContext);
 }
 
-/** Helper: get text field with fallback */
+/** Helper: get text field with fallback (raw, not merged into i18n) */
 export function useText(key: string, fallback: string): string {
   const { text, loaded } = useSiteContent();
   if (!loaded) return fallback;
@@ -63,6 +64,57 @@ export function useClients(fallback: string[]): string[] {
 export function useBoardOpt(type: 'news' | 'dl') {
   const { boardOpt } = useSiteContent();
   return boardOpt[type];
+}
+
+/**
+ * Convert a flat dot-keyed object ({"nav.company": "회사소개"})
+ * into a nested object ({nav: {company: "회사소개"}}) so it can be
+ * merged into i18next as a translation resource bundle.
+ */
+function unflatten(flat: Record<string, string>): Record<string, any> {
+  const result: Record<string, any> = {};
+  for (const [path, value] of Object.entries(flat)) {
+    if (typeof value !== 'string') continue;
+    const parts = path.split('.');
+    let cursor: any = result;
+    for (let i = 0; i < parts.length - 1; i++) {
+      const k = parts[i];
+      if (typeof cursor[k] !== 'object' || cursor[k] === null) cursor[k] = {};
+      cursor = cursor[k];
+    }
+    cursor[parts[parts.length - 1]] = value;
+  }
+  return result;
+}
+
+/**
+ * Merge Firestore-edited text into the i18next ko bundle so every
+ * existing t('...') call automatically picks up admin overrides
+ * without each component needing a useText wrapper.
+ *
+ * Flat keys like "nav.company" are treated as i18n paths; non-dotted
+ * keys (logo-1, ft-b1, etc.) remain accessible via useText only.
+ */
+function mergeIntoI18n(flat: Record<string, string>) {
+  if (!flat || typeof flat !== 'object') return;
+  const dotted: Record<string, string> = {};
+  for (const [k, v] of Object.entries(flat)) {
+    if (k.includes('.')) dotted[k] = v;
+  }
+  if (Object.keys(dotted).length === 0) return;
+  const nested = unflatten(dotted);
+  try {
+    const lng = i18n.language || 'ko';
+    i18n.addResourceBundle(lng, 'translation', nested, true /* deep */, true /* overwrite */);
+    if (lng !== 'ko') {
+      i18n.addResourceBundle('ko', 'translation', nested, true, true);
+    }
+    // Trigger re-render of components consuming useTranslation
+    i18n.emit('languageChanged', lng);
+    console.log(`✅ Merged ${Object.keys(dotted).length} Firestore text overrides into i18n (${lng})`);
+  } catch (e) {
+    console.warn('i18n merge failed:', e);
+  }
 }
 
 export function SiteContentProvider({ children }: { children: ReactNode }) {
@@ -98,6 +150,9 @@ export function SiteContentProvider({ children }: { children: ReactNode }) {
           if (sd.boardOpt?.news) Object.assign(boardOpt.news, sd.boardOpt.news);
           if (sd.boardOpt?.dl) Object.assign(boardOpt.dl, sd.boardOpt.dl);
         }
+
+        // ── CMS pairing: merge Firestore text into i18n so all t() calls reflect admin edits ──
+        mergeIntoI18n(text);
 
         setContent({ text, images, videos, clients, boardOpt, loaded: true });
         console.log('✅ SiteContent loaded from Firestore');
