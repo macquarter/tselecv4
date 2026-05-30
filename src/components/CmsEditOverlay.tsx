@@ -1,17 +1,12 @@
 /**
- * CmsEditOverlay v10
+ * CmsEditOverlay v11
  *
- * Activated when the page URL has ?edit=1 (admin embeds the site this way).
- *
- * v10 additions:
- *  - Image click editing: <img> elements whose src matches the Firestore
- *    image registry (siteContent/media.images) become clickable. Posts
- *    {type:'cms-edit-image', key, currentSrc} to the admin.
- *  - Live image overrides: if Firestore image map has an override for an
- *    image's original src, swap it in automatically (works even when the
- *    React component still hardcodes src='/images/...').
- *  - Trailing-punctuation tolerant text matching: "솔루션." vs "솔루션!"
- *    will match the same i18n key.
+ * v11 additions:
+ *  - Include non-dotted siteContent/text keys (logo-1, ft-b1, ci-ad …) in the
+ *    reverse map. Logos and footer badges become clickable.
+ *  - Ambiguous handling: when a value maps to multiple keys, we no longer skip.
+ *    Instead we postMessage `candidates: [{key, value}]` so the admin can show
+ *    a picker.
  */
 import { useEffect } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
@@ -47,9 +42,16 @@ export default function CmsEditOverlay() {
     const params = new URLSearchParams(window.location.search);
     if (params.get('edit') !== '1') return;
 
-    // ===== TEXT MATCHING =====
-    let textReverse: Record<string, string> = {};
-    let textReverseLoose: Record<string, string> = {};
+    // ===== TEXT REVERSE MAP =====
+    // value → array of candidate keys (single or multiple)
+    let textReverse: Record<string, string[]> = {};
+    let textReverseLoose: Record<string, string[]> = {};
+
+    function addTo(map: Record<string, string[]>, value: string, key: string) {
+      const arr = map[value] || (map[value] = []);
+      if (!arr.includes(key)) arr.push(key);
+    }
+
     function rebuildTextReverse() {
       try {
         const bundle = i18n.getResourceBundle('ko', 'translation') || {};
@@ -58,25 +60,45 @@ export default function CmsEditOverlay() {
         textReverseLoose = {};
         for (const [k, v] of Object.entries(flat)) {
           if (typeof v !== 'string' || !v.trim()) continue;
-          if (textReverse[v]) textReverse[v] = '__AMBIGUOUS__';
-          else textReverse[v] = k;
-          // Loose key — strip trailing punctuation/whitespace differences
+          addTo(textReverse, v, k);
           const loose = stripTrailingPunct(v);
-          if (loose && loose !== v) {
-            if (textReverseLoose[loose]) textReverseLoose[loose] = '__AMBIGUOUS__';
-            else textReverseLoose[loose] = k;
-          }
+          if (loose && loose !== v) addTo(textReverseLoose, loose, k);
+        }
+        // Also include non-dotted siteContent/text (logo-1, ft-b1, ci-ad …)
+        // fetched separately into nonDottedText
+        for (const [k, v] of Object.entries(nonDottedText)) {
+          if (typeof v !== 'string' || !v.trim()) continue;
+          addTo(textReverse, v, k);
+          const loose = stripTrailingPunct(v);
+          if (loose && loose !== v) addTo(textReverseLoose, loose, k);
         }
       } catch (e) {
         console.warn('[CMS] text reverse failed', e);
       }
     }
-    rebuildTextReverse();
+
+    // ===== NON-DOTTED FIRESTORE TEXT =====
+    let nonDottedText: Record<string, string> = {};
+    async function loadNonDottedText() {
+      try {
+        const snap = await getDoc(doc(db, 'siteContent', 'text'));
+        if (!snap.exists()) return;
+        const data = snap.data() as Record<string, string>;
+        nonDottedText = {};
+        for (const [k, v] of Object.entries(data)) {
+          if (typeof v === 'string' && !k.includes('.')) nonDottedText[k] = v;
+        }
+        rebuildTextReverse();
+        decorate();
+      } catch (e) {
+        console.warn('[CMS] non-dotted text load failed', e);
+      }
+    }
+    loadNonDottedText();
 
     // ===== IMAGE REGISTRY =====
-    // Reverse map: img-src/basename → key from siteContent/media.images
-    let imageMap: Record<string, string> = {};       // key → url
-    let imageReverse: Record<string, string> = {};   // url → key  (also basename → key)
+    let imageMap: Record<string, string> = {};
+    let imageReverse: Record<string, string> = {};
     async function loadImageRegistry() {
       try {
         const snap = await getDoc(doc(db, 'siteContent', 'media'));
@@ -90,7 +112,6 @@ export default function CmsEditOverlay() {
           const bn = basename(url);
           if (bn) imageReverse[bn] = key;
         }
-        // Apply overrides + decorate after registry loads
         applyImageOverrides();
         decorate();
       } catch (e) {
@@ -107,20 +128,32 @@ export default function CmsEditOverlay() {
         const bn = basename(orig);
         const key = imageReverse[orig] || imageReverse[bn];
         if (key && imageMap[key] && imageMap[key] !== orig) {
-          // The registry override differs from current src — swap.
           el.src = imageMap[key];
         }
       });
     }
 
+    rebuildTextReverse();
+
     // ===== CLICK HANDLERS =====
     function onTextEditClick(this: HTMLElement, e: Event) {
       e.preventDefault();
       e.stopPropagation();
-      const key = this.dataset.cmsKey;
+      const candidatesStr = this.dataset.cmsKeys;
       const value = this.textContent || '';
-      if (!key) return;
-      window.parent.postMessage({ type: 'cms-edit', key, currentValue: value }, '*');
+      if (!candidatesStr) return;
+      const candidates = candidatesStr.split('||');
+      if (candidates.length === 1) {
+        // Single candidate — direct edit
+        window.parent.postMessage({ type: 'cms-edit', key: candidates[0], currentValue: value }, '*');
+      } else {
+        // Ambiguous — send all candidates to admin for picker
+        window.parent.postMessage({
+          type: 'cms-edit',
+          candidates: candidates.map((k) => ({ key: k, value })),
+          currentValue: value,
+        }, '*');
+      }
     }
 
     function onImageEditClick(this: HTMLElement, e: Event) {
@@ -145,23 +178,23 @@ export default function CmsEditOverlay() {
       while ((node = walker.nextNode())) {
         const text = (node.nodeValue || '').trim();
         if (!text || text.length < 2) continue;
-        let key = textReverse[text];
-        if (!key) {
-          // Fallback: match by stripped-trailing-punctuation
-          const looseKey = textReverseLoose[stripTrailingPunct(text)];
-          if (looseKey && looseKey !== '__AMBIGUOUS__') key = looseKey;
+        let keys = textReverse[text];
+        if (!keys || keys.length === 0) {
+          const looseKeys = textReverseLoose[stripTrailingPunct(text)];
+          if (looseKeys && looseKeys.length > 0) keys = looseKeys;
         }
-        if (!key || key === '__AMBIGUOUS__') continue;
+        if (!keys || keys.length === 0) continue;
         const parent = node.parentElement as HTMLElement | null;
         if (!parent) continue;
         const tag = parent.tagName;
         if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'TEXTAREA' || tag === 'INPUT') continue;
-        if (parent.dataset.cmsKey) continue;
-        parent.dataset.cmsKey = key;
+        if (parent.dataset.cmsKeys) continue;
+        parent.dataset.cmsKeys = keys.join('||');
+        const label = keys.length === 1 ? keys[0] : `${keys.length}개 후보 (${keys[0]} 외)`;
         parent.style.outline = '1px dashed rgba(56,189,248,.45)';
         parent.style.outlineOffset = '2px';
         parent.style.cursor = 'pointer';
-        parent.title = '✏️ Edit: ' + key;
+        parent.title = '✏️ Edit: ' + label;
         parent.addEventListener('click', onTextEditClick, true);
       }
 
