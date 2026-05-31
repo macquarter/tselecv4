@@ -1,4 +1,5 @@
 import { motion } from 'motion/react';
+import { useVideo } from '../contexts/SiteContentContext';
 import { useTranslation } from 'react-i18next';
 
 /**
@@ -7,6 +8,7 @@ import { useTranslation } from 'react-i18next';
  * 언어 전환 시 본문이 즉시 변경됩니다.
  */
 export default function About() {
+  const _aboutVid = useVideo('about.video', '/about-video.mp4');
   const { t } = useTranslation();
 
   const stats = [
@@ -66,7 +68,7 @@ export default function About() {
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           >
             <video
-              src="/about-video.mp4"
+              src={_aboutVid}
               autoPlay
               loop
               muted
