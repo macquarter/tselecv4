@@ -1,10 +1,18 @@
 import { motion } from 'motion/react';
 import { useTranslation } from 'react-i18next';
+import { useImage } from '../contexts/SiteContentContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductNav from '../components/ProductNav';
 
 export default function ProductsPage() {
+  const _p0 = useImage('productsPage.p0.img', 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&w=800&q=80');
+  const _p1 = useImage('productsPage.p1.img', 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=800&q=80');
+  const _p2 = useImage('productsPage.p2.img', 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80');
+  const _p3 = useImage('productsPage.p3.img', 'https://images.unsplash.com/photo-1526406915894-7bcd65f60845?auto=format&fit=crop&w=800&q=80');
+  const _p4 = useImage('productsPage.p4.img', 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=80');
+  const _p5 = useImage('productsPage.p5.img', 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80');
+  const _imgMap: Record<string,string> = {'https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&w=800&q=80': _p0, 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=800&q=80': _p1, 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80': _p2, 'https://images.unsplash.com/photo-1526406915894-7bcd65f60845?auto=format&fit=crop&w=800&q=80': _p3, 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=80': _p4, 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80': _p5};
   const { t } = useTranslation();
 
   const products = [
@@ -107,7 +115,7 @@ export default function ProductsPage() {
                 </div>
                 <div className="absolute inset-0 top-1/3 mt-4 overflow-hidden rounded-b-[2rem]">
                   <img
-                    src={product.img}
+                    src={_imgMap[product.img] || product.img}
                     alt={product.title}
                     className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-60 group-hover:opacity-90"
                   />
