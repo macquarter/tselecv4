@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useTranslation } from 'react-i18next';
+import { useImage } from '../contexts/SiteContentContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import BusinessNav from '../components/BusinessNav';
@@ -55,6 +56,10 @@ const features: Feature[] = [
 ];
 
 export default function BusinessMedical() {
+  const _img0 = useImage('biz.med.f0.img', '/images/products/medical-centrifuge.jpg');
+  const _img1 = useImage('biz.med.f1.img', '/images/products/medical-diagnostic.jpg');
+  const _img2 = useImage('biz.med.f2.img', '/images/products/medical-dental-scaler.jpg');
+  const _imgMap: Record<string,string> = {'/images/products/medical-centrifuge.jpg': _img0, '/images/products/medical-diagnostic.jpg': _img1, '/images/products/medical-dental-scaler.jpg': _img2};
   const { t } = useTranslation();
   const [selected, setSelected] = useState<Feature | null>(null);
 
@@ -98,7 +103,7 @@ export default function BusinessMedical() {
                 onClick={() => setSelected(feature)}
               >
                 <img
-                  src={feature.image}
+                  src={_imgMap[feature.image] || feature.image}
                   alt={t(`bizMedical.${feature.key}n`)}
                   className="absolute inset-0 w-full h-full object-cover opacity-60 transition-transform duration-1000 group-hover:scale-105 group-hover:opacity-80"
                   loading="lazy"
@@ -132,7 +137,7 @@ export default function BusinessMedical() {
 
               <div className="mb-6 rounded-2xl overflow-hidden aspect-video bg-[#111] border border-white/5">
                 <img
-                  src={selected.image}
+                  src={_imgMap[selected.image] || selected.image}
                   alt={t(`bizMedical.${selected.key}n`)}
                   className="w-full h-full object-cover"
                   onError={(e) => {
