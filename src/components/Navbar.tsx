@@ -85,7 +85,7 @@ export default function Navbar() {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2" data-cms-img-key="logo-img">
             {logoImg ? (
               <img src={logoImg} alt={logo1+logo2} className="h-10 w-auto object-contain" />
             ) : (
@@ -193,7 +193,7 @@ export default function Navbar() {
           >
             {/* Header */}
             <div className="flex items-center justify-between px-6 h-16 shrink-0">
-              <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2">
+              <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2" data-cms-img-key="logo-img">
                 {logoImg ? (
                   <img src={logoImg} alt={logo1+logo2} className="h-10 w-auto object-contain" />
                 ) : (
