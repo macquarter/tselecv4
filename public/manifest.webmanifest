@@ -1,0 +1,11 @@
+{
+  "name": "TSELEC - 태승전자(주)",
+  "short_name": "TSELEC",
+  "icons": [
+    { "src": "/icon-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "/icon-512.png", "type": "image/png", "sizes": "512x512" }
+  ],
+  "theme_color": "#0a0a0a",
+  "background_color": "#000000",
+  "display": "standalone"
+}
