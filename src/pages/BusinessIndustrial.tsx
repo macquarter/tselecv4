@@ -19,7 +19,7 @@ const STOCK = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit
 const features: Feature[] = [
   {
     key: 'f0',
-    image: '/images/products/industrial-dishwasher.jpg',
+    image: '/images/products/dishwasher.jpg',
     fallback: STOCK('photo-1581622558663-b2e33377dfb2'),
     solutions: [
       '세척·헹굼·건조 사이클 시퀀스 제어',
@@ -31,7 +31,7 @@ const features: Feature[] = [
   },
   {
     key: 'f1',
-    image: '/images/products/industrial-ice-maker.jpg',
+    image: '/images/products/chungho-ice-550.jpg',
     fallback: STOCK('photo-1499636136210-6f4ee915583e'),
     solutions: [
       '컴프레서·핫가스 밸브 자동 사이클 제어',
@@ -43,7 +43,7 @@ const features: Feature[] = [
   },
   {
     key: 'f2',
-    image: '/images/products/industrial-pump.jpg',
+    image: '/images/products/pump.jpg',
     fallback: STOCK('photo-1581094794326-c0a7060a4b48'),
     solutions: [
       'BLDC / 인버터 모터 구동 제어',
@@ -55,7 +55,7 @@ const features: Feature[] = [
   },
   {
     key: 'f3',
-    image: '/images/products/industrial-booth.jpg',
+    image: '/images/products/smart-booth.jpg',
     fallback: STOCK('photo-1497366216548-37526070297c'),
     solutions: [
       '환기팬·조명·공조 통합 자동 제어',
@@ -67,7 +67,7 @@ const features: Feature[] = [
   },
   {
     key: 'f4',
-    image: '/images/products/industrial-temp-controller.jpg',
+    image: '/images/products/temp-controller.jpg',
     fallback: STOCK('photo-1581094289810-adf5d25690e3'),
     solutions: [
       'PT100·열전대(K/J/T 타입) 등 다채널 센서 입력',
@@ -80,12 +80,12 @@ const features: Feature[] = [
 ];
 
 export default function BusinessIndustrial() {
-  const _img0 = useImage('biz.ind.f0.img', '/images/products/industrial-dishwasher.jpg');
-  const _img1 = useImage('biz.ind.f1.img', '/images/products/industrial-ice-maker.jpg');
-  const _img2 = useImage('biz.ind.f2.img', '/images/products/industrial-pump.jpg');
-  const _img3 = useImage('biz.ind.f3.img', '/images/products/industrial-booth.jpg');
-  const _img4 = useImage('biz.ind.f4.img', '/images/products/industrial-temp-controller.jpg');
-  const _imgMap: Record<string,string> = {'/images/products/industrial-dishwasher.jpg': _img0, '/images/products/industrial-ice-maker.jpg': _img1, '/images/products/industrial-pump.jpg': _img2, '/images/products/industrial-booth.jpg': _img3, '/images/products/industrial-temp-controller.jpg': _img4};
+  const _img0 = useImage('biz.ind.f0.img', '/images/products/dishwasher.jpg');
+  const _img1 = useImage('biz.ind.f1.img', '/images/products/chungho-ice-550.jpg');
+  const _img2 = useImage('biz.ind.f2.img', '/images/products/pump.jpg');
+  const _img3 = useImage('biz.ind.f3.img', '/images/products/smart-booth.jpg');
+  const _img4 = useImage('biz.ind.f4.img', '/images/products/temp-controller.jpg');
+  const _imgMap: Record<string,string> = {'/images/products/dishwasher.jpg': _img0, '/images/products/chungho-ice-550.jpg': _img1, '/images/products/pump.jpg': _img2, '/images/products/smart-booth.jpg': _img3, '/images/products/temp-controller.jpg': _img4};
   const { t } = useTranslation();
   const [selected, setSelected] = useState<Feature | null>(null);
 
