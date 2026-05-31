@@ -19,7 +19,7 @@ const STOCK = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit
 const features: Feature[] = [
   {
     key: 'f0',
-    image: '/images/products/renewable-fuel-cell.jpg',
+    image: '/images/products/fuel-cell-pbu.jpg',
     fallback: STOCK('photo-1518709268805-4e9042af2176'),
     solutions: [
       '스택 전압·전류·온도 멀티 채널 모니터링',
@@ -31,7 +31,7 @@ const features: Feature[] = [
   },
   {
     key: 'f1',
-    image: '/images/products/renewable-hydrogen-drone.jpg',
+    image: '/images/products/hydrogen.jpg',
     fallback: STOCK('photo-1473968512647-3e447244af8f'),
     solutions: [
       '연료전지 ↔ 비행 컨트롤러 인터페이스',
@@ -43,7 +43,7 @@ const features: Feature[] = [
   },
   {
     key: 'f2',
-    image: '/images/products/renewable-liion-charger.jpg',
+    image: '/images/products/lithium-charger.jpg',
     fallback: STOCK('photo-1620714223084-8fcacc6dfd8d'),
     solutions: [
       'CC-CV 충전 프로파일·다단 충전 제어',
@@ -55,7 +55,7 @@ const features: Feature[] = [
   },
   {
     key: 'f3',
-    image: '/images/products/renewable-solar-panel.jpg',
+    image: '/images/products/solar-panel.jpg',
     fallback: STOCK('photo-1509391366360-2e959784a276'),
     solutions: [
       'MPPT 알고리즘 기반 발전 최적화 제어',
@@ -68,11 +68,11 @@ const features: Feature[] = [
 ];
 
 export default function BusinessRenewable() {
-  const _img0 = useImage('biz.ren.f0.img', '/images/products/renewable-fuel-cell.jpg');
-  const _img1 = useImage('biz.ren.f1.img', '/images/products/renewable-hydrogen-drone.jpg');
-  const _img2 = useImage('biz.ren.f2.img', '/images/products/renewable-liion-charger.jpg');
-  const _img3 = useImage('biz.ren.f3.img', '/images/products/renewable-solar-panel.jpg');
-  const _imgMap: Record<string,string> = {'/images/products/renewable-fuel-cell.jpg': _img0, '/images/products/renewable-hydrogen-drone.jpg': _img1, '/images/products/renewable-liion-charger.jpg': _img2, '/images/products/renewable-solar-panel.jpg': _img3};
+  const _img0 = useImage('biz.ren.f0.img', '/images/products/fuel-cell-pbu.jpg');
+  const _img1 = useImage('biz.ren.f1.img', '/images/products/hydrogen.jpg');
+  const _img2 = useImage('biz.ren.f2.img', '/images/products/lithium-charger.jpg');
+  const _img3 = useImage('biz.ren.f3.img', '/images/products/solar-panel.jpg');
+  const _imgMap: Record<string,string> = {'/images/products/fuel-cell-pbu.jpg': _img0, '/images/products/hydrogen.jpg': _img1, '/images/products/lithium-charger.jpg': _img2, '/images/products/solar-panel.jpg': _img3};
   const { t } = useTranslation();
   const [selected, setSelected] = useState<Feature | null>(null);
 
