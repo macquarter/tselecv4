@@ -1,12 +1,11 @@
 /**
- * CmsEditOverlay v17
+ * CmsEditOverlay v18
  *
- * 변경사항:
- *  - window.prompt() 완전 제거
- *  - 사이트 안에 인라인 편집 모달 표시 (textarea + 저장 버튼)
- *  - 이미지: URL 입력 + 파일 업로드 (base64 dataURI)
- *  - SiteContentContext.updateText/Image 직접 호출 → Firestore PATCH + React state 즉시 갱신
- *  - postMessage 단계 제거 (사이트가 자체적으로 처리)
+ * v18 변경사항:
+ *  - 파일 업로드 시 자동으로 canvas 리사이즈/JPEG 압축
+ *  - 결과 base64를 900KB 이하로 보장 (Firestore 1MB 한계 안전)
+ *  - 큰 이미지(태승전자 풀 로고 등)도 문제없이 저장
+ *  - 에러 메시지 더 명확하게 표시
  */
 import { useEffect, useState, useCallback } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
@@ -47,6 +46,89 @@ function insideImgKeyContainer(el: HTMLElement | null): boolean {
   return false;
 }
 
+/**
+ * 이미지 파일을 canvas로 리사이즈/압축 → base64 dataURI 반환
+ * 결과가 900KB 이하가 될 때까지 반복적으로 크기/품질 낮춤
+ */
+async function processImageFile(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        // 시작: 원본 크기, 품질 0.9
+        let maxDim = 1600;
+        let quality = 0.9;
+        let result = '';
+
+        const tryEncode = (): boolean => {
+          let { width, height } = img;
+          // 비율 유지하며 maxDim에 맞춤
+          if (width > height && width > maxDim) {
+            height = Math.round(height * maxDim / width);
+            width = maxDim;
+          } else if (height > maxDim) {
+            width = Math.round(width * maxDim / height);
+            height = maxDim;
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) return false;
+          // 투명 PNG → 흰 배경 (JPEG는 alpha 미지원)
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, width, height);
+          ctx.drawImage(img, 0, 0, width, height);
+          // PNG 원본 알파가 있으면 PNG로, 없으면 JPEG로
+          const hasAlpha = file.type === 'image/png' || file.type === 'image/webp';
+          result = hasAlpha
+            ? canvas.toDataURL('image/png')
+            : canvas.toDataURL('image/jpeg', quality);
+          return true;
+        };
+
+        // 첫 시도
+        if (!tryEncode()) { reject(new Error('canvas encode 실패')); return; }
+        const SAFE_MAX = 900_000; // 900KB 안전 한계
+        let attempts = 0;
+        while (result.length > SAFE_MAX && attempts < 8) {
+          attempts++;
+          // 매번 크기를 75%로, 품질도 낮춤 (JPEG일 경우만)
+          maxDim = Math.round(maxDim * 0.75);
+          quality = Math.max(0.4, quality - 0.1);
+          // PNG라도 너무 크면 JPEG로 강제 전환
+          if (attempts >= 2 && result.startsWith('data:image/png')) {
+            // 강제 JPEG (알파 손실)
+            const canvas = document.createElement('canvas');
+            let w = img.width, h = img.height;
+            if (w > h && w > maxDim) { h = Math.round(h * maxDim / w); w = maxDim; }
+            else if (h > maxDim) { w = Math.round(w * maxDim / h); h = maxDim; }
+            canvas.width = w; canvas.height = h;
+            const ctx = canvas.getContext('2d')!;
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, w, h);
+            ctx.drawImage(img, 0, 0, w, h);
+            result = canvas.toDataURL('image/jpeg', quality);
+          } else {
+            tryEncode();
+          }
+        }
+        if (result.length > SAFE_MAX) {
+          reject(new Error(`이미지를 900KB 이하로 줄일 수 없음 (현재 ${(result.length / 1024).toFixed(0)}KB)`));
+          return;
+        }
+        console.log(`[CMS] 이미지 처리: ${(file.size / 1024).toFixed(0)}KB 원본 → ${(result.length / 1024).toFixed(0)}KB base64 (${attempts}회 압축)`);
+        resolve(result);
+      };
+      img.onerror = () => reject(new Error('이미지 디코드 실패'));
+      img.src = reader.result as string;
+    };
+    reader.onerror = () => reject(new Error('파일 읽기 실패'));
+    reader.readAsDataURL(file);
+  });
+}
+
 type EditMode = null | {
   type: 'text';
   key: string;
@@ -62,62 +144,63 @@ export default function CmsEditOverlay() {
   const siteContent = useSiteContent();
   const [editMode, setEditMode] = useState<EditMode>(null);
   const [draftValue, setDraftValue] = useState('');
-  const [imageFile, setImageFile] = useState<string>('');  // base64
+  const [imageFile, setImageFile] = useState<string>('');
+  const [imageInfo, setImageInfo] = useState<string>('');
   const [saving, setSaving] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string>('');
 
-  // ===== 저장 핸들러 =====
   const handleSave = useCallback(async () => {
     if (!editMode) return;
     setSaving(true);
+    setErrorMsg('');
     try {
       if (editMode.type === 'text') {
         if (siteContent.updateText) {
           const ok = await siteContent.updateText(editMode.key, draftValue);
           if (ok) setEditMode(null);
-          else alert('저장 실패. 콘솔 확인하세요.');
+          else setErrorMsg('Firestore 저장 실패. 콘솔(F12)에 자세한 에러가 있습니다.');
         }
       } else if (editMode.type === 'image') {
         const finalUrl = imageFile || draftValue;
-        if (!finalUrl) { alert('URL 또는 파일을 선택하세요.'); setSaving(false); return; }
-        // Google Drive 공유 URL 자동 변환
+        if (!finalUrl) { setErrorMsg('파일을 선택하거나 URL을 입력하세요.'); setSaving(false); return; }
         let url = finalUrl;
         const gd = url.match(/drive\.google\.com\/file\/d\/([^/]+)\//);
         if (gd) url = `https://drive.google.com/uc?export=view&id=${gd[1]}`;
         if (siteContent.updateImage) {
           const ok = await siteContent.updateImage(editMode.key, url);
           if (ok) setEditMode(null);
-          else alert('저장 실패. 콘솔 확인하세요.');
+          else setErrorMsg(`Firestore 저장 실패. dataURI 크기: ${(url.length / 1024).toFixed(0)}KB (1024KB 한계).`);
         }
       }
+    } catch (e: any) {
+      setErrorMsg('에러: ' + (e?.message || String(e)));
     } finally {
       setSaving(false);
     }
   }, [editMode, draftValue, imageFile, siteContent]);
 
-  // ===== 파일 선택 → base64 변환 =====
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 2 * 1024 * 1024) {
-      alert('파일 크기가 2MB를 초과합니다. URL 입력을 사용하거나 더 작은 파일을 선택하세요.');
-      return;
+    setErrorMsg('');
+    setImageInfo(`처리 중: ${file.name} (${(file.size / 1024).toFixed(0)}KB)...`);
+    try {
+      const dataUri = await processImageFile(file);
+      setImageFile(dataUri);
+      setDraftValue('');
+      const sizeKB = (dataUri.length / 1024).toFixed(0);
+      setImageInfo(`✓ ${file.name} → ${sizeKB}KB (자동 리사이즈됨)`);
+    } catch (err: any) {
+      setImageInfo('');
+      setErrorMsg(err?.message || '이미지 처리 실패');
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      setImageFile(result);
-      setDraftValue(result.slice(0, 60) + '...(파일)');
-    };
-    reader.readAsDataURL(file);
   };
 
-  // ===== 텍스트 후보 선택 =====
   const handleCandidatePick = (key: string) => {
     if (!editMode || editMode.type !== 'text') return;
     setEditMode({ ...editMode, key, candidates: undefined });
   };
 
-  // ===== Decoration logic (이전과 동일하지만 prompt 대신 setEditMode) =====
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('edit') !== '1') return;
@@ -203,6 +286,7 @@ export default function CmsEditOverlay() {
         setEditMode({ type: 'text', key: candidates[0], currentValue: value, candidates });
         setDraftValue(value);
       }
+      setErrorMsg('');
     }
 
     function onImageEditClick(this: HTMLElement, e: Event) {
@@ -220,6 +304,8 @@ export default function CmsEditOverlay() {
       setEditMode({ type: 'image', key, currentSrc });
       setDraftValue('');
       setImageFile('');
+      setImageInfo('');
+      setErrorMsg('');
     }
 
     function decorate() {
@@ -291,7 +377,7 @@ export default function CmsEditOverlay() {
 
     const banner = document.createElement('div');
     banner.id = '__cms_edit_banner';
-    banner.textContent = '✏️ CMS 편집 모드 — 텍스트/이미지/로고 클릭 시 인라인 편집기로 즉시 수정';
+    banner.textContent = '✏️ CMS 편집 모드 v18 — 텍스트/이미지/로고 클릭 + 자동 리사이즈';
     Object.assign(banner.style, {
       position: 'fixed', top: '0', left: '0', right: '0', zIndex: '99999',
       background: 'rgba(56,189,248,.92)', color: '#000', fontSize: '12px',
@@ -309,7 +395,6 @@ export default function CmsEditOverlay() {
     };
   }, []);
 
-  // ===== 인라인 편집 모달 렌더 =====
   if (!editMode) return null;
 
   const overlayStyle: React.CSSProperties = {
@@ -321,6 +406,7 @@ export default function CmsEditOverlay() {
     background: '#0a0a0a', border: '1px solid rgba(255,255,255,.1)',
     borderRadius: 16, padding: 24, maxWidth: 600, width: '100%',
     color: '#fff', boxShadow: '0 20px 60px rgba(0,0,0,.5)',
+    maxHeight: '90vh', overflowY: 'auto',
   };
   const btnStyle: React.CSSProperties = {
     padding: '10px 20px', borderRadius: 8, border: 'none', cursor: 'pointer',
@@ -380,10 +466,16 @@ export default function CmsEditOverlay() {
               </div>
             )}
             <div style={{ marginBottom: 12 }}>
-              <div style={{ fontSize: 11, color: '#aaa', marginBottom: 6 }}>📁 파일 업로드 (최대 2MB)</div>
+              <div style={{ fontSize: 11, color: '#aaa', marginBottom: 6 }}>📁 파일 업로드 (자동 리사이즈 → 900KB 이하 보장)</div>
               <input type="file" accept="image/*" onChange={handleFileChange}
                 style={{ width: '100%', padding: 8, background: '#1a1a1a',
                   border: '1px solid rgba(255,255,255,.15)', borderRadius: 8, color: '#fff' }} />
+              {imageInfo && (
+                <div style={{ marginTop: 8, padding: '6px 10px', background: 'rgba(52,211,153,.1)',
+                  borderRadius: 6, fontSize: 11, color: '#34d399' }}>
+                  {imageInfo}
+                </div>
+              )}
               {imageFile && (
                 <div style={{ marginTop: 8 }}>
                   <img src={imageFile} alt="" style={{ maxHeight: 100, borderRadius: 8 }} />
@@ -403,6 +495,14 @@ export default function CmsEditOverlay() {
               💡 Google Drive 공유 URL은 자동 변환됨. placehold.co / Unsplash / GitHub raw URL 추천.
             </div>
           </>
+        )}
+
+        {errorMsg && (
+          <div style={{ marginTop: 12, padding: '10px 14px', background: 'rgba(239,68,68,.15)',
+            border: '1px solid rgba(239,68,68,.4)', borderRadius: 8,
+            color: '#fca5a5', fontSize: 12 }}>
+            ⚠️ {errorMsg}
+          </div>
         )}
 
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 20 }}>
