@@ -19,7 +19,7 @@ const STOCK = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit
 const features: Feature[] = [
   {
     key: 'f0',
-    image: '/images/products/medical-centrifuge.jpg',
+    image: '/images/products/centrifuge.jpg',
     fallback: STOCK('photo-1576091160550-2173dba999ef'),
     solutions: [
       'BLDC 모터 정밀 속도(RPM/RCF) 제어',
@@ -31,7 +31,7 @@ const features: Feature[] = [
   },
   {
     key: 'f1',
-    image: '/images/products/medical-diagnostic.jpg',
+    image: '/images/products/medical-device.jpg',
     fallback: STOCK('photo-1530026405186-ed1f139313f8'),
     solutions: [
       '정밀 아날로그 신호 처리 / ADC 회로',
@@ -43,7 +43,7 @@ const features: Feature[] = [
   },
   {
     key: 'f2',
-    image: '/images/products/medical-dental-scaler.jpg',
+    image: '/images/products/dental-scaler.jpg',
     fallback: STOCK('photo-1606811971618-4486d14f3f99'),
     solutions: [
       '초음파 핸드피스 주파수·출력 정밀 제어',
@@ -56,10 +56,10 @@ const features: Feature[] = [
 ];
 
 export default function BusinessMedical() {
-  const _img0 = useImage('biz.med.f0.img', '/images/products/medical-centrifuge.jpg');
-  const _img1 = useImage('biz.med.f1.img', '/images/products/medical-diagnostic.jpg');
-  const _img2 = useImage('biz.med.f2.img', '/images/products/medical-dental-scaler.jpg');
-  const _imgMap: Record<string,string> = {'/images/products/medical-centrifuge.jpg': _img0, '/images/products/medical-diagnostic.jpg': _img1, '/images/products/medical-dental-scaler.jpg': _img2};
+  const _img0 = useImage('biz.med.f0.img', '/images/products/centrifuge.jpg');
+  const _img1 = useImage('biz.med.f1.img', '/images/products/medical-device.jpg');
+  const _img2 = useImage('biz.med.f2.img', '/images/products/dental-scaler.jpg');
+  const _imgMap: Record<string,string> = {'/images/products/centrifuge.jpg': _img0, '/images/products/medical-device.jpg': _img1, '/images/products/dental-scaler.jpg': _img2};
   const { t } = useTranslation();
   const [selected, setSelected] = useState<Feature | null>(null);
 
