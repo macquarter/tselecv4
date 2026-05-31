@@ -1,12 +1,11 @@
 /**
- * CmsEditOverlay v11
+ * CmsEditOverlay v13
  *
- * v11 additions:
- *  - Include non-dotted siteContent/text keys (logo-1, ft-b1, ci-ad …) in the
- *    reverse map. Logos and footer badges become clickable.
- *  - Ambiguous handling: when a value maps to multiple keys, we no longer skip.
- *    Instead we postMessage `candidates: [{key, value}]` so the admin can show
- *    a picker.
+ * v13 additions:
+ *  - Any element with [data-cms-img-key="…"] (Link/div, not only <img>) is
+ *    decorated as an image-edit target. Children inside such an element are
+ *    NOT decorated as text. Click triggers cms-edit-image with the attr value
+ *    as the key (e.g., logo containers in Navbar/Footer).
  */
 import { useEffect } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
@@ -37,13 +36,26 @@ function basename(url: string): string {
   }
 }
 
+/**
+ * Returns true if `el` is a descendant of (or itself) any element that has
+ * the data-cms-img-key attribute. We use this to suppress text decoration
+ * inside explicit image-edit containers (e.g., the logo Link).
+ */
+function insideImgKeyContainer(el: HTMLElement | null): boolean {
+  let cur: HTMLElement | null = el;
+  while (cur) {
+    if (cur.hasAttribute && cur.hasAttribute('data-cms-img-key')) return true;
+    cur = cur.parentElement;
+  }
+  return false;
+}
+
 export default function CmsEditOverlay() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('edit') !== '1') return;
 
     // ===== TEXT REVERSE MAP =====
-    // value → array of candidate keys (single or multiple)
     let textReverse: Record<string, string[]> = {};
     let textReverseLoose: Record<string, string[]> = {};
 
@@ -64,8 +76,6 @@ export default function CmsEditOverlay() {
           const loose = stripTrailingPunct(v);
           if (loose && loose !== v) addTo(textReverseLoose, loose, k);
         }
-        // Also include non-dotted siteContent/text (logo-1, ft-b1, ci-ad …)
-        // fetched separately into nonDottedText
         for (const [k, v] of Object.entries(nonDottedText)) {
           if (typeof v !== 'string' || !v.trim()) continue;
           addTo(textReverse, v, k);
@@ -144,10 +154,8 @@ export default function CmsEditOverlay() {
       if (!candidatesStr) return;
       const candidates = candidatesStr.split('||');
       if (candidates.length === 1) {
-        // Single candidate — direct edit
         window.parent.postMessage({ type: 'cms-edit', key: candidates[0], currentValue: value }, '*');
       } else {
-        // Ambiguous — send all candidates to admin for picker
         window.parent.postMessage({
           type: 'cms-edit',
           candidates: candidates.map((k) => ({ key: k, value })),
@@ -159,48 +167,69 @@ export default function CmsEditOverlay() {
     function onImageEditClick(this: HTMLElement, e: Event) {
       e.preventDefault();
       e.stopPropagation();
-      const img = this as HTMLImageElement;
-      const key = img.dataset.cmsImgKey;
+      const el = this as HTMLElement;
+      const key = el.dataset.cmsImgKey || '';
       if (!key) return;
+      // Determine current value: if <img>, its src; otherwise look up registry
+      let currentSrc = '';
+      if (el.tagName === 'IMG') currentSrc = (el as HTMLImageElement).src;
+      else {
+        const inner = el.querySelector('img');
+        currentSrc = inner ? inner.src : (imageMap[key] || '');
+      }
       window.parent.postMessage({
         type: 'cms-edit-image',
         key,
-        currentSrc: img.src,
-        alt: img.alt || '',
+        currentSrc,
+        alt: (el as any).alt || el.textContent?.trim().slice(0, 60) || '',
       }, '*');
     }
 
     function decorate() {
-      // -- Text nodes --
+      // ---- 1) Explicit image-edit containers (any tag with data-cms-img-key) ----
+      document.querySelectorAll<HTMLElement>('[data-cms-img-key]').forEach((el) => {
+        if ((el as any).__cmsImgDecorated) return;
+        (el as any).__cmsImgDecorated = true;
+        el.style.outline = '2px dashed rgba(251,191,36,.65)';
+        el.style.outlineOffset = '3px';
+        el.style.cursor = 'pointer';
+        el.title = '🖼️ 이미지 변경: ' + el.dataset.cmsImgKey;
+        el.addEventListener('click', onImageEditClick, true);
+      });
+
+      // ---- 2) Text nodes (skip those inside image-edit containers) ----
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
       let node: Node | null;
       // eslint-disable-next-line no-cond-assign
       while ((node = walker.nextNode())) {
         const text = (node.nodeValue || '').trim();
         if (!text || text.length < 2) continue;
+        const parent = node.parentElement as HTMLElement | null;
+        if (!parent) continue;
+        // Skip if inside explicit image-edit container (logo, etc.)
+        if (insideImgKeyContainer(parent)) continue;
         let keys = textReverse[text];
         if (!keys || keys.length === 0) {
           const looseKeys = textReverseLoose[stripTrailingPunct(text)];
           if (looseKeys && looseKeys.length > 0) keys = looseKeys;
         }
         if (!keys || keys.length === 0) continue;
-        const parent = node.parentElement as HTMLElement | null;
-        if (!parent) continue;
         const tag = parent.tagName;
         if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'TEXTAREA' || tag === 'INPUT') continue;
         if (parent.dataset.cmsKeys) continue;
         parent.dataset.cmsKeys = keys.join('||');
-        const label = keys.length === 1 ? keys[0] : `${keys.length}개 후보 (${keys[0]} 외)`;
         parent.style.outline = '1px dashed rgba(56,189,248,.45)';
         parent.style.outlineOffset = '2px';
         parent.style.cursor = 'pointer';
-        parent.title = '✏️ Edit: ' + label;
+        parent.title = '✏️ Edit: ' + (keys.length === 1 ? keys[0] : `${keys.length}개 후보`);
         parent.addEventListener('click', onTextEditClick, true);
       }
 
-      // -- Images --
+      // ---- 3) <img> elements that match the Firestore registry by src ----
       document.querySelectorAll('img').forEach((img) => {
         const el = img as HTMLImageElement & { dataset: any };
+        // Skip if its parent is already an explicit img-key container (handled above)
+        if (insideImgKeyContainer(el.parentElement)) return;
         if (el.dataset.cmsImgKey) return;
         const orig = el.dataset.cmsOrigSrc || el.getAttribute('src') || '';
         const bn = basename(orig);
@@ -247,7 +276,7 @@ export default function CmsEditOverlay() {
 
     const banner = document.createElement('div');
     banner.id = '__cms_edit_banner';
-    banner.textContent = '✏️ CMS 편집 모드 — 텍스트/이미지 클릭 시 어드민에서 편집됩니다';
+    banner.textContent = '✏️ CMS 편집 모드 — 텍스트/이미지/로고 클릭 시 어드민에서 편집됩니다';
     Object.assign(banner.style, {
       position: 'fixed',
       top: '0',
