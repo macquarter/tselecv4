@@ -1,4 +1,5 @@
 import { motion } from 'motion/react';
+import { useImage } from '../contexts/SiteContentContext';
 import { useTranslation } from 'react-i18next';
 import { Product } from '../types';
 
@@ -7,6 +8,12 @@ interface ProductsProps {
 }
 
 export default function Products({ onSelectProduct }: ProductsProps) {
+  const _hp0 = useImage('homeProducts.p0.img', 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=1200&q=80');
+  const _hp1 = useImage('homeProducts.p1.img', 'https://images.unsplash.com/photo-1585659722983-3a675dabf23d?auto=format&fit=crop&w=800&q=80');
+  const _hp2 = useImage('homeProducts.p2.img', 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=800&q=80');
+  const _hp3 = useImage('homeProducts.p3.img', 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=800&q=80');
+  const _hp4 = useImage('homeProducts.p4.img', 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80');
+  const _imgMap: Record<string,string> = {'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=1200&q=80': _hp0, 'https://images.unsplash.com/photo-1585659722983-3a675dabf23d?auto=format&fit=crop&w=800&q=80': _hp1, 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=800&q=80': _hp2, 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=800&q=80': _hp3, 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80': _hp4};
   const { t } = useTranslation();
 
   const products: Product[] = [
@@ -91,7 +98,7 @@ export default function Products({ onSelectProduct }: ProductsProps) {
               >
                 <motion.img
                   layoutId={`img-${product.id}`}
-                  src={product.img}
+                  src={_imgMap[product.img] || product.img}
                   alt={product.name}
                   className="absolute inset-0 w-full h-full object-cover opacity-60"
                   variants={{ hover: { scale: 1.05, opacity: 0.8 } }}
