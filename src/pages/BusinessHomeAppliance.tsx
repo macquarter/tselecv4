@@ -19,7 +19,7 @@ const STOCK = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit
 const features: Feature[] = [
   {
     key: 'f0',
-    image: '/images/products/home-refrigerator-4door.jpg',
+    image: '/images/products/refrigerator-main.jpg',
     fallback: STOCK('photo-1571175443880-49e1d25b2bc5'),
     solutions: [
       '인버터 컴프레서 구동 및 정온 제어 알고리즘',
@@ -31,7 +31,7 @@ const features: Feature[] = [
   },
   {
     key: 'f1',
-    image: '/images/products/home-ice-purifier.jpg',
+    image: '/images/products/water-purifier-main.jpg',
     fallback: STOCK('photo-1610822546219-c100ce40f7a3'),
     solutions: [
       '냉수·온수·얼음 모듈 통합 제어',
@@ -43,7 +43,7 @@ const features: Feature[] = [
   },
   {
     key: 'f2',
-    image: '/images/products/home-range-hood.jpg',
+    image: '/images/products/range-hood.jpg',
     fallback: STOCK('photo-1556909114-f6e7ad7d3136'),
     solutions: [
       'BLDC 모터 다단 풍량 제어',
@@ -55,7 +55,7 @@ const features: Feature[] = [
   },
   {
     key: 'f3',
-    image: '/images/products/home-air-purifier.jpg',
+    image: '/images/products/air-purifier-main.jpg',
     fallback: STOCK('photo-1585771724684-38269d6639fd'),
     solutions: [
       'PM2.5·VOC·온습도 멀티 센서 신호 처리',
@@ -68,11 +68,11 @@ const features: Feature[] = [
 ];
 
 export default function BusinessHomeAppliance() {
-  const _img0 = useImage('biz.home.f0.img', '/images/products/home-refrigerator-4door.jpg');
-  const _img1 = useImage('biz.home.f1.img', '/images/products/home-ice-purifier.jpg');
-  const _img2 = useImage('biz.home.f2.img', '/images/products/home-range-hood.jpg');
-  const _img3 = useImage('biz.home.f3.img', '/images/products/home-air-purifier.jpg');
-  const _imgMap: Record<string,string> = {'/images/products/home-refrigerator-4door.jpg': _img0, '/images/products/home-ice-purifier.jpg': _img1, '/images/products/home-range-hood.jpg': _img2, '/images/products/home-air-purifier.jpg': _img3};
+  const _img0 = useImage('biz.home.f0.img', '/images/products/refrigerator-main.jpg');
+  const _img1 = useImage('biz.home.f1.img', '/images/products/water-purifier-main.jpg');
+  const _img2 = useImage('biz.home.f2.img', '/images/products/range-hood.jpg');
+  const _img3 = useImage('biz.home.f3.img', '/images/products/air-purifier-main.jpg');
+  const _imgMap: Record<string,string> = {'/images/products/refrigerator-main.jpg': _img0, '/images/products/water-purifier-main.jpg': _img1, '/images/products/range-hood.jpg': _img2, '/images/products/air-purifier-main.jpg': _img3};
   const { t } = useTranslation();
   const [selected, setSelected] = useState<Feature | null>(null);
 
