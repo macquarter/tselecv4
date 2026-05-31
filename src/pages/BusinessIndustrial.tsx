@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useTranslation } from 'react-i18next';
+import { useImage } from '../contexts/SiteContentContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import BusinessNav from '../components/BusinessNav';
@@ -79,6 +80,12 @@ const features: Feature[] = [
 ];
 
 export default function BusinessIndustrial() {
+  const _img0 = useImage('biz.ind.f0.img', '/images/products/industrial-dishwasher.jpg');
+  const _img1 = useImage('biz.ind.f1.img', '/images/products/industrial-ice-maker.jpg');
+  const _img2 = useImage('biz.ind.f2.img', '/images/products/industrial-pump.jpg');
+  const _img3 = useImage('biz.ind.f3.img', '/images/products/industrial-booth.jpg');
+  const _img4 = useImage('biz.ind.f4.img', '/images/products/industrial-temp-controller.jpg');
+  const _imgMap: Record<string,string> = {'/images/products/industrial-dishwasher.jpg': _img0, '/images/products/industrial-ice-maker.jpg': _img1, '/images/products/industrial-pump.jpg': _img2, '/images/products/industrial-booth.jpg': _img3, '/images/products/industrial-temp-controller.jpg': _img4};
   const { t } = useTranslation();
   const [selected, setSelected] = useState<Feature | null>(null);
 
@@ -122,7 +129,7 @@ export default function BusinessIndustrial() {
                 onClick={() => setSelected(feature)}
               >
                 <img
-                  src={feature.image}
+                  src={_imgMap[feature.image] || feature.image}
                   alt={t(`bizIndustrial.${feature.key}n`)}
                   className="absolute inset-0 w-full h-full object-cover opacity-60 transition-transform duration-1000 group-hover:scale-105 group-hover:opacity-80"
                   loading="lazy"
@@ -156,7 +163,7 @@ export default function BusinessIndustrial() {
 
               <div className="mb-6 rounded-2xl overflow-hidden aspect-video bg-[#111] border border-white/5">
                 <img
-                  src={selected.image}
+                  src={_imgMap[selected.image] || selected.image}
                   alt={t(`bizIndustrial.${selected.key}n`)}
                   className="w-full h-full object-cover"
                   onError={(e) => {
