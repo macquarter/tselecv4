@@ -21,7 +21,7 @@ export default function Footer({ pageBadge }: FooterProps) {
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8 mb-12 md:mb-16">
           <div className="col-span-2">
-            <Link to="/" className="inline-block mb-6">
+            <Link to="/" className="inline-block mb-6" data-cms-img-key="logo-img">
               {logoImg ? (
                 <img src={logoImg} alt={logo1+logo2} className="h-10 w-auto object-contain" />
               ) : (
