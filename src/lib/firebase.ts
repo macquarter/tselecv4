@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth, signInAnonymously } from 'firebase/auth';
+import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDmgOBu3kPUGzff_CyR647kIbN4F91seJE",
@@ -13,11 +14,17 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-// Anonymous auth for Firestore write access (chatbot inquiries)
+// Anonymous auth for Firestore + Storage write access
+// (P0-C에서 Email/Password Auth로 교체 예정)
 const auth = getAuth(app);
 signInAnonymously(auth).catch(e => console.warn('Anonymous auth failed:', e));
 
-// Use the existing Firestore database
+// Firestore (named DB)
 export const db = getFirestore(app, 'ai-studio-e97c649f-c50c-4cd5-8952-6640d34f2444');
 
+// Storage — P0-A: 큰 파일(이미지/PDF) 업로드용
+// Firestore 1MB 한계 우회. base64 인코딩 대신 Storage URL을 DB에 저장.
+export const storage = getStorage(app);
+
+export { auth };
 export default app;
