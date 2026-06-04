@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode, useCallback 
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import i18n from '../lib/i18n';
+import { uploadDataURI, pathForCmsImage } from '../lib/storage';
 
 interface BoardOpt {
   showDate: boolean;
@@ -15,9 +16,8 @@ interface SiteContent {
   clients: string[];
   boardOpt: { news: BoardOpt; dl: BoardOpt };
   loaded: boolean;
-  /** v17: 사이트 자체에서 직접 콘텐츠 업데이트 */
   updateText?: (key: string, value: string) => Promise<boolean>;
-  updateImage?: (key: string, url: string) => Promise<boolean>;
+  updateImage?: (key: string, urlOrDataURI: string) => Promise<boolean>;
   updateVideo?: (key: string, url: string) => Promise<boolean>;
 }
 
@@ -101,18 +101,22 @@ function mergeIntoI18n(flat: Record<string, string>) {
   }
 }
 
+/**
+ * dataURI에서 MIME 추출 → Storage 업로드용
+ */
+function detectMimeFromDataURI(dataURI: string): string {
+  const m = dataURI.match(/^data:([^;]+);/);
+  return m ? m[1] : 'image/png';
+}
+
 export function SiteContentProvider({ children }: { children: ReactNode }) {
   const [content, setContent] = useState<SiteContent>(defaultContent);
 
-  // v17: 인라인 편집 → Firestore PATCH + React state 즉시 갱신
   const updateText = useCallback(async (key: string, value: string): Promise<boolean> => {
     try {
       const newText = { ...content.text, [key]: value };
-      // Firestore PATCH (merge: true 로 다른 키 보존)
       await setDoc(doc(db, 'siteContent', 'text'), newText, { merge: true });
-      // React state 갱신
       setContent(prev => ({ ...prev, text: newText }));
-      // i18n 머지
       mergeIntoI18n({ [key]: value });
       console.log(`✏️ CMS 저장: ${key} = ${value.slice(0, 50)}...`);
       return true;
@@ -122,14 +126,29 @@ export function SiteContentProvider({ children }: { children: ReactNode }) {
     }
   }, [content.text]);
 
-  const updateImage = useCallback(async (key: string, url: string): Promise<boolean> => {
+  /**
+   * v19 (P0-A): 큰 base64 dataURI는 Firebase Storage에 업로드 후 URL을 Firestore에 저장.
+   *   - dataURI 길이 200KB 초과 → Storage 사용 (Firestore 1MB 한계 우회)
+   *   - dataURI 작거나 일반 URL → 그대로 Firestore에 저장
+   *   - 결과: 어떤 크기 파일이든 안전하게 저장 가능
+   */
+  const updateImage = useCallback(async (key: string, urlOrDataURI: string): Promise<boolean> => {
     try {
-      const newImages = { ...content.images, [key]: url };
+      let finalUrl = urlOrDataURI;
+      // base64 dataURI이고 200KB 넘으면 Storage로 우회
+      if (urlOrDataURI.startsWith('data:') && urlOrDataURI.length > 200_000) {
+        const mime = detectMimeFromDataURI(urlOrDataURI);
+        const path = pathForCmsImage(key, mime);
+        console.log(`📤 Storage 업로드 중: ${key} (${(urlOrDataURI.length / 1024).toFixed(0)}KB → ${path})`);
+        finalUrl = await uploadDataURI(urlOrDataURI, path);
+        console.log(`✅ Storage URL: ${finalUrl.slice(0, 80)}...`);
+      }
+      const newImages = { ...content.images, [key]: finalUrl };
       await setDoc(doc(db, 'siteContent', 'media'), { images: newImages }, { merge: true });
       setContent(prev => ({ ...prev, images: newImages }));
-      console.log(`🖼️ CMS 이미지 저장: ${key} = ${url.slice(0, 60)}`);
+      console.log(`🖼️ CMS 이미지 저장: ${key} = ${finalUrl.slice(0, 60)}`);
       return true;
-    } catch (e) {
+    } catch (e: any) {
       console.error('updateImage 실패:', e);
       return false;
     }
@@ -137,7 +156,13 @@ export function SiteContentProvider({ children }: { children: ReactNode }) {
 
   const updateVideo = useCallback(async (key: string, url: string): Promise<boolean> => {
     try {
-      const newVideos = { ...content.videos, [key]: url };
+      let finalUrl = url;
+      if (url.startsWith('data:') && url.length > 200_000) {
+        const mime = detectMimeFromDataURI(url);
+        const path = pathForCmsImage(key, mime);
+        finalUrl = await uploadDataURI(url, path);
+      }
+      const newVideos = { ...content.videos, [key]: finalUrl };
       await setDoc(doc(db, 'siteContent', 'media'), { videos: newVideos }, { merge: true });
       setContent(prev => ({ ...prev, videos: newVideos }));
       return true;
@@ -214,7 +239,6 @@ export function SiteContentProvider({ children }: { children: ReactNode }) {
     );
   }
 
-  // v17: updateText/Image/Video 함수를 context value에 포함
   const contextValue: SiteContent = {
     ...content,
     updateText,
