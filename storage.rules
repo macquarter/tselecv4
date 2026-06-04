@@ -1,0 +1,50 @@
+rules_version = '2';
+
+// ─────────────────────────────────────────────────────────────────
+// 태승전자 Firebase Storage Security Rules (P0-B, v1)
+// 적용: Firebase Console → Storage → Rules → 붙여넣기 → 게시
+// 또는: firebase deploy --only storage
+//
+// 정책:
+//   - 읽기: 모두 허용 (사이트 이미지 공개)
+//   - 쓰기: admin custom claim 보유자만 (CMS 업로드)
+//   - 게시판 첨부: admin만
+// ─────────────────────────────────────────────────────────────────
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // === CMS 이미지 (cms/로고-img-...) ===
+    match /cms/{file=**} {
+      allow read: if true;
+      allow write: if isAdmin() && validImage();
+    }
+
+    // === 게시판 첨부 (boards/{id}/...) ===
+    match /boards/{boardId}/{file=**} {
+      allow read: if true;
+      allow write: if isAdmin();  // PDF/Excel 등 자유롭게
+    }
+
+    // === 기본 deny ===
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
+
+function isAdmin() {
+  return request.auth != null && (
+    request.auth.token.admin == true
+    || request.auth.token.email in [
+      'admin@tselec.co.kr',
+      'tsadmin@tselec.co.kr'
+    ]
+  );
+}
+
+// 이미지 업로드 검증: 10MB 이하 + 이미지 MIME만
+function validImage() {
+  return request.resource.size < 10 * 1024 * 1024
+    && request.resource.contentType.matches('image/.*');
+}
