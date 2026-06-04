@@ -1,0 +1,79 @@
+rules_version = '2';
+
+// ─────────────────────────────────────────────────────────────────
+// 태승전자 Firestore Security Rules (P0-B, v1)
+// 적용: Firebase Console → Firestore Database → Rules → 붙여넣기 → 게시
+// 또는: firebase deploy --only firestore:rules
+//
+// 정책:
+//   - 읽기: 모두 허용 (사이트는 공개)
+//   - 쓰기: admin custom claim 보유자만 (P0-C 후 적용)
+//   - 익명 사용자: 문의/챗봇 폼 제출은 가능 (create), 그 외 차단
+//
+// admin claim 부여 (1회):
+//   firebase functions:shell → admin.auth().setCustomUserClaims(uid, {admin: true})
+//   또는 Cloud Function으로 자동화
+// ─────────────────────────────────────────────────────────────────
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // === 사이트 콘텐츠 (텍스트/이미지/비디오) ===
+    match /siteContent/{doc} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // === 게시판: 공지사항 ===
+    match /news/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // === 게시판: 자료실 ===
+    match /downloads/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // === 문의 (Contact 폼) ===
+    match /inquiries/{id} {
+      // 누구나 새 문의 작성 가능 (사이트 폼)
+      allow create: if true;
+      // 운영자만 조회/수정/삭제
+      allow read, update, delete: if isAdmin();
+    }
+
+    // === 챗봇 대화/문의 ===
+    match /chat/{id} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+    match /chatInquiries/{id} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // === 외부 접근 차단 (기본 deny) ===
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────
+// admin 판별 헬퍼
+// P0-C 완료 후 활성: request.auth.token.admin == true
+// 임시(P0-C 전): request.auth != null  (익명 인증도 통과 — 보안 약함, 빠른 적용 위해)
+// ─────────────────────────────────────────────────────────────────
+function isAdmin() {
+  return request.auth != null && (
+    // 옵션 A: admin custom claim 보유 (P0-C 후 권장)
+    request.auth.token.admin == true
+    // 옵션 B: 특정 이메일 화이트리스트 (P0-C 진행 전 임시)
+    || request.auth.token.email in [
+      'admin@tselec.co.kr',
+      'tsadmin@tselec.co.kr'
+    ]
+  );
+}
