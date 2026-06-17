@@ -24,6 +24,7 @@ import BusinessHomeAppliance from './pages/BusinessHomeAppliance';
 import BusinessIndustrial from './pages/BusinessIndustrial';
 import BusinessMedical from './pages/BusinessMedical';
 import BusinessRenewable from './pages/BusinessRenewable';
+import BusinessSmartIoT from './pages/BusinessSmartIoT';
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ChatBot from './components/ChatBot';
@@ -46,6 +47,7 @@ export default function App() {
           <Route path="/business/industrial" element={<BusinessIndustrial />} />
           <Route path="/business/medical" element={<BusinessMedical />} />
           <Route path="/business/renewable" element={<BusinessRenewable />} />
+          <Route path="/business/smart-iot" element={<BusinessSmartIoT />} />
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/main-controller" element={<MainController />} />
           <Route path="/display" element={<Display />} />
