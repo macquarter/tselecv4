@@ -96,6 +96,42 @@ export default function ProductsPage() {
           </motion.p>
         </section>
 
+        <section className="max-w-7xl mx-auto px-6 mb-24">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl md:text-4xl font-bold tracking-tight text-white">제품 카테고리</h2>
+            <p className="text-gray-400 font-light mt-3">필요한 제품군을 선택하세요.</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {[
+              { tt: t('nav.embedded'), dd: '시스템의 두뇌. 고성능 임베디드 제어 솔루션.', link: '/main-controller' },
+              { tt: t('nav.hmi'), dd: '터치 디스플레이 + UI 펌웨어 통합 공급.', link: '/display' },
+              { tt: t('nav.custom'), dd: '정밀 온도 제어부터 특수 산업 장비까지.', link: '/others' },
+              { tt: t('nav.process'), dd: '설계부터 출하까지 체계적인 제조 공정.', link: '/process' },
+            ].map((c, i) => (
+              <motion.a
+                key={c.link}
+                href={c.link}
+                whileHover={{ y: -3 }}
+                className="ts-card group relative rounded-[2rem] bg-[#0a0a0a] border border-white/10 p-8 flex flex-col justify-between min-h-[220px]"
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.6, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div>
+                  <div className="text-[11px] uppercase tracking-[0.2em] text-gray-500 mb-5">{String(i + 1).padStart(2, '0')}</div>
+                  <h3 className="text-xl font-bold tracking-tight text-white mb-3 ts-card-title">{c.tt}</h3>
+                  <p className="text-sm text-gray-400 font-light leading-relaxed">{c.dd}</p>
+                </div>
+                <span className="mt-6 inline-flex items-center text-xs text-gray-500 group-hover:text-white transition-colors">
+                  바로가기
+                  <svg className="ml-1 w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                </span>
+              </motion.a>
+            ))}
+          </div>
+        </section>
+
         <section className="max-w-7xl mx-auto px-6 mb-32">
           <ProductNav />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
