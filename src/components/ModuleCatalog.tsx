@@ -52,13 +52,14 @@ export default function ModuleCatalog({ badge, title1, title2, sub, cards }: Pro
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-50px' }}
             transition={{ duration: 0.7, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="relative rounded-[2rem] bg-[#0a0a0a] border border-white/5 overflow-hidden group hover:border-white/10 transition-colors duration-500"
+            whileHover={{ y: -3 }}
+            className="relative rounded-[2rem] bg-[#0a0a0a] border border-white/5 overflow-hidden group hover:border-white/10 transition-colors duration-500 ts-card"
           >
             <div className={`absolute -top-32 -right-32 w-72 h-72 rounded-full bg-gradient-to-br ${card.accent} blur-3xl pointer-events-none`} />
 
             <div className="relative z-10 p-8 md:p-10">
               <div className="text-[11px] font-semibold tracking-[0.12em] uppercase text-gray-500 mb-3">{card.tag}</div>
-              <h3 className="text-2xl md:text-3xl font-bold tracking-tight mb-3">{card.name}</h3>
+              <h3 className="text-2xl md:text-3xl font-bold tracking-tight mb-3 ts-card-title">{card.name}</h3>
               <p className="text-sm md:text-base text-gray-400 font-light leading-relaxed mb-7">{card.lede}</p>
 
               <ul className="divide-y divide-white/5 border-t border-white/5 mb-6">
