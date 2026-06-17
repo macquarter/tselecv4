@@ -11,6 +11,7 @@ export default function BusinessNav() {
     { key: 'industrial', path: '/business/industrial' },
     { key: 'medical', path: '/business/medical' },
     { key: 'renewable', path: '/business/renewable' },
+    { key: 'smartiot', path: '/business/smart-iot' },
   ];
 
   return (
