@@ -30,8 +30,11 @@ const staticDownloads: DownloadItem[] = [
   { id: 'd7', cat: '소프트웨어', title: 'TSELEC 모니터링 소프트웨어 v3.0', content: '태승전자 제품 원격 모니터링 소프트웨어 최신 버전입니다.\n\n시스템 요구사항: Windows 10 이상', date: '2025.08.25', views: 312, file: 'TSELEC_Monitor_v3.0.zip' },
 ];
 
-const CAT_KEYS = ['전체', '카탈로그', '데이터시트', '인증서', '매뉴얼', '소프트웨어'];
-const CAT_LABEL: Record<string, string> = { '전체': 'catAll', '카탈로그': 'catCat', '데이터시트': 'catDS', '인증서': 'catCert', '매뉴얼': 'catManual', '소프트웨어': 'catSW' };
+const CAT_KEYS = ['전체', '카탈로그', '기술자료', '기타자료'];
+const CAT_LABEL: Record<string, string> = { '전체': 'catAll', '카탈로그': 'catCat', '기술자료': 'catTech', '기타자료': 'catEtc' };
+// 기존 데이터 카테고리 → 3개 그룹 매핑
+const CAT_GROUP: Record<string, string> = { '카탈로그': '카탈로그', '데이터시트': '기술자료', '매뉴얼': '기술자료', '인증서': '기술자료', '사양서': '기술자료', '소프트웨어': '기타자료', '기술자료': '기술자료', '기타자료': '기타자료' };
+const toGroup = (cat: string): string => CAT_GROUP[cat] || '기타자료';
 
 export default function Downloads() {
   const { t } = useTranslation();
@@ -76,7 +79,7 @@ export default function Downloads() {
   }, []);
 
   const filtered = downloadItems
-    .filter(item => filter === '전체' || item.cat === filter)
+    .filter(item => filter === '전체' || toGroup(item.cat) === filter)
     .filter(item => !search || item.title.toLowerCase().includes(search.toLowerCase()) || item.content.toLowerCase().includes(search.toLowerCase()));
 
   return (
@@ -138,7 +141,7 @@ export default function Downloads() {
                 <div className="bg-[#0a0a0a] border border-white/5 rounded-2xl overflow-hidden">
                   <div className="p-8 border-b border-white/5">
                     <div className="flex items-center gap-3 mb-4">
-                      <span className="text-xs font-semibold px-3 py-1 rounded-full bg-sky-400/10 text-sky-400">{t(`dlPage.${CAT_LABEL[openItem.cat] || 'catCat'}`)}</span>
+                      <span className="text-xs font-semibold px-3 py-1 rounded-full bg-sky-400/10 text-sky-400">{t(`dlPage.${CAT_LABEL[toGroup(openItem.cat)] || 'catEtc'}`)}</span>
                       {boardOpt.showDate && <span className="text-xs text-gray-500 font-mono">{openItem.date}</span>}
                       {boardOpt.showViews && <span className="text-xs text-gray-500">{t('dlPage.views')} {openItem.views}</span>}
                     </div>
@@ -233,7 +236,7 @@ export default function Downloads() {
                           transition={{ duration: 0.4, delay: i * 0.05 }}
                         >
                           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-5">
-                            <span className="text-xs font-medium px-2.5 py-1 rounded-md bg-white/5 text-gray-400 w-fit">{t(`dlPage.${CAT_LABEL[item.cat] || 'catCat'}`)}</span>
+                            <span className="text-xs font-medium px-2.5 py-1 rounded-md bg-white/5 text-gray-400 w-fit">{t(`dlPage.${CAT_LABEL[toGroup(item.cat)] || 'catEtc'}`)}</span>
                             <h3 className="text-sm sm:text-base font-medium text-gray-200 group-hover:text-white transition-colors flex items-center gap-2">
                               {item.title}
                               {i === 0 && (
