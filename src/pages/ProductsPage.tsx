@@ -12,6 +12,10 @@ export default function ProductsPage() {
   const _p3 = useImage('productsPage.p3.img', 'https://images.unsplash.com/photo-1526406915894-7bcd65f60845?auto=format&fit=crop&w=800&q=80');
   const _p4 = useImage('productsPage.p4.img', 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=80');
   const _p5 = useImage('productsPage.p5.img', 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80');
+  const _catEmbedded = useImage('productsCat.embedded.img', 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80');
+  const _catHmi = useImage('productsCat.hmi.img', 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80');
+  const _catCustom = useImage('productsCat.custom.img', 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1200&q=80');
+  const _catProcess = useImage('productsCat.process.img', 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1600&q=80');
   const _imgMap: Record<string,string> = {'https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&w=800&q=80': _p0, 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=800&q=80': _p1, 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80': _p2, 'https://images.unsplash.com/photo-1526406915894-7bcd65f60845?auto=format&fit=crop&w=800&q=80': _p3, 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=80': _p4, 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80': _p5};
   const { t } = useTranslation();
 
@@ -96,44 +100,65 @@ export default function ProductsPage() {
           </motion.p>
         </section>
 
+        <section className="max-w-7xl mx-auto px-6 mb-16">
+          <ProductNav />
+        </section>
+
         <section className="max-w-7xl mx-auto px-6 mb-24">
           <div className="text-center mb-12">
             <h2 className="text-2xl md:text-4xl font-bold tracking-tight text-white">제품 카테고리</h2>
             <p className="text-gray-400 font-light mt-3">필요한 제품군을 선택하세요.</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             {[
-              { tt: t('nav.embedded'), dd: '시스템의 두뇌. 고성능 임베디드 제어 솔루션.', link: '/main-controller' },
-              { tt: t('nav.hmi'), dd: '터치 디스플레이 + UI 펌웨어 통합 공급.', link: '/display' },
-              { tt: t('nav.custom'), dd: '정밀 온도 제어부터 특수 산업 장비까지.', link: '/others' },
-              { tt: t('nav.process'), dd: '설계부터 출하까지 체계적인 제조 공정.', link: '/process' },
+              { tt: t('nav.embedded'), dd: '시스템의 두뇌. 고성능 임베디드 제어.', link: '/main-controller', img: _catEmbedded },
+              { tt: t('nav.hmi'), dd: '터치 디스플레이 + UI 펌웨어 통합 공급.', link: '/display', img: _catHmi },
+              { tt: t('nav.custom'), dd: '정밀 온도 제어 · 특수 산업 장비.', link: '/others', img: _catCustom },
             ].map((c, i) => (
               <motion.a
                 key={c.link}
                 href={c.link}
                 whileHover={{ y: -3 }}
-                className="ts-card group relative rounded-[2rem] bg-[#0a0a0a] border border-white/10 p-8 flex flex-col justify-between min-h-[220px]"
+                className="ts-card group relative rounded-[2rem] overflow-hidden border border-white/5 aspect-[4/3] block"
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
                 transition={{ duration: 0.6, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
               >
-                <div>
-                  <div className="text-[11px] uppercase tracking-[0.2em] text-gray-500 mb-5">{String(i + 1).padStart(2, '0')}</div>
-                  <h3 className="text-xl font-bold tracking-tight text-white mb-3 ts-card-title">{c.tt}</h3>
-                  <p className="text-sm text-gray-400 font-light leading-relaxed">{c.dd}</p>
+                <img src={c.img} alt={c.tt} className="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-1000 group-hover:scale-105 group-hover:opacity-70" loading="lazy" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                <div className="relative z-10 flex flex-col justify-end h-full p-8">
+                  <div className="text-[11px] uppercase tracking-[0.2em] text-gray-400 mb-3">{String(i + 1).padStart(2, '0')}</div>
+                  <h3 className="text-2xl font-bold tracking-tight text-white ts-card-title">{c.tt}</h3>
+                  <p className="text-sm text-gray-300 font-light mt-2">{c.dd}</p>
                 </div>
-                <span className="mt-6 inline-flex items-center text-xs text-gray-500 group-hover:text-white transition-colors">
-                  바로가기
-                  <svg className="ml-1 w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                </span>
               </motion.a>
             ))}
           </div>
+
+          <motion.a
+            href="/process"
+            className="ts-card group relative block rounded-[2rem] overflow-hidden border border-white/10 h-[300px] md:h-[380px]"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <img src={_catProcess} alt="제조공정" className="absolute inset-0 w-full h-full object-cover opacity-45 transition-transform duration-[1200ms] group-hover:scale-105 group-hover:opacity-60" loading="lazy" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent" />
+            <div className="relative z-10 flex flex-col justify-center h-full max-w-2xl px-10 md:px-16">
+              <div className="text-[11px] uppercase tracking-[0.25em] text-gray-400 mb-5">04 · Manufacturing Process</div>
+              <h3 className="text-4xl md:text-6xl font-bold tracking-tighter text-white mb-4 ts-card-title">제조공정</h3>
+              <p className="text-gray-300 font-light text-base md:text-lg leading-relaxed mb-7">설계부터 출하까지, 10단계 정밀 제조 공정으로 무결점 품질을 구현합니다.</p>
+              <span className="inline-flex items-center text-sm text-white border-b border-white/40 pb-1 w-fit group-hover:border-white transition-colors">
+                제조공정 자세히 보기
+                <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              </span>
+            </div>
+          </motion.a>
         </section>
 
         <section className="max-w-7xl mx-auto px-6 mb-32">
-          <ProductNav />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.map((product, i) => (
               <motion.a
