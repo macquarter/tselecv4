@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductNav from '../components/ProductNav';
 import ModuleCatalog, { CatalogCard } from '../components/ModuleCatalog';
+import { useImage } from '../contexts/SiteContentContext';
 
 const HMI_CARDS: CatalogCard[] = [
   {
@@ -23,6 +24,7 @@ const HMI_CARDS: CatalogCard[] = [
 
 export default function Display() {
   const { t } = useTranslation();
+  const _heroImg = useImage('displayPage.hero.img', 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1600&q=80');
 
   return (
     <div className="bg-black min-h-screen text-white selection:bg-white/30 selection:text-white">
@@ -38,6 +40,12 @@ export default function Display() {
           <motion.p className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto font-light tracking-tight whitespace-pre-line" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}>
             {t('displayPage.sub')}
           </motion.p>
+        </section>
+
+        <section className="max-w-6xl mx-auto px-6 mb-20">
+          <div className="rounded-[2rem] overflow-hidden border border-white/10 aspect-[21/9] bg-[#0a0a0a]">
+            <img src={_heroImg} alt={t('displayPage.t2')} className="w-full h-full object-cover opacity-85" loading="lazy" />
+          </div>
         </section>
 
         <section className="max-w-7xl mx-auto px-6 mb-16">
