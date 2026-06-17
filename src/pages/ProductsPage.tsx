@@ -103,14 +103,15 @@ export default function ProductsPage() {
               <motion.a
                 href={product.link}
                 key={product.id}
-                className="group relative rounded-[2rem] overflow-hidden bg-[#0a0a0a] border border-white/5 block flex flex-col h-[450px]"
+                whileHover={{ y: -3 }}
+                className="group relative rounded-[2rem] overflow-hidden bg-[#0a0a0a] border border-white/5 block flex flex-col h-[450px] ts-card"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
               >
                 <div className="p-10 z-10 relative">
-                  <h3 className="text-3xl font-bold mb-3 tracking-tight group-hover:text-white transition-colors">{product.title}</h3>
+                  <h3 className="text-3xl font-bold mb-3 tracking-tight group-hover:text-white transition-colors ts-card-title">{product.title}</h3>
                   <p className="text-gray-400 text-sm leading-relaxed font-light max-w-[80%]">{product.desc}</p>
                 </div>
                 <div className="absolute inset-0 top-1/3 mt-4 overflow-hidden rounded-b-[2rem]">
