@@ -5,6 +5,7 @@ import { useImage } from '../contexts/SiteContentContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import BusinessNav from '../components/BusinessNav';
+import BusinessOverview from '../components/BusinessOverview';
 
 interface Feature {
   key: string;
@@ -88,6 +89,8 @@ export default function BusinessMedical() {
       </section>
 
       <BusinessNav />
+
+      <BusinessOverview />
 
       <section className="py-24 px-6">
         <div className="max-w-7xl mx-auto">
