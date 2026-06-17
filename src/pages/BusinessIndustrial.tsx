@@ -79,7 +79,7 @@ const features: Feature[] = [
   },
   {
     key: 'f5',
-    image: STOCK('photo-1518770660439-4636190af475'),
+    image: '/images/products/smart-iot.jpg',
     fallback: STOCK('photo-1558494949-ef010cbdcc31'),
     solutions: [
       '센서 신호 처리',
@@ -98,7 +98,8 @@ export default function BusinessIndustrial() {
   const _img2 = useImage('biz.ind.f2.img', '/images/products/pump.jpg');
   const _img3 = useImage('biz.ind.f3.img', '/images/products/smart-booth.jpg');
   const _img4 = useImage('biz.ind.f4.img', '/images/products/temp-controller.jpg');
-  const _imgMap: Record<string,string> = {'/images/products/dishwasher.jpg': _img0, '/images/products/chungho-ice-550.jpg': _img1, '/images/products/pump.jpg': _img2, '/images/products/smart-booth.jpg': _img3, '/images/products/temp-controller.jpg': _img4};
+  const _img5 = useImage('biz.ind.f5.img', STOCK('photo-1518770660439-4636190af475'));
+  const _imgMap: Record<string,string> = {'/images/products/dishwasher.jpg': _img0, '/images/products/chungho-ice-550.jpg': _img1, '/images/products/pump.jpg': _img2, '/images/products/smart-booth.jpg': _img3, '/images/products/temp-controller.jpg': _img4, '/images/products/smart-iot.jpg': _img5};
   const { t } = useTranslation();
   const [selected, setSelected] = useState<Feature | null>(null);
 
