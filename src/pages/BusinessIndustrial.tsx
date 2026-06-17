@@ -77,6 +77,19 @@ const features: Feature[] = [
     ],
     boards: ['Main PCB', 'POWER PCB', 'Display (HMI)'],
   },
+  {
+    key: 'f5',
+    image: STOCK('photo-1518770660439-4636190af475'),
+    fallback: STOCK('photo-1558494949-ef010cbdcc31'),
+    solutions: [
+      '센서 신호 처리',
+      '디스플레이·HMI 연동',
+      '무선 통신 모듈 연동',
+      '상태 감지 및 알림 로직',
+      '고객 요구사항 기반 커스텀 제어보드 설계',
+    ],
+    boards: ['Main PCB', 'Sensor Module', 'Display (HMI)', 'Wireless Module', 'POWER PCB'],
+  },
 ];
 
 export default function BusinessIndustrial() {
@@ -125,7 +138,8 @@ export default function BusinessIndustrial() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-100px' }}
                 transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="relative rounded-[2rem] bg-[#0a0a0a] border border-white/5 overflow-hidden group aspect-[4/3] cursor-pointer"
+                whileHover={{ y: -3 }}
+                className="relative rounded-[2rem] bg-[#0a0a0a] border border-white/5 overflow-hidden group aspect-[4/3] cursor-pointer ts-card"
                 onClick={() => setSelected(feature)}
               >
                 <img
@@ -140,7 +154,7 @@ export default function BusinessIndustrial() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                 <div className="relative z-10 flex flex-col justify-end h-full p-8">
-                  <h3 className="text-2xl font-bold mb-2 tracking-tight">{t(`bizIndustrial.${feature.key}n`)}</h3>
+                  <h3 className="text-2xl font-bold mb-2 tracking-tight ts-card-title">{t(`bizIndustrial.${feature.key}n`)}</h3>
                   <p className="text-gray-400 text-sm font-light leading-relaxed">{t(`bizIndustrial.${feature.key}d`)}</p>
                   <span className="mt-4 inline-flex items-center text-xs text-gray-500 group-hover:text-white transition-colors">
                     {t('common.detail')}
