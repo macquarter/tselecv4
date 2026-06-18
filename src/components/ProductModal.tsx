@@ -71,12 +71,12 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
               ))}
             </ul>
 
-            <div className="mt-12 flex flex-col sm:flex-row gap-4">
-              <button className="flex-1 py-4 bg-white text-black font-medium rounded-xl hover:bg-gray-200 transition-colors">
+            <div className="mt-12">
+              <button
+                onClick={() => { onClose(); setTimeout(() => { document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); }, 350); }}
+                className="w-full py-4 bg-white text-black font-medium rounded-xl hover:bg-gray-200 transition-colors"
+              >
                 상담 문의하기
-              </button>
-              <button className="flex-1 py-4 bg-transparent border border-white/10 text-white font-medium rounded-xl hover:bg-white/5 transition-colors">
-                스펙 시트 다운로드
               </button>
             </div>
           </motion.div>
