@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useText, useImage } from '../contexts/SiteContentContext';
+import BrandLogo from './BrandLogo';
 
 interface FooterProps {
   /** 페이지 고유 메타 라벨 (예: "Manufacturing Process · v6.0 · ISO 9001 인증 라인"). */
@@ -25,10 +26,7 @@ export default function Footer({ pageBadge }: FooterProps) {
               {logoImg ? (
                 <img src={logoImg} alt={logo1+logo2} className="h-10 w-auto object-contain" />
               ) : (
-                <div className="flex flex-col leading-[0.85] font-black text-[20px] tracking-[-0.12em] uppercase text-white">
-                  <span>{logo1}</span>
-                  <span>{logo2}</span>
-                </div>
+                <BrandLogo className="h-10 w-auto" />
               )}
             </Link>
             <p className="text-sm text-gray-500 leading-relaxed">
