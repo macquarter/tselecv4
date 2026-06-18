@@ -9,6 +9,7 @@
  *
  * v22: CMS 편집은 관리자(Firebase Auth) 로그인 시에만 활성화
  * v23: 관리자 챗봇 학습 패널 추가 (siteContent/chatbot)
+ * v24: 관리자 앱(iframe) 내에서는 로그인 없이 편집 허용
  */
 import { useEffect, useState, useCallback } from 'react';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
@@ -162,6 +163,11 @@ export default function CmsEditOverlay() {
   const [loggingIn, setLoggingIn] = useState(false);
   const [loginDismissed, setLoginDismissed] = useState(false);
   const isAdmin = !!adminUser && (adminUser.email || '').toLowerCase() === ADMIN_EMAIL;
+  const inAdminFrame = (() => {
+    try { return window.self !== window.top && /tselecadmin/i.test(document.referrer || ''); }
+    catch (e) { return true; }
+  })();
+  const canEdit = isAdmin || inAdminFrame;
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u: any) => {
@@ -270,7 +276,7 @@ export default function CmsEditOverlay() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('edit') !== '1') return;
-    if (!isAdmin) return;
+    if (!canEdit) return;
 
     let textReverse: Record<string, string[]> = {};
     let textReverseLoose: Record<string, string[]> = {};
@@ -460,11 +466,11 @@ export default function CmsEditOverlay() {
       banner.remove();
       document.body.style.paddingTop = '';
     };
-  }, [isAdmin]);
+  }, [canEdit]);
 
   const _editParam = new URLSearchParams(window.location.search).get('edit') === '1';
 
-  if (_editParam && authResolved && !isAdmin && !loginDismissed) {
+  if (_editParam && authResolved && !canEdit && !loginDismissed) {
     return (
       <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.82)', zIndex: 100000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
         onClick={() => setLoginDismissed(true)}>
@@ -492,7 +498,7 @@ export default function CmsEditOverlay() {
   }
 
   if (!editMode) {
-    if (_editParam && isAdmin) {
+    if (_editParam && canEdit) {
       return (
         <>
           <div style={{ position: 'fixed', top: 5, right: 10, zIndex: 100001, display: 'flex', gap: 8 }}>
