@@ -42,14 +42,14 @@ export default function Display() {
         </section>
 
         <section className="max-w-7xl mx-auto px-6 pb-24">
-          <div className="grid lg:grid-cols-[1.05fr_1fr] gap-8 lg:gap-12 items-center">
-            {/* LEFT: HMI Solutions 사진 (시원한 16:10 비율) */}
+          <div className="grid lg:grid-cols-[3fr_7fr] gap-8 lg:gap-10 items-stretch">
+            {/* LEFT: HMI Solutions 사진 (3 : 스펙 7, 높이 매칭) */}
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-80px' }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="relative rounded-[2rem] overflow-hidden border border-white/10 bg-[#0a0a0a] aspect-[16/10]"
+              className="relative rounded-[2rem] overflow-hidden border border-white/10 bg-[#0a0a0a] min-h-[320px] lg:min-h-0"
             >
               <img src={_heroImg} alt={t('displayPage.t2')} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
