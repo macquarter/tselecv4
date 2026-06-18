@@ -51,7 +51,6 @@ export default function Navbar() {
         { name: t('nav.industrial'), href: '/business/industrial' },
         { name: t('nav.medical'), href: '/business/medical' },
         { name: t('nav.renewable'), href: '/business/renewable' },
-        { name: t('nav.smartiot'), href: '/business/smart-iot' },
       ]
     },
     {
