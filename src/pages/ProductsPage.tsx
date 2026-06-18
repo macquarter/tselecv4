@@ -71,15 +71,15 @@ export default function ProductsPage() {
                 className="ts-card group relative rounded-[2rem] overflow-hidden border border-white/5 aspect-[4/3] block"
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
+                viewport={{ once: true, margin: '300px 0px' }}
                 transition={{ duration: 0.6, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
               >
-                <img src={c.img} alt={c.tt} className="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-1000 group-hover:scale-105 group-hover:opacity-70" loading="lazy" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                <img src={c.img} alt={c.tt} className="absolute inset-0 w-full h-full object-cover opacity-85 transition-all duration-700 group-hover:scale-105 group-hover:opacity-100" loading="eager" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
                 <div className="relative z-10 flex flex-col justify-end h-full p-8">
                   <div className="text-[11px] uppercase tracking-[0.2em] text-gray-400 mb-3">{String(i + 1).padStart(2, '0')}</div>
                   <h3 className="text-2xl font-bold tracking-tight text-white ts-card-title">{c.tt}</h3>
-                  <p className="text-sm text-gray-300 font-light mt-2">{c.dd}</p>
+                  <p className="text-sm md:text-[15px] text-gray-100 font-light mt-2">{c.dd}</p>
                 </div>
               </motion.a>
             ))}
@@ -90,10 +90,10 @@ export default function ProductsPage() {
             className="ts-card group relative block rounded-[2rem] overflow-hidden border border-white/10 h-[300px] md:h-[380px]"
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
+            viewport={{ once: true, margin: '300px 0px' }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
-            <img src={_catProcess} alt="제조공정" className="absolute inset-0 w-full h-full object-cover opacity-45 transition-transform duration-[1200ms] group-hover:scale-105 group-hover:opacity-60" loading="lazy" />
+            <img src={_catProcess} alt="제조공정" className="absolute inset-0 w-full h-full object-cover opacity-75 transition-all duration-[1200ms] group-hover:scale-105 group-hover:opacity-90" loading="eager" />
             <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent" />
             <div className="relative z-10 flex flex-col justify-center h-full max-w-2xl px-10 md:px-16">
               <div className="text-[11px] uppercase tracking-[0.25em] text-gray-400 mb-5">04 · Manufacturing Process</div>
