@@ -7,6 +7,7 @@ export default function BusinessNav() {
   const { t } = useTranslation();
 
   const links = [
+    { key: 'businessAll', path: '/business' },
     { key: 'homeAppliance', path: '/business/home-appliance' },
     { key: 'industrial', path: '/business/industrial' },
     { key: 'medical', path: '/business/medical' },
