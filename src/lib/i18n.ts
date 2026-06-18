@@ -7,17 +7,31 @@ import en from '../locales/en.json';
 import zh from '../locales/zh.json';
 import ja from '../locales/ja.json';
 import vi from '../locales/vi.json';
+import extra from '../locales/extra';
+
+// 깊은 병합: 기존 로케일 + 최근 추가 번역(extra)
+function deepMerge(base: any, add: any): any {
+  const out: any = { ...base };
+  for (const k of Object.keys(add || {})) {
+    if (add[k] && typeof add[k] === 'object' && !Array.isArray(add[k]) && base?.[k] && typeof base[k] === 'object' && !Array.isArray(base[k])) {
+      out[k] = deepMerge(base[k], add[k]);
+    } else {
+      out[k] = add[k];
+    }
+  }
+  return out;
+}
 
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     resources: {
-      ko: { translation: ko },
-      en: { translation: en },
-      zh: { translation: zh },
-      ja: { translation: ja },
-      vi: { translation: vi },
+      ko: { translation: deepMerge(ko, (extra as any).ko) },
+      en: { translation: deepMerge(en, (extra as any).en) },
+      zh: { translation: deepMerge(zh, (extra as any).zh) },
+      ja: { translation: deepMerge(ja, (extra as any).ja) },
+      vi: { translation: deepMerge(vi, (extra as any).vi) },
     },
     // 디폴트 언어: 한국어 강제
     lng: 'ko',
