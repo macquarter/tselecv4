@@ -31,10 +31,10 @@ export default function Expertise() {
   const c4Y = useTransform(scrollYProgress, [0.5, 0.75], ["150%", "0%"]);
 
   const data = [
-    { sub: 'HOME APPLIANCE', tt: '가전', dd: '냉장고·정수기·레인지후드·공기청정기 등 생활가전의 MCU 제어보드와 터치 디스플레이를 설계·제조합니다.', img: imgHome },
-    { sub: 'INDUSTRIAL', tt: '산업', dd: '식기세척기·펌프·회의부스·온도제어기 등 산업 장비의 핵심 제어 솔루션을 공급합니다.', img: imgInd },
-    { sub: 'MEDICAL DEVICE', tt: '의료', dd: '원심분리기·진단기·치과 스케일러 등 고정밀 의료기기 제어보드를 설계·공급합니다.', img: imgMed },
-    { sub: 'RENEWABLE ENERGY', tt: '신재생', dd: '태양광·수소연료전지·리튬이온 충전 등 친환경 에너지 시스템 제어 기술을 제공합니다.', img: imgRen },
+    { sub: 'HOME APPLIANCE', tt: t('expertise.x0t'), dd: t('expertise.x0d'), img: imgHome },
+    { sub: 'INDUSTRIAL', tt: t('expertise.x1t'), dd: t('expertise.x1d'), img: imgInd },
+    { sub: 'MEDICAL DEVICE', tt: t('expertise.x2t'), dd: t('expertise.x2d'), img: imgMed },
+    { sub: 'RENEWABLE ENERGY', tt: t('expertise.x3t'), dd: t('expertise.x3d'), img: imgRen },
   ];
 
   const renderCard = (d: typeof data[0]) => (
@@ -64,8 +64,8 @@ export default function Expertise() {
             {t('home.expertiseTag')}
           </div>
           <h2 className="text-2xl md:text-5xl font-bold tracking-tighter text-white leading-tight">
-            가전·산업·의료·신재생<br />
-            4대 핵심 산업을 위한 맞춤형 솔루션
+            {t('expertise.t1')}<br />
+            {t('expertise.t2')}
           </h2>
         </div>
 
