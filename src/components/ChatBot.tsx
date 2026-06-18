@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { MessageCircle, X, Send, Bot, User, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
 interface Message {
@@ -298,6 +298,23 @@ const defaultCtx: ConversationContext = {
   lastBotResponse: '', turnCount: 0,
 };
 
+// ── 관리자 학습 지식 (Firestore siteContent/chatbot.raw) ──
+let DYNAMIC_KB: KBEntry[] = [];
+
+function parseChatbotKnowledge(raw: string): KBEntry[] {
+  if (!raw || !raw.trim()) return [];
+  const blocks = raw.split(/\n\s*---\s*\n/);
+  const out: KBEntry[] = [];
+  blocks.forEach((b, i) => {
+    const lines = b.split('\n').map(l => l.trim()).filter(Boolean);
+    if (lines.length < 2) return;
+    const keywords = lines[0].split(/[,，]/).map(k => k.trim()).filter(Boolean);
+    const answer = lines.slice(1).join('\n');
+    if (keywords.length && answer) out.push({ id: 'admin-' + i, category: '관리자학습', keywords, answer });
+  });
+  return out;
+}
+
 // ── 패턴 감지 ──
 const PHONE_REGEX = /(?:0\d{1,2}[-.\s]?\d{3,4}[-.\s]?\d{4}|01[016789][-.\s]?\d{3,4}[-.\s]?\d{4})/;
 const EMAIL_REGEX = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
@@ -432,7 +449,7 @@ function generateResponse(input: string, ctx: ConversationContext): ResponseResu
   let bestScore = 0;
   let bestEntry: KBEntry | null = null;
 
-  for (const entry of KB) {
+  for (const entry of DYNAMIC_KB.concat(KB)) {
     let score = 0;
     for (const kw of entry.keywords) {
       if (qLower.includes(kw.toLowerCase())) {
@@ -441,6 +458,9 @@ function generateResponse(input: string, ctx: ConversationContext): ResponseResu
     }
     if (score > 0 && entry.category === ctx.lastCategory) {
       score += 0.5;
+    }
+    if (score > 0 && entry.category === '관리자학습') {
+      score += 1.5;
     }
     if (score > bestScore) {
       bestScore = score;
@@ -525,6 +545,12 @@ export default function ChatBot() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  useEffect(() => {
+    getDoc(doc(db, 'siteContent', 'chatbot'))
+      .then(snap => { if (snap.exists()) DYNAMIC_KB = parseChatbotKnowledge((snap.data() as any).raw || ''); })
+      .catch(() => { /* noop */ });
+  }, []);
 
   const addBotMessage = useCallback((text: string) => {
     setMessages(prev => [...prev, { role: 'bot', text, time: getTime() }]);
