@@ -20,6 +20,7 @@ import Others from './pages/Others';
 import Process from './pages/Process';
 import Downloads from './pages/Downloads';
 import NewsPage from './pages/NewsPage';
+import BusinessPage from './pages/BusinessPage';
 import BusinessHomeAppliance from './pages/BusinessHomeAppliance';
 import BusinessIndustrial from './pages/BusinessIndustrial';
 import BusinessMedical from './pages/BusinessMedical';
@@ -43,6 +44,7 @@ export default function App() {
           <Route path="/certifications" element={<Certifications />} />
           <Route path="/organization" element={<Organization />} />
           <Route path="/directions" element={<Directions />} />
+          <Route path="/business" element={<BusinessPage />} />
           <Route path="/business/home-appliance" element={<BusinessHomeAppliance />} />
           <Route path="/business/industrial" element={<BusinessIndustrial />} />
           <Route path="/business/medical" element={<BusinessMedical />} />
