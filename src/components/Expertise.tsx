@@ -40,7 +40,7 @@ export default function Expertise() {
   const renderCard = (d: typeof data[0]) => (
     <>
       <div className="w-full md:w-1/2 h-48 md:h-full">
-        <img src={d.img} alt={d.tt} className="w-full h-full object-cover opacity-90" />
+        <img src={d.img} alt={d.tt} loading="eager" fetchPriority="high" decoding="async" className="w-full h-full object-cover opacity-90" />
       </div>
       <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center relative">
         <div className="absolute inset-0 bg-gradient-to-r from-white/[0.02] to-transparent pointer-events-none" />
