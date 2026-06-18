@@ -2,9 +2,17 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 
+const ALL_LABEL: Record<string, string> = {
+  ko: '전체보기',
+  en: 'All Areas',
+  ja: '事業領域一覧',
+  zh: '全部业务',
+  vi: 'Tất cả lĩnh vực',
+};
+
 export default function BusinessNav() {
   const location = useLocation();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const links = [
     { key: 'businessAll', path: '/business' },
@@ -20,6 +28,9 @@ export default function BusinessNav() {
       <div className="inline-flex bg-[#111] border border-white/10 rounded-full p-1.5 relative overflow-x-auto max-w-full scrollbar-hide">
         {links.map((link) => {
           const isActive = location.pathname === link.path;
+          const label = link.key === 'businessAll'
+            ? (ALL_LABEL[i18n.language] || ALL_LABEL.ko)
+            : t(`nav.${link.key}`);
           return (
             <Link
               key={link.path}
@@ -35,7 +46,7 @@ export default function BusinessNav() {
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 />
               )}
-              <span className="relative z-10">{t(`nav.${link.key}`)}</span>
+              <span className="relative z-10">{label}</span>
             </Link>
           );
         })}
