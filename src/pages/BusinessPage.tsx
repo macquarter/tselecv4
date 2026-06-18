@@ -1,10 +1,12 @@
 import { motion } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import BusinessNav from '../components/BusinessNav';
 import BusinessOverview from '../components/BusinessOverview';
 
 export default function BusinessPage() {
+  const { t } = useTranslation();
   return (
     <div className="bg-black min-h-screen text-white selection:bg-white/30 selection:text-white">
       <Navbar />
@@ -25,9 +27,9 @@ export default function BusinessPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           >
-            모든 산업의 중심.<br />
+            {t('bizPage.heroT1')}<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-600">
-              태승전자 핵심 사업영역.
+              {t('bizPage.heroT2')}
             </span>
           </motion.h1>
           <motion.p
@@ -36,8 +38,7 @@ export default function BusinessPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
-            가전부터 신재생에너지까지,<br className="hidden md:block" />
-            5대 핵심 산업의 제어 솔루션을 제공합니다.
+            {t('bizPage.heroSub')}
           </motion.p>
         </section>
 
