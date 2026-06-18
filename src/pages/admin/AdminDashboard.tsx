@@ -1,6 +1,16 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
+import { db } from '../../lib/firebase';
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  serverTimestamp,
+} from 'firebase/firestore';
 import {
   LogOut,
   Plus,
@@ -67,6 +77,112 @@ export default function AdminDashboard() {
   const [isTyping, setIsTyping] = useState(false);
   const [activeCategoryFilter, setActiveCategoryFilter] = useState<MemoryCategory | 'ALL'>('ALL');
   const chatEndRef = useRef<HTMLDivElement>(null);
+
+  // ── 뉴스 / 제품 관리 상태 (Firestore 연동) ──
+  const [newsList, setNewsList] = useState<any[]>([]);
+  const [prodList, setProdList] = useState<any[]>([]);
+  const [editingNews, setEditingNews] = useState<any | null>(null);
+  const [editingProd, setEditingProd] = useState<any | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  const tsOf = (x: any) =>
+    x?.createdAt?.toDate?.()?.getTime?.() ??
+    (typeof x?.createdAt === 'string' ? new Date(x.createdAt).getTime() : 0);
+  const fmtDate = (x: any) => {
+    const d = x?.createdAt?.toDate?.() || (typeof x?.createdAt === 'string' ? new Date(x.createdAt) : null);
+    return d ? `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}` : '-';
+  };
+
+  async function reloadNews() {
+    try {
+      const snap = await getDocs(collection(db, 'news'));
+      const items = snap.docs.map((d) => ({ id: d.id, ...(d.data() as any) }));
+      items.sort((a, b) => tsOf(b) - tsOf(a));
+      setNewsList(items);
+    } catch (e) { console.warn('news load fail', e); }
+  }
+  async function reloadProducts() {
+    try {
+      const snap = await getDocs(collection(db, 'products'));
+      setProdList(snap.docs.map((d) => ({ id: d.id, ...(d.data() as any) })));
+    } catch (e) { console.warn('products load fail', e); }
+  }
+  useEffect(() => { reloadNews(); reloadProducts(); }, []);
+
+  async function saveNews(item: any) {
+    if (!item.title?.trim()) { alert('제목을 입력하세요.'); return; }
+    setBusy(true);
+    try {
+      if (item.id) {
+        await updateDoc(doc(db, 'news', item.id), {
+          category: item.category || '공지사항',
+          title: item.title,
+          content: item.content || '',
+          author: item.author || '관리자',
+        });
+      } else {
+        await addDoc(collection(db, 'news'), {
+          category: item.category || '공지사항',
+          title: item.title,
+          content: item.content || '',
+          author: item.author || '관리자',
+          views: 0,
+          createdAt: serverTimestamp(),
+        });
+      }
+      await reloadNews();
+      setEditingNews(null);
+    } catch (e) { alert('저장 실패: ' + (e as any)?.message); }
+    finally { setBusy(false); }
+  }
+  async function removeNews(id: string) {
+    if (!window.confirm('이 공지를 삭제할까요?')) return;
+    try { await deleteDoc(doc(db, 'news', id)); setNewsList((l) => l.filter((n) => n.id !== id)); }
+    catch (e) { alert('삭제 실패: ' + (e as any)?.message); }
+  }
+
+  async function saveProd(item: any) {
+    if (!item.name?.trim()) { alert('제품명을 입력하세요.'); return; }
+    setBusy(true);
+    try {
+      if (item.id) {
+        await updateDoc(doc(db, 'products', item.id), { name: item.name, category: item.category || '기타' });
+      } else {
+        await addDoc(collection(db, 'products'), { name: item.name, category: item.category || '기타', createdAt: serverTimestamp() });
+      }
+      await reloadProducts();
+      setEditingProd(null);
+    } catch (e) { alert('저장 실패: ' + (e as any)?.message); }
+    finally { setBusy(false); }
+  }
+  async function removeProd(id: string) {
+    if (!window.confirm('이 제품을 삭제할까요?')) return;
+    try { await deleteDoc(doc(db, 'products', id)); setProdList((l) => l.filter((p) => p.id !== id)); }
+    catch (e) { alert('삭제 실패: ' + (e as any)?.message); }
+  }
+
+  const PROD_SEED = [
+    { name: '냉장고 제어보드', category: '가전' }, { name: '정수기 제어보드', category: '가전' },
+    { name: '레인지후드 제어보드', category: '가전' }, { name: '공기청정기 제어보드', category: '가전' },
+    { name: '식기세척기 제어보드', category: '산업용' }, { name: '제빙기 제어보드', category: '산업용' },
+    { name: '펌프 제어보드', category: '산업용' }, { name: '회의부스 제어보드', category: '산업용' },
+    { name: '산업용 온도제어기', category: '산업용' }, { name: '원심분리기 제어보드', category: '의료기기' },
+    { name: '진단기 제어보드', category: '의료기기' }, { name: '치과용 스케일러 제어보드', category: '의료기기' },
+    { name: '연료전지 제어보드', category: '신재생에너지' }, { name: '수소드론 제어보드', category: '신재생에너지' },
+    { name: '리튬이온 배터리충전 제어', category: '신재생에너지' }, { name: '태양광패널 제어보드', category: '신재생에너지' },
+    { name: 'Main PCB', category: '임베디드' }, { name: 'POWER PCB', category: '임베디드' },
+    { name: 'Display (HMI)', category: 'HMI' }, { name: 'SMPS', category: '주변기기' },
+    { name: '무선모듈 (Wi-Fi/BLE)', category: '주변기기' },
+  ];
+  async function seedProducts() {
+    if (!window.confirm('기본 제품 21개를 등록할까요?')) return;
+    setBusy(true);
+    try {
+      for (const p of PROD_SEED) await addDoc(collection(db, 'products'), { ...p, createdAt: serverTimestamp() });
+      await reloadProducts();
+    } catch (e) { alert('등록 실패: ' + (e as any)?.message); }
+    finally { setBusy(false); }
+  }
 
   useEffect(() => {
     const isAdmin = localStorage.getItem('isAdmin');
@@ -176,9 +292,19 @@ export default function AdminDashboard() {
           ))}
         </nav>
 
+        <a
+          href="/?edit=1"
+          target="_blank"
+          rel="noreferrer"
+          className="flex items-center gap-3 px-4 py-3 mt-auto rounded-xl bg-white/5 border border-white/10 text-gray-200 hover:bg-white/10 hover:text-white transition-colors"
+        >
+          <Edit2 size={18} />
+          <span className="text-sm leading-tight">사이트 편집<br /><span className="text-[11px] text-gray-500">이미지·텍스트·로고</span></span>
+        </a>
+
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors px-4 py-3 mt-auto"
+          className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors px-4 py-3 mt-2"
         >
           <LogOut size={20} />
           로그아웃
@@ -202,8 +328,15 @@ export default function AdminDashboard() {
               </p>
             )}
           </div>
-          {activeTab !== 'memory' && (
-            <button className="bg-white text-black px-6 py-2.5 rounded-full font-medium flex items-center gap-2 hover:bg-gray-200 transition-colors">
+          {(activeTab === 'news' || activeTab === 'products') && (
+            <button
+              onClick={() =>
+                activeTab === 'news'
+                  ? setEditingNews({ category: '공지사항', title: '', content: '', author: '관리자' })
+                  : setEditingProd({ name: '', category: '가전' })
+              }
+              className="bg-white text-black px-6 py-2.5 rounded-full font-medium flex items-center gap-2 hover:bg-gray-200 transition-colors"
+            >
               <Plus size={18} />
               새로 등록하기
             </button>
@@ -423,67 +556,154 @@ export default function AdminDashboard() {
         {/* ─────── 제품 관리 탭 ─────── */}
         {activeTab === 'products' && (
           <div className="px-10 py-8 overflow-y-auto">
-            <div className="bg-[#111] rounded-3xl border border-white/10 overflow-hidden">
-              <table className="w-full text-left">
-                <thead className="bg-white/5 border-b border-white/10">
-                  <tr>
-                    <th className="px-6 py-4 font-medium text-gray-400">제품명</th>
-                    <th className="px-6 py-4 font-medium text-gray-400">카테고리</th>
-                    <th className="px-6 py-4 font-medium text-gray-400">등록일</th>
-                    <th className="px-6 py-4 font-medium text-gray-400 text-right">관리</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/10">
-                  {[
-                    { name: '냉장고 제어보드', category: '가전', date: '2026-05-27' },
-                    { name: '정수기 제어보드', category: '가전', date: '2026-05-27' },
-                    { name: '레인지후드 제어보드', category: '가전', date: '2026-05-27' },
-                    { name: '공기청정기 제어보드', category: '가전', date: '2026-05-27' },
-                    { name: '식기세척기 제어보드', category: '산업용', date: '2026-05-27' },
-                    { name: '제빙기 제어보드', category: '산업용', date: '2026-05-27' },
-                    { name: '펌프 제어보드', category: '산업용', date: '2026-05-27' },
-                    { name: '회의부스 제어보드', category: '산업용', date: '2026-05-27' },
-                    { name: '산업용 온도제어기', category: '산업용', date: '2026-05-27' },
-                    { name: '원심분리기 제어보드', category: '의료기기', date: '2026-05-27' },
-                    { name: '진단기 제어보드', category: '의료기기', date: '2026-05-27' },
-                    { name: '치과용 스케일러 제어보드', category: '의료기기', date: '2026-05-27' },
-                    { name: '연료전지 제어보드', category: '신재생에너지', date: '2026-05-27' },
-                    { name: '수소드론 제어보드', category: '신재생에너지', date: '2026-05-27' },
-                    { name: '리튬이온 배터리충전 제어', category: '신재생에너지', date: '2026-05-27' },
-                    { name: '태양광패널 제어보드', category: '신재생에너지', date: '2026-05-27' },
-                    { name: 'Main PCB', category: '임베디드', date: '2026-05-27' },
-                    { name: 'POWER PCB', category: '임베디드', date: '2026-05-27' },
-                    { name: 'Display (HMI)', category: 'HMI', date: '2026-05-27' },
-                    { name: 'SMPS', category: '주변기기', date: '2026-05-27' },
-                    { name: '무선모듈 (Wi-Fi/BLE)', category: '주변기기', date: '2026-05-27' },
-                  ].map((product, idx) => (
-                    <tr key={idx} className="hover:bg-white/5 transition-colors">
-                      <td className="px-6 py-4 font-medium">{product.name}</td>
-                      <td className="px-6 py-4 text-gray-400">{product.category}</td>
-                      <td className="px-6 py-4 text-gray-400">{product.date}</td>
-                      <td className="px-6 py-4 text-right space-x-3">
-                        <button className="text-gray-400 hover:text-white transition-colors">
-                          <Edit2 size={18} />
-                        </button>
-                        <button className="text-red-500 hover:text-red-400 transition-colors">
-                          <Trash2 size={18} />
-                        </button>
-                      </td>
+            {prodList.length === 0 ? (
+              <div className="bg-[#111] rounded-3xl border border-white/10 p-12 text-center">
+                <p className="text-gray-400 text-sm mb-5">등록된 제품이 없습니다. 기본 제품 21개를 불러오거나 직접 등록하세요.</p>
+                <button onClick={seedProducts} disabled={busy} className="bg-white text-black px-6 py-2.5 rounded-full font-medium hover:bg-gray-200 transition-colors disabled:opacity-50">
+                  기본 제품 21개 등록
+                </button>
+              </div>
+            ) : (
+              <div className="bg-[#111] rounded-3xl border border-white/10 overflow-hidden">
+                <table className="w-full text-left">
+                  <thead className="bg-white/5 border-b border-white/10">
+                    <tr>
+                      <th className="px-6 py-4 font-medium text-gray-400">제품명</th>
+                      <th className="px-6 py-4 font-medium text-gray-400">카테고리</th>
+                      <th className="px-6 py-4 font-medium text-gray-400">등록일</th>
+                      <th className="px-6 py-4 font-medium text-gray-400 text-right">관리</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-white/10">
+                    {prodList.map((product) => (
+                      <tr key={product.id} className="hover:bg-white/5 transition-colors">
+                        <td className="px-6 py-4 font-medium">{product.name}</td>
+                        <td className="px-6 py-4 text-gray-400">{product.category}</td>
+                        <td className="px-6 py-4 text-gray-400">{fmtDate(product)}</td>
+                        <td className="px-6 py-4 text-right space-x-3">
+                          <button onClick={() => setEditingProd(product)} className="text-gray-400 hover:text-white transition-colors">
+                            <Edit2 size={18} />
+                          </button>
+                          <button onClick={() => removeProd(product.id)} className="text-red-500 hover:text-red-400 transition-colors">
+                            <Trash2 size={18} />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'news' && (
+          <div className="px-10 py-8 overflow-y-auto">
+            {newsList.length === 0 ? (
+              <div className="bg-[#111] rounded-3xl border border-white/10 p-12 text-center text-gray-500 text-sm">
+                등록된 공지가 없습니다. 우측 상단 ‘새로 등록하기’로 첫 공지를 작성하세요.
+              </div>
+            ) : (
+              <div className="bg-[#111] rounded-3xl border border-white/10 overflow-hidden">
+                <table className="w-full text-left">
+                  <thead className="bg-white/5 border-b border-white/10">
+                    <tr>
+                      <th className="px-6 py-4 font-medium text-gray-400">제목</th>
+                      <th className="px-6 py-4 font-medium text-gray-400">분류</th>
+                      <th className="px-6 py-4 font-medium text-gray-400">작성일</th>
+                      <th className="px-6 py-4 font-medium text-gray-400 text-right">관리</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/10">
+                    {newsList.map((n) => (
+                      <tr key={n.id} className="hover:bg-white/5 transition-colors">
+                        <td className="px-6 py-4 font-medium max-w-md truncate">{n.title}</td>
+                        <td className="px-6 py-4 text-gray-400">{n.category}</td>
+                        <td className="px-6 py-4 text-gray-400">{fmtDate(n)}</td>
+                        <td className="px-6 py-4 text-right space-x-3">
+                          <button onClick={() => setEditingNews(n)} className="text-gray-400 hover:text-white transition-colors">
+                            <Edit2 size={18} />
+                          </button>
+                          <button onClick={() => removeNews(n.id)} className="text-red-500 hover:text-red-400 transition-colors">
+                            <Trash2 size={18} />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'users' && (
+          <div className="px-10 py-8">
+            <div className="bg-[#111] rounded-3xl border border-white/10 p-12 text-center text-gray-500 text-sm">
+              문의 내역 기능은 준비 중입니다. (문의는 사이트 하단 연락처/이메일로 접수됩니다)
             </div>
           </div>
         )}
 
-        {(activeTab === 'news' || activeTab === 'users') && (
-          <div className="px-10 py-8">
-            <div className="bg-[#111] rounded-3xl border border-white/10 p-12 text-center text-gray-500 text-sm">
-              준비 중입니다.
-            </div>
-          </div>
-        )}
+        {/* ── 공지 작성/수정 모달 ── */}
+        <AnimatePresence>
+          {editingNews && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center px-6 bg-black/80 backdrop-blur-sm" onClick={() => setEditingNews(null)}>
+              <motion.div initial={{ opacity: 0, y: 30, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 30, scale: 0.97 }} className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl bg-[#111] border border-white/10 p-8" onClick={(e) => e.stopPropagation()}>
+                <h3 className="text-xl font-bold mb-6">{editingNews.id ? '공지 수정' : '새 공지 등록'}</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-2">분류</label>
+                    <select value={editingNews.category} onChange={(e) => setEditingNews({ ...editingNews, category: e.target.value })} className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30">
+                      <option value="공지사항">공지사항</option>
+                      <option value="보도자료">보도자료</option>
+                      <option value="이벤트">이벤트</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-2">제목</label>
+                    <input value={editingNews.title} onChange={(e) => setEditingNews({ ...editingNews, title: e.target.value })} className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30" placeholder="공지 제목" />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-2">내용</label>
+                    <textarea value={editingNews.content} onChange={(e) => setEditingNews({ ...editingNews, content: e.target.value })} rows={8} className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 resize-none" placeholder="공지 내용 (줄바꿈 가능)" />
+                  </div>
+                </div>
+                <div className="flex justify-end gap-3 mt-8">
+                  <button onClick={() => setEditingNews(null)} className="px-5 py-2.5 rounded-full border border-white/10 text-gray-300 hover:bg-white/5 transition-colors">취소</button>
+                  <button onClick={() => saveNews(editingNews)} disabled={busy} className="px-6 py-2.5 rounded-full bg-white text-black font-medium hover:bg-gray-200 transition-colors disabled:opacity-50">{busy ? '저장 중…' : '저장'}</button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* ── 제품 작성/수정 모달 ── */}
+        <AnimatePresence>
+          {editingProd && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center px-6 bg-black/80 backdrop-blur-sm" onClick={() => setEditingProd(null)}>
+              <motion.div initial={{ opacity: 0, y: 30, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 30, scale: 0.97 }} className="relative w-full max-w-lg rounded-3xl bg-[#111] border border-white/10 p-8" onClick={(e) => e.stopPropagation()}>
+                <h3 className="text-xl font-bold mb-6">{editingProd.id ? '제품 수정' : '새 제품 등록'}</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-2">제품명</label>
+                    <input value={editingProd.name} onChange={(e) => setEditingProd({ ...editingProd, name: e.target.value })} className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30" placeholder="제품명" />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-2">카테고리</label>
+                    <select value={editingProd.category} onChange={(e) => setEditingProd({ ...editingProd, category: e.target.value })} className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30">
+                      {['가전', '산업용', '의료기기', '신재생에너지', '임베디드', 'HMI', '주변기기', '기타'].map((c) => (<option key={c} value={c}>{c}</option>))}
+                    </select>
+                  </div>
+                </div>
+                <div className="flex justify-end gap-3 mt-8">
+                  <button onClick={() => setEditingProd(null)} className="px-5 py-2.5 rounded-full border border-white/10 text-gray-300 hover:bg-white/5 transition-colors">취소</button>
+                  <button onClick={() => saveProd(editingProd)} disabled={busy} className="px-6 py-2.5 rounded-full bg-white text-black font-medium hover:bg-gray-200 transition-colors disabled:opacity-50">{busy ? '저장 중…' : '저장'}</button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
