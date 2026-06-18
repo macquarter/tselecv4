@@ -110,7 +110,7 @@ export default function BusinessRenewable() {
                 key={feature.key}
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-100px' }}
+                viewport={{ once: true, margin: '300px 0px' }}
                 transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
                 whileHover={{ y: -3 }}
                 className="relative rounded-[2rem] bg-[#0a0a0a] border border-white/5 overflow-hidden group aspect-[4/3] cursor-pointer ts-card"
@@ -119,17 +119,17 @@ export default function BusinessRenewable() {
                 <img
                   src={_imgMap[feature.image] || feature.image}
                   alt={t(`bizRenewable.${feature.key}n`)}
-                  className="absolute inset-0 w-full h-full object-cover opacity-60 transition-transform duration-1000 group-hover:scale-105 group-hover:opacity-80"
-                  loading="lazy"
+                  className="absolute inset-0 w-full h-full object-cover opacity-85 transition-all duration-700 group-hover:scale-105 group-hover:opacity-100"
+                  loading="eager"
                   onError={(e) => {
                     const img = e.currentTarget as HTMLImageElement;
                     if (feature.fallback && !img.src.includes('unsplash')) img.src = feature.fallback;
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
                 <div className="relative z-10 flex flex-col justify-end h-full p-8">
                   <h3 className="text-2xl font-bold mb-2 tracking-tight ts-card-title">{t(`bizRenewable.${feature.key}n`)}</h3>
-                  <p className="text-gray-400 text-sm font-light leading-relaxed">{t(`bizRenewable.${feature.key}d`)}</p>
+                  <p className="text-gray-200 text-sm md:text-[15px] font-light leading-relaxed">{t(`bizRenewable.${feature.key}d`)}</p>
                   <span className="mt-4 inline-flex items-center text-xs text-gray-500 group-hover:text-white transition-colors">
                     {t('common.detail')}
                     <svg className="ml-1 w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" /></svg>
