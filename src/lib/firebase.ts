@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-import { getAuth, signInAnonymously } from 'firebase/auth';
+import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
@@ -17,7 +17,10 @@ const app = initializeApp(firebaseConfig);
 // Anonymous auth for Firestore + Storage write access
 // (P0-C에서 Email/Password Auth로 교체 예정)
 const auth = getAuth(app);
-signInAnonymously(auth).catch(e => console.warn('Anonymous auth failed:', e));
+// 로그인된 사용자가 없을 때만 익명 인증 (관리자 Email/Password 세션 보존)
+onAuthStateChanged(auth, (u) => {
+  if (!u) signInAnonymously(auth).catch((e) => console.warn('Anonymous auth failed:', e));
+});
 
 // Firestore (named DB)
 export const db = getFirestore(app, 'ai-studio-e97c649f-c50c-4cd5-8952-6640d34f2444');
