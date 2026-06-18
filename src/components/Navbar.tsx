@@ -45,7 +45,7 @@ export default function Navbar() {
     },
     {
       name: t('nav.business'),
-      href: '/business/home-appliance',
+      href: '/business',
       dropdown: [
         { name: t('nav.homeAppliance'), href: '/business/home-appliance' },
         { name: t('nav.industrial'), href: '/business/industrial' },
