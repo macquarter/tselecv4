@@ -28,7 +28,7 @@ export default function Certifications() {
       krName: '품질경영시스템',
       year: '2018년 인증 (NTQ-3898)',
       desc: '마이크로 콘트롤러의 개발·제조에 대한 품질경영시스템 인증. 유효기간 2024.03.02~2027.03.01',
-      img: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80',
+      img: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80',
       category: 'cert',
       detail: {
         what: 'ISO 9001은 국제표준화기구(ISO)가 제정한 품질경영시스템(QMS) 국제 표준입니다. 조직이 고객 요구사항과 법적 규제를 충족하는 제품·서비스를 일관되게 제공할 수 있는 능력을 갖추었음을 제3자 인증기관이 검증한 것입니다.',
@@ -47,7 +47,7 @@ export default function Certifications() {
       krName: '환경경영시스템',
       year: '2006년 인증',
       desc: '환경 보호 및 지속 가능한 경영',
-      img: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=800&q=80',
+      img: 'https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?auto=format&fit=crop&w=800&q=80',
       category: 'cert',
       detail: {
         what: 'ISO 14001은 환경경영시스템(EMS) 국제 표준으로, 조직이 환경 영향을 체계적으로 관리하고 지속적으로 환경 성과를 개선할 수 있는 프레임워크를 갖추었음을 인증합니다.',
@@ -66,7 +66,7 @@ export default function Certifications() {
       krName: '유럽연합 안전 인증',
       year: '안전적합인증',
       desc: '유럽연합 기술 표준 준수 확인',
-      img: 'https://images.unsplash.com/photo-1516383740770-fbcc5ccbece0?auto=format&fit=crop&w=800&q=80',
+      img: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80',
       category: 'cert',
       detail: {
         what: 'CE 마킹(Conformité Européenne)은 제품이 유럽연합(EU)의 안전·건강·환경 보호에 관한 기술 규격(Directive)을 충족함을 나타내는 의무 인증 마크입니다. EU 시장에 유통되는 전자제품에 반드시 필요합니다.',
@@ -85,7 +85,7 @@ export default function Certifications() {
       krName: '한국 안전 인증',
       year: '안전인증',
       desc: '한국 전자제품 안전 기준 준수',
-      img: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80',
+      img: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?auto=format&fit=crop&w=800&q=80',
       category: 'cert',
       detail: {
         what: 'KC 인증(Korea Certification)은 대한민국 국가통합인증마크로, 전기·전자제품의 안전성, 전자파 적합성(EMC), 에너지 효율 등에 대한 법적 인증입니다. 국내 시장 유통을 위해 반드시 취득해야 합니다.',
@@ -104,7 +104,7 @@ export default function Certifications() {
       krName: 'KOITA 인증',
       year: '2000년 인증',
       desc: '독자 기술 개발 능력 보유',
-      img: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=80',
+      img: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80',
       category: 'cert',
       detail: {
         what: 'KOITA(한국산업기술진흥협회)에서 인증하는 기업부설연구소는 기업이 독자적인 연구개발(R&D) 조직과 인력, 시설을 갖추고 기술혁신 활동을 수행할 역량이 있음을 공식 인정하는 제도입니다.',
@@ -123,7 +123,7 @@ export default function Certifications() {
       krName: '유해물질 제한 준수',
       year: '유해물질제한',
       desc: '환경 친화 제조 공정',
-      img: 'https://images.unsplash.com/photo-1532601224476-15c79f2f7a51?auto=format&fit=crop&w=800&q=80',
+      img: 'https://images.unsplash.com/photo-1567789884554-0b844b597180?auto=format&fit=crop&w=800&q=80',
       category: 'cert',
       detail: {
         what: 'RoHS(Restriction of Hazardous Substances)는 EU 지침으로, 전기·전자제품에 납(Pb), 수은(Hg), 카드뮴(Cd), 6가 크롬 등 10대 유해물질의 사용을 제한하는 환경 규제입니다.',
@@ -236,6 +236,12 @@ export default function Certifications() {
                       src={cert.img}
                       alt={cert.name}
                       className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700"
+                      loading="lazy"
+                      onError={(e) => {
+                        const im = e.currentTarget as HTMLImageElement;
+                        const fb = 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80';
+                        if (im.src !== fb) im.src = fb;
+                      }}
                     />
                   </div>
                   <div className="mb-auto">
