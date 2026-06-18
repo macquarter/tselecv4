@@ -8,9 +8,10 @@
  *  - 에러 메시지 더 명확하게 표시
  *
  * v22: CMS 편집은 관리자(Firebase Auth) 로그인 시에만 활성화
+ * v23: 관리자 챗봇 학습 패널 추가 (siteContent/chatbot)
  */
 import { useEffect, useState, useCallback } from 'react';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import i18n from '../lib/i18n';
 import { db, auth } from '../lib/firebase';
 import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
@@ -188,6 +189,30 @@ export default function CmsEditOverlay() {
   const handleLogout = useCallback(async () => {
     try { await signOut(auth); } catch (e) { /* noop */ }
   }, []);
+
+  const [chatPanelOpen, setChatPanelOpen] = useState(false);
+  const [chatRaw, setChatRaw] = useState('');
+  const [chatSaving, setChatSaving] = useState(false);
+  const [chatMsg, setChatMsg] = useState('');
+
+  const openChatPanel = useCallback(async () => {
+    setChatMsg('');
+    setChatPanelOpen(true);
+    try {
+      const snap = await getDoc(doc(db, 'siteContent', 'chatbot'));
+      setChatRaw(snap.exists() ? ((snap.data() as any).raw || '') : '');
+    } catch (e) { /* noop */ }
+  }, []);
+
+  const saveChatKnowledge = useCallback(async () => {
+    setChatSaving(true); setChatMsg('');
+    try {
+      await setDoc(doc(db, 'siteContent', 'chatbot'), { raw: chatRaw }, { merge: true });
+      setChatMsg('✓ 저장되었습니다. 챗봇이 새 지식을 학습합니다. (방문자는 새로고침 시 반영)');
+    } catch (e: any) {
+      setChatMsg('저장 실패: ' + (e?.message || String(e)));
+    } finally { setChatSaving(false); }
+  }, [chatRaw]);
 
 
   const handleSave = useCallback(async () => {
@@ -469,10 +494,43 @@ export default function CmsEditOverlay() {
   if (!editMode) {
     if (_editParam && isAdmin) {
       return (
-        <button onClick={handleLogout}
-          style={{ position: 'fixed', top: 5, right: 10, zIndex: 100001, padding: '4px 12px', borderRadius: 6, border: 'none', background: 'rgba(0,0,0,.55)', color: '#fff', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
-          관리자 로그아웃
-        </button>
+        <>
+          <div style={{ position: 'fixed', top: 5, right: 10, zIndex: 100001, display: 'flex', gap: 8 }}>
+            <button onClick={openChatPanel}
+              style={{ padding: '4px 12px', borderRadius: 6, border: 'none', background: 'rgba(14,165,233,.9)', color: '#fff', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
+              🤖 챗봇 학습
+            </button>
+            <button onClick={handleLogout}
+              style={{ padding: '4px 12px', borderRadius: 6, border: 'none', background: 'rgba(0,0,0,.55)', color: '#fff', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
+              관리자 로그아웃
+            </button>
+          </div>
+          {chatPanelOpen && (
+            <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.7)', zIndex: 100002, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
+              onClick={() => setChatPanelOpen(false)}>
+              <div style={{ background: '#0a0a0a', border: '1px solid rgba(255,255,255,.12)', borderRadius: 16, padding: 24, maxWidth: 640, width: '100%', maxHeight: '88vh', overflowY: 'auto', color: '#fff' }}
+                onClick={(e) => e.stopPropagation()}>
+                <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 4 }}>🤖 챗봇 학습 (지식 추가/수정)</div>
+                <div style={{ fontSize: 12, color: '#9ca3af', marginBottom: 14, lineHeight: 1.6 }}>
+                  추가한 지식을 챗봇이 바로 학습합니다. 항목은 <b style={{ color: '#6ee7ff' }}>---</b> 한 줄로 구분하고,
+                  각 항목의 <b>첫 줄 = 키워드(쉼표로 구분)</b>, <b>둘째 줄부터 = 답변</b> 입니다.
+                </div>
+                <textarea value={chatRaw} onChange={(e) => setChatRaw(e.target.value)}
+                  placeholder={'환불, 반품, 교환\n수령 후 7일 이내 환불 가능합니다. 032-329-7600 으로 연락 주세요.\n---\n납기, 배송, 출고\n표준 납기는 발주 후 2~3주입니다.'}
+                  style={{ width: '100%', minHeight: 320, padding: 12, borderRadius: 8, background: '#1a1a1a', border: '1px solid rgba(255,255,255,.15)', color: '#fff', fontSize: 13, lineHeight: 1.6, fontFamily: 'monospace', resize: 'vertical', boxSizing: 'border-box' }} />
+                {chatMsg && <div style={{ marginTop: 10, fontSize: 12, color: chatMsg.startsWith('✓') ? '#34d399' : '#fca5a5' }}>{chatMsg}</div>}
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 16 }}>
+                  <button onClick={() => setChatPanelOpen(false)}
+                    style={{ padding: '10px 18px', borderRadius: 8, border: '1px solid rgba(255,255,255,.15)', background: 'transparent', color: '#aaa', fontSize: 14, cursor: 'pointer' }}>닫기</button>
+                  <button onClick={saveChatKnowledge} disabled={chatSaving}
+                    style={{ padding: '10px 18px', borderRadius: 8, border: 'none', background: chatSaving ? '#666' : '#0ea5e9', color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+                    {chatSaving ? '저장 중…' : '💾 저장 (즉시 학습)'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
       );
     }
     return null;
