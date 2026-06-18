@@ -9,6 +9,8 @@ import {
   updateDoc,
   deleteDoc,
   doc,
+  getDoc,
+  setDoc,
   serverTimestamp,
 } from 'firebase/firestore';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
@@ -86,6 +88,26 @@ export default function AdminDashboard() {
   const [editingProd, setEditingProd] = useState<any | null>(null);
   const [busy, setBusy] = useState(false);
 
+  // ── 챗봇 지속 학습 (Firestore siteContent/chatbot.raw) ──
+  const [chatRaw, setChatRaw] = useState('');
+  const [chatSaving, setChatSaving] = useState(false);
+  const [chatMsg, setChatMsg] = useState('');
+  async function loadChatbot() {
+    try {
+      const snap = await getDoc(doc(db, 'siteContent', 'chatbot'));
+      setChatRaw(snap.exists() ? ((snap.data() as any).raw || '') : '');
+    } catch (e) { /* noop */ }
+  }
+  async function saveChatbot() {
+    setChatSaving(true); setChatMsg('');
+    try {
+      await setDoc(doc(db, 'siteContent', 'chatbot'), { raw: chatRaw }, { merge: true });
+      setChatMsg('✓ 저장 완료 — 챗봇에 즉시 반영됩니다.');
+    } catch (e) { setChatMsg('저장 실패: ' + (e as any)?.message); }
+    finally { setChatSaving(false); }
+  }
+  const learnedCount = chatRaw.split(/\n\s*---\s*\n/).map((b) => b.trim()).filter(Boolean).length;
+
   const tsOf = (x: any) =>
     x?.createdAt?.toDate?.()?.getTime?.() ??
     (typeof x?.createdAt === 'string' ? new Date(x.createdAt).getTime() : 0);
@@ -108,7 +130,7 @@ export default function AdminDashboard() {
       setProdList(snap.docs.map((d) => ({ id: d.id, ...(d.data() as any) })));
     } catch (e) { console.warn('products load fail', e); }
   }
-  useEffect(() => { reloadNews(); reloadProducts(); }, []);
+  useEffect(() => { reloadNews(); reloadProducts(); loadChatbot(); }, []);
 
   async function saveNews(item: any) {
     if (!item.title?.trim()) { alert('제목을 입력하세요.'); return; }
@@ -502,6 +524,30 @@ export default function AdminDashboard() {
 
             {/* KB Browser (사이드 패널) */}
             <div className="border-l border-white/5 bg-[#080808] overflow-y-auto px-6 py-8 hidden lg:block">
+              {/* ── 관리자 챗봇 지속 학습 ── */}
+              <div className="mb-6 rounded-2xl border border-sky-400/20 bg-sky-400/[0.04] p-4">
+                <div className="text-sm font-bold text-sky-300 mb-1">🤖 챗봇 학습 (직접 추가)</div>
+                <p className="text-[11px] text-gray-500 leading-relaxed mb-3">
+                  항목은 <b className="text-sky-300">---</b> 한 줄로 구분. 각 항목 <b>첫 줄=키워드(쉼표 구분)</b>, 다음 줄부터 답변.
+                  저장하면 사이트 챗봇에 <b>즉시 반영</b>됩니다. 현재 {learnedCount}개 학습됨.
+                </p>
+                <textarea
+                  value={chatRaw}
+                  onChange={(e) => { setChatRaw(e.target.value); setChatMsg(''); }}
+                  rows={8}
+                  placeholder={'예시)\n배송, 납기, 리드타임\n표준 리드타임은 영업일 기준 4~6주입니다.\n---\n견적, 가격 문의\n사양서를 보내주시면 1~2일 내 견적을 드립니다.'}
+                  className="w-full bg-black border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-sky-400/40 resize-none leading-relaxed font-mono"
+                />
+                <button
+                  onClick={saveChatbot}
+                  disabled={chatSaving}
+                  className="mt-2 w-full bg-sky-400 text-black text-sm font-semibold py-2 rounded-full hover:bg-sky-300 transition-colors disabled:opacity-50"
+                >
+                  {chatSaving ? '저장 중…' : '💾 저장 (즉시 학습)'}
+                </button>
+                {chatMsg && <p className="mt-2 text-[11px] text-sky-300">{chatMsg}</p>}
+              </div>
+
               <div className="text-xs tracking-widest uppercase text-gray-500 mb-4">
                 Knowledge Base
               </div>
