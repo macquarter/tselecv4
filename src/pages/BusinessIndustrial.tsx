@@ -147,7 +147,7 @@ export default function BusinessIndustrial() {
                   src={_imgMap[feature.image] || feature.image}
                   alt={t(`bizIndustrial.${feature.key}n`)}
                   className="absolute inset-0 w-full h-full object-cover opacity-85 transition-all duration-700 group-hover:scale-105 group-hover:opacity-100"
-                  loading="eager"
+                  loading="eager" fetchPriority="high" decoding="async"
                   onError={(e) => {
                     const img = e.currentTarget as HTMLImageElement;
                     if (feature.fallback && !img.src.includes('unsplash')) img.src = feature.fallback;
