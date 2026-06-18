@@ -6,12 +6,17 @@
  *  - 결과 base64를 900KB 이하로 보장 (Firestore 1MB 한계 안전)
  *  - 큰 이미지(태승전자 풀 로고 등)도 문제없이 저장
  *  - 에러 메시지 더 명확하게 표시
+ *
+ * v22: CMS 편집은 관리자(Firebase Auth) 로그인 시에만 활성화
  */
 import { useEffect, useState, useCallback } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
 import i18n from '../lib/i18n';
-import { db } from '../lib/firebase';
+import { db, auth } from '../lib/firebase';
+import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { useSiteContent } from '../contexts/SiteContentContext';
+
+const ADMIN_EMAIL = 'tsadmin@tselec.co.kr';
 
 function flatten(obj: any, prefix = ''): Record<string, string> {
   const out: Record<string, string> = {};
@@ -148,6 +153,42 @@ export default function CmsEditOverlay() {
   const [imageInfo, setImageInfo] = useState<string>('');
   const [saving, setSaving] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string>('');
+  const [adminUser, setAdminUser] = useState<any>(null);
+  const [authResolved, setAuthResolved] = useState(false);
+  const [loginId, setLoginId] = useState('');
+  const [loginPw, setLoginPw] = useState('');
+  const [loginErr, setLoginErr] = useState('');
+  const [loggingIn, setLoggingIn] = useState(false);
+  const [loginDismissed, setLoginDismissed] = useState(false);
+  const isAdmin = !!adminUser && (adminUser.email || '').toLowerCase() === ADMIN_EMAIL;
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (u: any) => {
+      setAdminUser(u && !u.isAnonymous ? u : null);
+      setAuthResolved(true);
+    });
+    return () => unsub();
+  }, []);
+
+  const handleLogin = useCallback(async () => {
+    setLoginErr('');
+    setLoggingIn(true);
+    try {
+      let id = loginId.trim();
+      if (id && id.indexOf('@') < 0) id = id + '@tselec.co.kr';
+      await signInWithEmailAndPassword(auth, id, loginPw);
+      setLoginPw('');
+    } catch (e: any) {
+      setLoginErr('로그인 실패: 아이디 또는 비밀번호를 확인하세요.');
+    } finally {
+      setLoggingIn(false);
+    }
+  }, [loginId, loginPw]);
+
+  const handleLogout = useCallback(async () => {
+    try { await signOut(auth); } catch (e) { /* noop */ }
+  }, []);
+
 
   const handleSave = useCallback(async () => {
     if (!editMode) return;
@@ -204,6 +245,7 @@ export default function CmsEditOverlay() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('edit') !== '1') return;
+    if (!isAdmin) return;
 
     let textReverse: Record<string, string[]> = {};
     let textReverseLoose: Record<string, string[]> = {};
@@ -377,7 +419,7 @@ export default function CmsEditOverlay() {
 
     const banner = document.createElement('div');
     banner.id = '__cms_edit_banner';
-    banner.textContent = '✏️ CMS 편집 모드 v18 — 텍스트/이미지/로고 클릭 + 자동 리사이즈';
+    banner.textContent = '✏️ CMS 편집 모드 (관리자) — 텍스트/이미지/로고 클릭 + 자동 리사이즈';
     Object.assign(banner.style, {
       position: 'fixed', top: '0', left: '0', right: '0', zIndex: '99999',
       background: 'rgba(56,189,248,.92)', color: '#000', fontSize: '12px',
@@ -393,9 +435,48 @@ export default function CmsEditOverlay() {
       banner.remove();
       document.body.style.paddingTop = '';
     };
-  }, []);
+  }, [isAdmin]);
 
-  if (!editMode) return null;
+  const _editParam = new URLSearchParams(window.location.search).get('edit') === '1';
+
+  if (_editParam && authResolved && !isAdmin && !loginDismissed) {
+    return (
+      <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.82)', zIndex: 100000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
+        onClick={() => setLoginDismissed(true)}>
+        <div style={{ background: '#0a0a0a', border: '1px solid rgba(255,255,255,.12)', borderRadius: 16, padding: 28, maxWidth: 360, width: '100%', color: '#fff' }}
+          onClick={(e) => e.stopPropagation()}>
+          <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 6 }}>관리자 로그인</div>
+          <div style={{ fontSize: 12, color: '#9ca3af', marginBottom: 18 }}>CMS 편집은 관리자만 가능합니다.</div>
+          <input value={loginId} onChange={(e) => setLoginId(e.target.value)} placeholder="아이디 (tsadmin)" autoFocus
+            style={{ width: '100%', padding: 11, marginBottom: 10, borderRadius: 8, background: '#1a1a1a', border: '1px solid rgba(255,255,255,.15)', color: '#fff', fontSize: 14, boxSizing: 'border-box' }} />
+          <input value={loginPw} onChange={(e) => setLoginPw(e.target.value)} type="password" placeholder="비밀번호"
+            onKeyDown={(e) => { if (e.key === 'Enter') handleLogin(); }}
+            style={{ width: '100%', padding: 11, marginBottom: 14, borderRadius: 8, background: '#1a1a1a', border: '1px solid rgba(255,255,255,.15)', color: '#fff', fontSize: 14, boxSizing: 'border-box' }} />
+          {loginErr && <div style={{ color: '#fca5a5', fontSize: 12, marginBottom: 12 }}>{loginErr}</div>}
+          <button onClick={handleLogin} disabled={loggingIn}
+            style={{ width: '100%', padding: 11, borderRadius: 8, border: 'none', background: loggingIn ? '#555' : '#0ea5e9', color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+            {loggingIn ? '로그인 중…' : '로그인'}
+          </button>
+          <button onClick={() => setLoginDismissed(true)}
+            style={{ width: '100%', padding: 9, marginTop: 8, borderRadius: 8, border: '1px solid rgba(255,255,255,.12)', background: 'transparent', color: '#9ca3af', fontSize: 12, cursor: 'pointer' }}>
+            닫기 (편집 안 함)
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!editMode) {
+    if (_editParam && isAdmin) {
+      return (
+        <button onClick={handleLogout}
+          style={{ position: 'fixed', top: 5, right: 10, zIndex: 100001, padding: '4px 12px', borderRadius: 6, border: 'none', background: 'rgba(0,0,0,.55)', color: '#fff', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
+          관리자 로그아웃
+        </button>
+      );
+    }
+    return null;
+  }
 
   const overlayStyle: React.CSSProperties = {
     position: 'fixed', inset: 0, background: 'rgba(0,0,0,.7)',
