@@ -5,7 +5,6 @@ import { Menu, X, ChevronDown } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useText, useImage } from '../contexts/SiteContentContext';
 import LanguageSwitcher from './LanguageSwitcher';
-import BrandLogo from './BrandLogo';
 
 export default function Navbar() {
   const { t } = useTranslation();
@@ -91,7 +90,10 @@ export default function Navbar() {
             {logoImg ? (
               <img src={logoImg} alt={logo1+logo2} className="h-10 w-auto object-contain" />
             ) : (
-              <BrandLogo className="h-9 w-auto" />
+              <div className="flex flex-col leading-[0.85] font-black text-[22px] tracking-[-0.12em] uppercase text-white">
+                <span>{logo1}</span>
+                <span>{logo2}</span>
+              </div>
             )}
           </Link>
 
@@ -196,7 +198,10 @@ export default function Navbar() {
                 {logoImg ? (
                   <img src={logoImg} alt={logo1+logo2} className="h-10 w-auto object-contain" />
                 ) : (
-                  <BrandLogo className="h-9 w-auto" />
+                  <div className="flex flex-col leading-[0.85] font-black text-[22px] tracking-[-0.12em] uppercase text-white">
+                    <span>{logo1}</span>
+                    <span>{logo2}</span>
+                  </div>
                 )}
               </Link>
               <div className="flex items-center gap-2">
