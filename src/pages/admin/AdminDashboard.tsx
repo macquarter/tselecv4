@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
-import { db } from '../../lib/firebase';
+import { auth, db } from '../../lib/firebase';
 import {
   collection,
   getDocs,
@@ -11,6 +11,7 @@ import {
   doc,
   serverTimestamp,
 } from 'firebase/firestore';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import {
   LogOut,
   Plus,
@@ -184,19 +185,24 @@ export default function AdminDashboard() {
     finally { setBusy(false); }
   }
 
+  const [authReady, setAuthReady] = useState(false);
   useEffect(() => {
-    const isAdmin = localStorage.getItem('isAdmin');
-    if (!isAdmin) {
-      navigate('/admin');
-    }
+    const unsub = onAuthStateChanged(auth, (u: any) => {
+      if (!u || (u.email || '').toLowerCase() !== 'tsadmin@tselec.co.kr') {
+        navigate('/admin');
+      } else {
+        setAuthReady(true);
+      }
+    });
+    return () => unsub();
   }, [navigate]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('isAdmin');
+  const handleLogout = async () => {
+    try { await signOut(auth); } catch (e) { /* noop */ }
     navigate('/admin');
   };
 
@@ -263,6 +269,10 @@ export default function AdminDashboard() {
     '조직',
     '기타',
   ];
+
+  if (!authReady) {
+    return <div className="min-h-screen bg-black flex items-center justify-center text-gray-500 text-sm">확인 중…</div>;
+  }
 
   return (
     <div className="min-h-screen bg-black text-white flex">
