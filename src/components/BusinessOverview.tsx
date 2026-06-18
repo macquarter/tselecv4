@@ -34,11 +34,11 @@ export default function BusinessOverview() {
             viewport={{ once: true, margin: '-50px' }}
             transition={{ duration: 0.6, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
           >
-            <img src={c.img} alt={c.tt} className="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-1000 group-hover:scale-105 group-hover:opacity-70" loading="lazy" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-transparent" />
+            <img src={c.img} alt={c.tt} className="absolute inset-0 w-full h-full object-cover opacity-85 transition-all duration-700 group-hover:scale-105 group-hover:opacity-100" loading="lazy" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
             <div className="relative z-10 flex flex-col justify-end h-full p-7">
               <h3 className="text-xl md:text-2xl font-bold tracking-tight text-white ts-card-title">{c.tt}</h3>
-              <p className="text-sm text-gray-300 font-light mt-2 leading-relaxed">{c.dd}</p>
+              <p className="text-sm md:text-[15px] text-gray-100 font-light mt-2 leading-relaxed">{c.dd}</p>
               <span className="mt-4 inline-flex items-center text-xs text-gray-400 group-hover:text-white transition-colors">
                 자세히 보기
                 <svg className="ml-1 w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" /></svg>
