@@ -18,6 +18,31 @@ const STOCK = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit
 
 const features: Feature[] = [
   {
+    key: 'f4',
+    image: '/images/products/temp-controller.jpg',
+    fallback: STOCK('photo-1581094289810-adf5d25690e3'),
+    solutions: [
+      'PT100·열전대(K/J/T 타입) 등 다채널 센서 입력',
+      'PID 오토튜닝 / 다단 프로파일(램프·소크) 제어',
+      '알람·인터록·과열 방지 안전 시퀀스',
+      '데이터 로깅·이력 관리 / RS-485·Modbus 통신',
+    ],
+    boards: ['Main PCB', 'POWER PCB', 'Display (HMI)'],
+  },
+  {
+    key: 'f5',
+    image: '/images/products/smart-iot.jpg',
+    fallback: STOCK('photo-1558494949-ef010cbdcc31'),
+    solutions: [
+      '센서 신호 처리',
+      '디스플레이·HMI 연동',
+      '무선 통신 모듈 연동',
+      '상태 감지 및 알림 로직',
+      '고객 요구사항 기반 커스텀 제어보드 설계',
+    ],
+    boards: ['Main PCB', 'Sensor Module', 'Display (HMI)', 'Wireless Module', 'POWER PCB'],
+  },
+  {
     key: 'f0',
     image: '/images/products/dishwasher.jpg',
     fallback: STOCK('photo-1581622558663-b2e33377dfb2'),
@@ -64,31 +89,6 @@ const features: Feature[] = [
       '네트워크 연동 시설 통합 관제(옵션)',
     ],
     boards: ['Main PCB', 'POWER PCB', 'Display (HMI)', '무선모듈'],
-  },
-  {
-    key: 'f4',
-    image: '/images/products/temp-controller.jpg',
-    fallback: STOCK('photo-1581094289810-adf5d25690e3'),
-    solutions: [
-      'PT100·열전대(K/J/T 타입) 등 다채널 센서 입력',
-      'PID 오토튜닝 / 다단 프로파일(램프·소크) 제어',
-      '알람·인터록·과열 방지 안전 시퀀스',
-      '데이터 로깅·이력 관리 / RS-485·Modbus 통신',
-    ],
-    boards: ['Main PCB', 'POWER PCB', 'Display (HMI)'],
-  },
-  {
-    key: 'f5',
-    image: '/images/products/smart-iot.jpg',
-    fallback: STOCK('photo-1558494949-ef010cbdcc31'),
-    solutions: [
-      '센서 신호 처리',
-      '디스플레이·HMI 연동',
-      '무선 통신 모듈 연동',
-      '상태 감지 및 알림 로직',
-      '고객 요구사항 기반 커스텀 제어보드 설계',
-    ],
-    boards: ['Main PCB', 'Sensor Module', 'Display (HMI)', 'Wireless Module', 'POWER PCB'],
   },
 ];
 
