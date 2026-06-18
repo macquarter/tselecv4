@@ -5,18 +5,6 @@ import Footer from '../components/Footer';
 import ProductNav from '../components/ProductNav';
 import { useImage } from '../contexts/SiteContentContext';
 
-const HMI_CARD = {
-  tag: 'HMI · DISPLAY',
-  lede: '터치 디스플레이 모듈과 UI 펌웨어를 통합 공급. 컨트롤 보드와의 연동까지 한 번에 설계되어, 별도 인터페이스 개발 부담을 줄입니다.',
-  specs: [
-    { k: '디스플레이', v: 'TFT LCD · 정전식 터치 패널' },
-    { k: '사이즈 옵션', v: '요구사양별 사이즈/해상도 대응' },
-    { k: 'UI 펌웨어', v: '메뉴 구성 · 다국어 · 커스텀 그래픽' },
-    { k: '통신', v: 'UART · SPI · I²C (메인 보드 연동)' },
-  ],
-  chips: ['터치 UI', '다국어 메뉴', '커스텀 그래픽', '메인 보드 연동'],
-};
-
 export default function Display() {
   const { t } = useTranslation();
   const _heroImg = useImage('displayPage.hero.img', 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1600&q=80');
@@ -43,8 +31,8 @@ export default function Display() {
 
         <section className="max-w-7xl mx-auto px-6 pb-24">
           <div className="text-center mb-10 md:mb-14">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white leading-tight">HMI 솔루션 라인업 상세</h2>
-            <p className="text-gray-400 font-light mt-4 max-w-2xl mx-auto leading-relaxed">{HMI_CARD.lede}</p>
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white leading-tight">{t('displayPage.hmiDetailTitle')}</h2>
+            <p className="text-gray-400 font-light mt-4 max-w-2xl mx-auto leading-relaxed">{t('displayPage.hmiLede')}</p>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-14 items-center">
@@ -66,9 +54,9 @@ export default function Display() {
               viewport={{ once: true, margin: '300px 0px' }}
               transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             >
-              <div className="text-[11px] font-semibold tracking-[0.16em] uppercase text-gray-500 mb-5">{HMI_CARD.tag}</div>
+              <div className="text-[11px] font-semibold tracking-[0.16em] uppercase text-gray-500 mb-5">{t('displayPage.hmiTag')}</div>
               <ul className="divide-y divide-white/10 border-t border-white/10 mb-8">
-                {HMI_CARD.specs.map((s, si) => (
+                {(t('displayPage.hmiSpecs', { returnObjects: true }) as {k:string;v:string}[]).map((s, si) => (
                   <li key={si} className="flex items-start justify-between gap-4 py-4 text-base">
                     <span className="text-gray-400 shrink-0">{s.k}</span>
                     <span className="text-white text-right font-medium">{s.v}</span>
@@ -76,7 +64,7 @@ export default function Display() {
                 ))}
               </ul>
               <div className="flex flex-wrap gap-2">
-                {HMI_CARD.chips.map((c, ci) => (
+                {(t('displayPage.hmiChips', { returnObjects: true }) as string[]).map((c, ci) => (
                   <span key={ci} className="text-xs px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-gray-300">{c}</span>
                 ))}
               </div>
