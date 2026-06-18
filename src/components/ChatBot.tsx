@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { MessageCircle, X, Send, Bot, User, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { collection, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
 interface Message {
@@ -547,9 +547,13 @@ export default function ChatBot() {
   }, [messages]);
 
   useEffect(() => {
-    getDoc(doc(db, 'siteContent', 'chatbot'))
-      .then(snap => { if (snap.exists()) DYNAMIC_KB = parseChatbotKnowledge((snap.data() as any).raw || ''); })
-      .catch(() => { /* noop */ });
+    // 실시간 구독: 관리자가 학습 내용을 저장하면 자동 반영
+    const unsub = onSnapshot(
+      doc(db, 'siteContent', 'chatbot'),
+      (snap) => { DYNAMIC_KB = snap.exists() ? parseChatbotKnowledge((snap.data() as any).raw || '') : []; },
+      () => { /* noop */ }
+    );
+    return () => unsub();
   }, []);
 
   const addBotMessage = useCallback((text: string) => {
