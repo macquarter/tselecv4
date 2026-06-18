@@ -42,8 +42,8 @@ export default function Display() {
         </section>
 
         <section className="max-w-7xl mx-auto px-6 pb-24">
-          <div className="grid lg:grid-cols-[3fr_7fr] gap-8 lg:gap-10 items-stretch">
-            {/* LEFT: HMI Solutions 사진 (3 : 스펙 7, 높이 매칭) */}
+          <div className="grid lg:grid-cols-[4fr_6fr] gap-8 lg:gap-10 items-stretch">
+            {/* LEFT: HMI Solutions 사진 (사진 4 : 스펙 6, 높이 매칭) */}
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -65,8 +65,10 @@ export default function Display() {
             >
               <div className="absolute -top-32 -right-32 w-72 h-72 rounded-full bg-gradient-to-br from-blue-500/15 to-blue-700/5 blur-3xl pointer-events-none" />
               <div className="relative z-10">
-                <span className="inline-block px-4 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs tracking-widest text-gray-400 uppercase mb-5">HMI Module</span>
-                <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4 ts-card-title">HMI 솔루션 라인업 상세</h2>
+                <div className="mb-5">
+                  <span className="inline-block px-4 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs tracking-widest text-gray-400 uppercase">HMI Module</span>
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4 ts-card-title leading-tight">HMI 솔루션 라인업 상세</h2>
                 <p className="text-sm md:text-base text-gray-400 font-light leading-relaxed mb-8">{HMI_CARD.lede}</p>
 
                 <div className="text-[11px] font-semibold tracking-[0.12em] uppercase text-gray-500 mb-3">{HMI_CARD.tag}</div>
