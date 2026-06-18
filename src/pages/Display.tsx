@@ -42,50 +42,43 @@ export default function Display() {
         </section>
 
         <section className="max-w-7xl mx-auto px-6 pb-24">
-          <div className="grid lg:grid-cols-[4fr_6fr] gap-8 lg:gap-10 items-stretch">
-            {/* LEFT: HMI Solutions 사진 (사진 4 : 스펙 6, 높이 매칭) */}
+          <div className="text-center mb-10 md:mb-14">
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white leading-tight">HMI 솔루션 라인업 상세</h2>
+            <p className="text-gray-400 font-light mt-4 max-w-2xl mx-auto leading-relaxed">{HMI_CARD.lede}</p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-14 items-center">
+            {/* LEFT: 사진 (라운드) */}
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
+              viewport={{ once: true, margin: '300px 0px' }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="relative rounded-[2rem] overflow-hidden border border-white/10 bg-[#0a0a0a] min-h-[320px] lg:min-h-0"
+              className="relative rounded-[2rem] overflow-hidden border border-white/10 bg-[#0a0a0a] aspect-[4/3]"
             >
-              <img src={_heroImg} alt={t('displayPage.t2')} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+              <img src={_heroImg} alt={t('displayPage.t2')} className="absolute inset-0 w-full h-full object-cover" loading="eager" decoding="async" />
             </motion.div>
 
-            {/* RIGHT: HMI Module */}
+            {/* RIGHT: 사양 (라운드 박스 없음, 배지 없음) */}
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
+              viewport={{ once: true, margin: '300px 0px' }}
               transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="relative rounded-[2rem] bg-[#0a0a0a] border border-white/5 overflow-hidden ts-card p-8 md:p-10"
             >
-              <div className="absolute -top-32 -right-32 w-72 h-72 rounded-full bg-gradient-to-br from-blue-500/15 to-blue-700/5 blur-3xl pointer-events-none" />
-              <div className="relative z-10">
-                <div className="mb-5">
-                  <span className="inline-block px-4 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs tracking-widest text-gray-400 uppercase">HMI Module</span>
-                </div>
-                <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4 ts-card-title leading-tight">HMI 솔루션 라인업 상세</h2>
-                <p className="text-sm md:text-base text-gray-400 font-light leading-relaxed mb-8">{HMI_CARD.lede}</p>
-
-                <div className="text-[11px] font-semibold tracking-[0.12em] uppercase text-gray-500 mb-3">{HMI_CARD.tag}</div>
-                <ul className="divide-y divide-white/5 border-t border-white/5 mb-7">
-                  {HMI_CARD.specs.map((s, si) => (
-                    <li key={si} className="flex items-start justify-between gap-4 py-3 text-sm">
-                      <span className="text-gray-500 shrink-0">{s.k}</span>
-                      <span className="text-gray-200 text-right font-medium">{s.v}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="flex flex-wrap gap-2">
-                  {HMI_CARD.chips.map((c, ci) => (
-                    <span key={ci} className="text-xs px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-gray-300">{c}</span>
-                  ))}
-                </div>
+              <div className="text-[11px] font-semibold tracking-[0.16em] uppercase text-gray-500 mb-5">{HMI_CARD.tag}</div>
+              <ul className="divide-y divide-white/10 border-t border-white/10 mb-8">
+                {HMI_CARD.specs.map((s, si) => (
+                  <li key={si} className="flex items-start justify-between gap-4 py-4 text-base">
+                    <span className="text-gray-400 shrink-0">{s.k}</span>
+                    <span className="text-white text-right font-medium">{s.v}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="flex flex-wrap gap-2">
+                {HMI_CARD.chips.map((c, ci) => (
+                  <span key={ci} className="text-xs px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-gray-300">{c}</span>
+                ))}
               </div>
             </motion.div>
           </div>
