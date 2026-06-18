@@ -4,10 +4,10 @@ import { useImage } from '../contexts/SiteContentContext';
 const PRE = 'https://firebasestorage.googleapis.com/v0/b/gen-lang-client-0276589179.firebasestorage.app/o/cms%2F';
 
 export default function BusinessOverview() {
-  const imgHome = useImage('biz.home.f0.img', PRE + 'biz.home.f0.img.jpg?alt=media&token=c7d508dd-a5ef-4b7e-89f0-756cd022a1c5');
-  const imgInd = useImage('biz.ind.f0.img', PRE + 'biz.ind.f0.img.jpg?alt=media&token=3c13f1f9-5052-4a70-9987-3cdb8a9989f7');
-  const imgMed = useImage('biz.med.f0.img', PRE + 'biz.med.f0.img.jpg?alt=media&token=e62cb91c-b3d9-4190-95e4-993068bd036d');
-  const imgRen = useImage('biz.ren.f0.img', PRE + 'biz.ren.f0.img.jpg?alt=media&token=9d13e9cd-e44a-478f-b6d1-d5dbfc3ee0a9');
+  const imgHome = useImage('biz.home.f0.img', PRE + 'biz.home.f0.img.jpg?alt=media&token=28a9e697-943a-47aa-81b4-6c8460b46d16');
+  const imgInd = useImage('biz.ind.f0.img', PRE + 'biz.ind.f0.img.jpg?alt=media&token=d92ec6c2-65bd-4db5-9a5f-1a689300d07d');
+  const imgMed = useImage('biz.med.f0.img', PRE + 'biz.med.f0.img.jpg?alt=media&token=96c7fec5-2b44-436b-8323-9a7e2a929049');
+  const imgRen = useImage('biz.ren.f0.img', PRE + 'biz.ren.f0.img.jpg?alt=media&token=5877c91c-a038-4f5b-b85b-fa69fa89f0be');
 
   const areas = [
     { tt: '가전', dd: '냉장고·정수기·레인지후드·공기청정기 제어보드.', link: '/business/home-appliance', img: imgHome },
@@ -34,7 +34,7 @@ export default function BusinessOverview() {
             viewport={{ once: true, margin: '300px 0px' }}
             transition={{ duration: 0.6, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
           >
-            <img src={c.img} alt={c.tt} className="absolute inset-0 w-full h-full object-cover opacity-85 transition-all duration-700 group-hover:scale-105 group-hover:opacity-100" loading="eager" />
+            <img src={c.img} alt={c.tt} className="absolute inset-0 w-full h-full object-cover opacity-85 transition-all duration-700 group-hover:scale-105 group-hover:opacity-100" loading="eager" fetchPriority="high" decoding="async" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
             <div className="relative z-10 flex flex-col justify-end h-full p-7">
               <h3 className="text-xl md:text-2xl font-bold tracking-tight text-white ts-card-title">{c.tt}</h3>
