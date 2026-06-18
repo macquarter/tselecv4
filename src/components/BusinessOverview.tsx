@@ -31,10 +31,10 @@ export default function BusinessOverview() {
             className="ts-card group relative rounded-[2rem] overflow-hidden border border-white/5 aspect-[4/5] block"
             initial={{ opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
+            viewport={{ once: true, margin: '300px 0px' }}
             transition={{ duration: 0.6, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
           >
-            <img src={c.img} alt={c.tt} className="absolute inset-0 w-full h-full object-cover opacity-85 transition-all duration-700 group-hover:scale-105 group-hover:opacity-100" loading="lazy" />
+            <img src={c.img} alt={c.tt} className="absolute inset-0 w-full h-full object-cover opacity-85 transition-all duration-700 group-hover:scale-105 group-hover:opacity-100" loading="eager" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
             <div className="relative z-10 flex flex-col justify-end h-full p-7">
               <h3 className="text-xl md:text-2xl font-bold tracking-tight text-white ts-card-title">{c.tt}</h3>
