@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useText, useImage } from '../contexts/SiteContentContext';
+import tsLogo from '../assets/tsLogo';
 import LanguageSwitcher from './LanguageSwitcher';
 
 export default function Navbar() {
@@ -16,7 +17,9 @@ export default function Navbar() {
 
   const logo1 = useText('logo-1', 'TSE');
   const logo2 = useText('logo-2', 'LEC');
-  const logoImg = useImage('logo-img', '');
+  const cmsLogo = useImage('logo-img', '');
+  // 실제 업로드(Storage http URL)일 때만 CMS 값 사용, 그 외엔 번들된 투명 로고(흰 배경 제거본)
+  const logoSrc = /^https?:\/\//.test(cmsLogo) ? cmsLogo : tsLogo;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -86,14 +89,7 @@ export default function Navbar() {
       >
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2" data-cms-img-key="logo-img">
-            {logoImg ? (
-              <img src={logoImg} alt={logo1+logo2} className="h-10 w-auto object-contain" />
-            ) : (
-              <div className="flex flex-col leading-[0.85] font-black text-[22px] tracking-[-0.12em] uppercase text-white">
-                <span>{logo1}</span>
-                <span>{logo2}</span>
-              </div>
-            )}
+            <img src={logoSrc} alt={logo1+logo2} className="h-10 w-auto object-contain" />
           </Link>
 
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300 tracking-wide">
@@ -194,14 +190,7 @@ export default function Navbar() {
             {/* Header */}
             <div className="flex items-center justify-between px-6 h-16 shrink-0">
               <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2" data-cms-img-key="logo-img">
-                {logoImg ? (
-                  <img src={logoImg} alt={logo1+logo2} className="h-10 w-auto object-contain" />
-                ) : (
-                  <div className="flex flex-col leading-[0.85] font-black text-[22px] tracking-[-0.12em] uppercase text-white">
-                    <span>{logo1}</span>
-                    <span>{logo2}</span>
-                  </div>
-                )}
+                <img src={logoSrc} alt={logo1+logo2} className="h-10 w-auto object-contain" />
               </Link>
               <div className="flex items-center gap-2">
                 <LanguageSwitcher />
