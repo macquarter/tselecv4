@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
-import { useText, useImage } from '../contexts/SiteContentContext';
 import LanguageSwitcher from './LanguageSwitcher';
+import BrandLogo from './BrandLogo';
 
 export default function Navbar() {
   const { t } = useTranslation();
@@ -14,9 +14,6 @@ export default function Navbar() {
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const location = useLocation();
 
-  const logo1 = useText('logo-1', 'TSE');
-  const logo2 = useText('logo-2', 'LEC');
-  const logoImg = useImage('logo-img', '');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -86,14 +83,8 @@ export default function Navbar() {
       >
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2" data-cms-img-key="logo-img">
-            {logoImg ? (
-              <img src={logoImg} alt={logo1+logo2} className="h-10 w-auto object-contain" />
-            ) : (
-              <div className="flex flex-col leading-[0.85] font-black text-[22px] tracking-[-0.12em] uppercase text-white">
-                <span>{logo1}</span>
-                <span>{logo2}</span>
-              </div>
-            )}
+            {/* 투명 벡터 로고 — CMS 흰배경 래스터 의존 제거 (흰 박스 영구 해결) */}
+            <BrandLogo className="h-9 w-auto" />
           </Link>
 
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300 tracking-wide">
@@ -194,14 +185,7 @@ export default function Navbar() {
             {/* Header */}
             <div className="flex items-center justify-between px-6 h-16 shrink-0">
               <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2" data-cms-img-key="logo-img">
-                {logoImg ? (
-                  <img src={logoImg} alt={logo1+logo2} className="h-10 w-auto object-contain" />
-                ) : (
-                  <div className="flex flex-col leading-[0.85] font-black text-[22px] tracking-[-0.12em] uppercase text-white">
-                    <span>{logo1}</span>
-                    <span>{logo2}</span>
-                  </div>
-                )}
+                <BrandLogo className="h-9 w-auto" />
               </Link>
               <div className="flex items-center gap-2">
                 <LanguageSwitcher />
