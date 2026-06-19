@@ -1,8 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
-import app, { auth, db } from '../../lib/firebase';
-import { getFunctions, httpsCallable } from 'firebase/functions';
+import { auth, db } from '../../lib/firebase';
 import {
   collection,
   getDocs,
@@ -143,25 +142,61 @@ export default function AdminDashboard() {
     ? chatRaw.split(/\n\s*---\s*\n/).map((b) => b.trim()).filter(Boolean).length
     : chatEntries.filter((e) => e.keywords.trim() || e.answer.trim()).length;
 
-  // ── AI 자동 고도화 (Gemini Cloud Function: enhanceAnswer) ──
+  // ── AI 자동 고도화 (브라우저에서 Gemini REST 직접 호출 — 서버/배포 불필요) ──
+  const GEMINI_MODEL = 'gemini-2.0-flash';
+  const ENHANCE_SYSTEM_PROMPT = [
+    '너는 태승전자(주)의 고객 상담 챗봇 답변을 다듬는 전문 에디터다.',
+    '아래 규칙을 반드시 지켜라:',
+    '1) 초안에 없는 수치(가격·납기·MOQ·수율·치수 등)를 절대 지어내지 마라. 초안에 있는 사실만 사용한다.',
+    '2) 정중한 한국어 비즈니스 상담 톤(~합니다 체)으로 쓴다.',
+    '3) 내용이 길면 핵심을 2~4개 항목으로 구조화하되, 불필요하게 늘리지 말고 간결하게.',
+    '4) 필요 시 마지막에 영업팀 연락처(032-329-7600) 안내를 한 번만 덧붙일 수 있다.',
+    '5) 답변 본문만 출력한다. 머리말/설명/마크다운 제목 없이 바로 답변 텍스트만.',
+  ].join('\n');
+
   const [enhancingIdx, setEnhancingIdx] = useState<number | null>(null);
+  const [geminiKey, setGeminiKey] = useState<string>(() => {
+    try { return localStorage.getItem('ts_gemini_key') || ''; } catch { return ''; }
+  });
+  const [keyOpen, setKeyOpen] = useState(false);
+  function saveGeminiKey(k: string) {
+    setGeminiKey(k);
+    try { k ? localStorage.setItem('ts_gemini_key', k) : localStorage.removeItem('ts_gemini_key'); } catch {}
+  }
   async function enhanceEntry(i: number) {
     const entry = chatEntries[i];
     if (!entry || !entry.answer.trim()) { setChatMsg('고도화할 답변 초안을 먼저 입력하세요.'); return; }
+    const key = geminiKey.trim();
+    if (!key) { setKeyOpen(true); setChatMsg('먼저 아래 “AI 설정”에서 Gemini API 키를 입력하세요.'); return; }
     setEnhancingIdx(i); setChatMsg('');
     try {
-      const fns = getFunctions(app, 'asia-northeast3');
-      const call = httpsCallable(fns, 'enhanceAnswer');
-      const res: any = await call({ keywords: entry.keywords, draft: entry.answer });
-      const improved = res?.data?.answer;
-      if (improved && typeof improved === 'string') {
-        updateEntry(i, { answer: improved.trim() });
+      const userPrompt = `[질문 키워드] ${entry.keywords || '(미지정)'}\n[답변 초안]\n${entry.answer}\n\n위 초안을 규칙에 따라 전문 상담 톤으로 재작성한 답변 본문만 출력해줘.`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(key)}`;
+      const resp = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: ENHANCE_SYSTEM_PROMPT }] },
+          contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
+          generationConfig: { temperature: 0.4, topP: 0.9, maxOutputTokens: 1024 },
+        }),
+      });
+      if (!resp.ok) {
+        const t = await resp.text().catch(() => '');
+        if (resp.status === 400 && /API key not valid/i.test(t)) throw new Error('API 키가 올바르지 않습니다. AI 설정에서 키를 확인하세요.');
+        throw new Error(`Gemini ${resp.status} ${t.slice(0, 140)}`);
+      }
+      const json: any = await resp.json();
+      const improved = (json?.candidates?.[0]?.content?.parts || [])
+        .map((pt: any) => pt?.text || '').join('').trim();
+      if (improved) {
+        updateEntry(i, { answer: improved });
         setChatMsg('✨ AI 고도화 완료 — 내용을 검토한 뒤 저장하세요.');
       } else {
         setChatMsg('AI 응답이 비어 있습니다. 다시 시도해 주세요.');
       }
     } catch (e: any) {
-      setChatMsg('AI 고도화 실패: ' + (e?.message || 'enhanceAnswer 함수가 아직 배포되지 않았을 수 있습니다.'));
+      setChatMsg('AI 고도화 실패: ' + (e?.message || '네트워크 오류'));
     } finally { setEnhancingIdx(null); }
   }
 
@@ -726,8 +761,37 @@ export default function AdminDashboard() {
                 </button>
                 {chatMsg && <p className="text-sm text-sky-300">{chatMsg}</p>}
               </div>
+              {/* AI 설정 — Gemini 키 (이 브라우저에만 저장, 서버/코드 미전송) */}
+              <div className="mt-6 rounded-xl border border-white/10 bg-white/[0.02] p-4">
+                <button
+                  onClick={() => setKeyOpen(o => !o)}
+                  className="w-full flex items-center justify-between text-left"
+                >
+                  <span className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+                    <Sparkles size={13} className="text-sky-300" /> AI 설정 · Gemini API 키
+                  </span>
+                  <span className="text-[11px] text-gray-500">
+                    {geminiKey ? '● 키 저장됨' : '○ 미설정'} · {keyOpen ? '접기' : '펼치기'}
+                  </span>
+                </button>
+                {keyOpen && (
+                  <div className="mt-3 space-y-2">
+                    <input
+                      type="password"
+                      value={geminiKey}
+                      onChange={(e) => saveGeminiKey(e.target.value)}
+                      placeholder="AIza... (Google AI Studio에서 발급한 Gemini API 키)"
+                      className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-sky-400/40 font-mono"
+                    />
+                    <p className="text-[11px] text-gray-500 leading-relaxed">
+                      키는 <b className="text-gray-400">이 브라우저에만</b> 저장됩니다(서버·코드에 올라가지 않음). 입력 즉시 저장되어 다음부터 ‘AI 고도화’가 바로 동작합니다.
+                      발급: aistudio.google.com/apikey
+                    </p>
+                  </div>
+                )}
+              </div>
               <p className="mt-3 text-[11px] text-gray-600 leading-relaxed">
-                ✨ <b className="text-gray-400">AI 고도화</b>: 초안 답변을 전문가 톤·구조로 자동으로 다듬어 줍니다. (Gemini 연동 함수 배포 후 동작)
+                ✨ <b className="text-gray-400">AI 고도화</b>: 초안 답변을 전문가 톤·구조로 자동으로 다듬어 줍니다.
               </p>
             </div>
           </div>
