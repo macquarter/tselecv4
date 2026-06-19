@@ -89,7 +89,7 @@ export default function Navbar() {
       >
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2" data-cms-img-key="logo-img">
-            <img src={logoSrc} alt={logo1+logo2} className="h-10 w-auto object-contain" />
+            <img src={logoSrc} alt={logo1+logo2} className="h-12 w-auto object-contain" />
           </Link>
 
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300 tracking-wide">
@@ -190,7 +190,7 @@ export default function Navbar() {
             {/* Header */}
             <div className="flex items-center justify-between px-6 h-16 shrink-0">
               <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2" data-cms-img-key="logo-img">
-                <img src={logoSrc} alt={logo1+logo2} className="h-10 w-auto object-contain" />
+                <img src={logoSrc} alt={logo1+logo2} className="h-12 w-auto object-contain" />
               </Link>
               <div className="flex items-center gap-2">
                 <LanguageSwitcher />
