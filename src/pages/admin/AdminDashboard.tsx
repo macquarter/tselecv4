@@ -89,24 +89,58 @@ export default function AdminDashboard() {
   const [busy, setBusy] = useState(false);
 
   // ── 챗봇 지속 학습 (Firestore siteContent/chatbot.raw) ──
+  // 저장 포맷(raw)은 챗봇 파서와 동일: 항목은 \n---\n 로 구분, 첫 줄=키워드(쉼표), 나머지=답변
+  type ChatEntry = { keywords: string; answer: string };
+  const parseChatEntries = (raw: string): ChatEntry[] =>
+    raw.split(/\n\s*---\s*\n/).map((b) => b.trim()).filter(Boolean).map((block) => {
+      const lines = block.split('\n');
+      return { keywords: (lines[0] || '').trim(), answer: lines.slice(1).join('\n').trim() };
+    });
+  const serializeChatEntries = (entries: ChatEntry[]): string =>
+    entries
+      .filter((e) => e.keywords.trim() || e.answer.trim())
+      .map((e) => `${e.keywords.trim()}\n${e.answer.trim()}`)
+      .join('\n---\n');
+
+  const [chatEntries, setChatEntries] = useState<ChatEntry[]>([]);
+  const [chatRawMode, setChatRawMode] = useState(false);
   const [chatRaw, setChatRaw] = useState('');
   const [chatSaving, setChatSaving] = useState(false);
   const [chatMsg, setChatMsg] = useState('');
+
   async function loadChatbot() {
     try {
       const snap = await getDoc(doc(db, 'siteContent', 'chatbot'));
-      setChatRaw(snap.exists() ? ((snap.data() as any).raw || '') : '');
+      const raw = snap.exists() ? ((snap.data() as any).raw || '') : '';
+      setChatRaw(raw);
+      setChatEntries(parseChatEntries(raw));
     } catch (e) { /* noop */ }
   }
   async function saveChatbot() {
     setChatSaving(true); setChatMsg('');
     try {
-      await setDoc(doc(db, 'siteContent', 'chatbot'), { raw: chatRaw }, { merge: true });
+      // 구조화 모드면 entries → raw 직렬화, raw 모드면 chatRaw 그대로
+      const raw = chatRawMode ? chatRaw : serializeChatEntries(chatEntries);
+      await setDoc(doc(db, 'siteContent', 'chatbot'), { raw }, { merge: true });
+      setChatRaw(raw);
+      if (!chatRawMode) setChatEntries(parseChatEntries(raw));
       setChatMsg('✓ 저장 완료 — 챗봇에 즉시 반영됩니다.');
     } catch (e) { setChatMsg('저장 실패: ' + (e as any)?.message); }
     finally { setChatSaving(false); }
   }
-  const learnedCount = chatRaw.split(/\n\s*---\s*\n/).map((b) => b.trim()).filter(Boolean).length;
+  // 엔트리 조작 헬퍼
+  const updateEntry = (i: number, patch: Partial<ChatEntry>) =>
+    setChatEntries((prev) => prev.map((e, idx) => (idx === i ? { ...e, ...patch } : e)));
+  const addEntry = () => setChatEntries((prev) => [...prev, { keywords: '', answer: '' }]);
+  const removeEntry = (i: number) => setChatEntries((prev) => prev.filter((_, idx) => idx !== i));
+  // 모드 전환 시 동기화
+  const toggleRawMode = () => {
+    if (!chatRawMode) { setChatRaw(serializeChatEntries(chatEntries)); setChatRawMode(true); }
+    else { setChatEntries(parseChatEntries(chatRaw)); setChatRawMode(false); }
+  };
+  const learnedCount = chatRawMode
+    ? chatRaw.split(/\n\s*---\s*\n/).map((b) => b.trim()).filter(Boolean).length
+    : chatEntries.filter((e) => e.keywords.trim() || e.answer.trim()).length;
 
   const tsOf = (x: any) =>
     x?.createdAt?.toDate?.()?.getTime?.() ??
@@ -524,24 +558,69 @@ export default function AdminDashboard() {
 
             {/* KB Browser (사이드 패널) */}
             <div className="border-l border-white/5 bg-[#080808] overflow-y-auto px-6 py-8 hidden lg:block">
-              {/* ── 관리자 챗봇 지속 학습 ── */}
+              {/* ── 관리자 챗봇 지속 학습 (구조화 Q&A) ── */}
               <div className="mb-6 rounded-2xl border border-sky-400/20 bg-sky-400/[0.04] p-4">
-                <div className="text-sm font-bold text-sky-300 mb-1">🤖 챗봇 학습 (직접 추가)</div>
+                <div className="flex items-center justify-between mb-1">
+                  <div className="text-sm font-bold text-sky-300">🤖 챗봇 학습 (Q&A 추가)</div>
+                  <button
+                    onClick={toggleRawMode}
+                    className="text-[10px] px-2 py-1 rounded-full border border-sky-400/30 text-sky-300 hover:bg-sky-400/10 transition-colors"
+                  >
+                    {chatRawMode ? '✏️ 카드 모드' : '{ } 텍스트 모드'}
+                  </button>
+                </div>
                 <p className="text-[11px] text-gray-500 leading-relaxed mb-3">
-                  항목은 <b className="text-sky-300">---</b> 한 줄로 구분. 각 항목 <b>첫 줄=키워드(쉼표 구분)</b>, 다음 줄부터 답변.
-                  저장하면 사이트 챗봇에 <b>즉시 반영</b>됩니다. 현재 {learnedCount}개 학습됨.
+                  질문 키워드와 답변을 입력하면 챗봇이 학습합니다. 저장 시 사이트 챗봇에 <b className="text-sky-300">즉시 반영</b>. 현재 <b className="text-sky-300">{learnedCount}</b>개 학습됨.
                 </p>
-                <textarea
-                  value={chatRaw}
-                  onChange={(e) => { setChatRaw(e.target.value); setChatMsg(''); }}
-                  rows={8}
-                  placeholder={'예시)\n배송, 납기, 리드타임\n표준 리드타임은 영업일 기준 4~6주입니다.\n---\n견적, 가격 문의\n사양서를 보내주시면 1~2일 내 견적을 드립니다.'}
-                  className="w-full bg-black border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-sky-400/40 resize-none leading-relaxed font-mono"
-                />
+
+                {!chatRawMode ? (
+                  <div className="space-y-3 max-h-[46vh] overflow-y-auto pr-1">
+                    {chatEntries.length === 0 && (
+                      <p className="text-[11px] text-gray-600 py-2">아직 추가된 항목이 없습니다. 아래 “＋ 항목 추가”로 시작하세요.</p>
+                    )}
+                    {chatEntries.map((entry, i) => (
+                      <div key={i} className="rounded-xl border border-white/10 bg-black/60 p-3">
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-[10px] font-semibold text-sky-300/80">#{i + 1}</span>
+                          <button
+                            onClick={() => { removeEntry(i); setChatMsg(''); }}
+                            className="text-[10px] text-red-400/80 hover:text-red-300"
+                          >🗑 삭제</button>
+                        </div>
+                        <input
+                          value={entry.keywords}
+                          onChange={(e) => { updateEntry(i, { keywords: e.target.value }); setChatMsg(''); }}
+                          placeholder="키워드 (쉼표로 구분) — 예: 납기, 리드타임, 배송"
+                          className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg px-2.5 py-2 text-[11px] text-white placeholder-gray-600 focus:outline-none focus:border-sky-400/40 mb-1.5"
+                        />
+                        <textarea
+                          value={entry.answer}
+                          onChange={(e) => { updateEntry(i, { answer: e.target.value }); setChatMsg(''); }}
+                          rows={3}
+                          placeholder="답변 — 예: 표준 리드타임은 영업일 기준 4~6주입니다."
+                          className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg px-2.5 py-2 text-[11px] text-white placeholder-gray-600 focus:outline-none focus:border-sky-400/40 resize-none leading-relaxed"
+                        />
+                      </div>
+                    ))}
+                    <button
+                      onClick={() => { addEntry(); setChatMsg(''); }}
+                      className="w-full border border-dashed border-sky-400/30 text-sky-300 text-xs py-2 rounded-xl hover:bg-sky-400/10 transition-colors"
+                    >＋ 항목 추가</button>
+                  </div>
+                ) : (
+                  <textarea
+                    value={chatRaw}
+                    onChange={(e) => { setChatRaw(e.target.value); setChatMsg(''); }}
+                    rows={10}
+                    placeholder={'배송, 납기, 리드타임\n표준 리드타임은 영업일 기준 4~6주입니다.\n---\n견적, 가격 문의\n사양서를 보내주시면 1~2일 내 견적을 드립니다.'}
+                    className="w-full bg-black border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-sky-400/40 resize-none leading-relaxed font-mono"
+                  />
+                )}
+
                 <button
                   onClick={saveChatbot}
                   disabled={chatSaving}
-                  className="mt-2 w-full bg-sky-400 text-black text-sm font-semibold py-2 rounded-full hover:bg-sky-300 transition-colors disabled:opacity-50"
+                  className="mt-3 w-full bg-sky-400 text-black text-sm font-semibold py-2 rounded-full hover:bg-sky-300 transition-colors disabled:opacity-50"
                 >
                   {chatSaving ? '저장 중…' : '💾 저장 (즉시 학습)'}
                 </button>
