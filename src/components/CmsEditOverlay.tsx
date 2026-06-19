@@ -63,14 +63,14 @@ async function processImageFile(file: File): Promise<string> {
     reader.onload = () => {
       const img = new Image();
       img.onload = () => {
-        // 시작: 원본 크기, 품질 0.9
+        // 투명도 보존: PNG/WEBP/투명 가능 포맷은 흰 배경을 칠하지 않고 PNG로 인코딩
+        const hasAlpha = file.type === 'image/png' || file.type === 'image/webp' || file.type === 'image/gif';
         let maxDim = 1600;
         let quality = 0.9;
         let result = '';
 
-        const tryEncode = (): boolean => {
+        const encode = (): void => {
           let { width, height } = img;
-          // 비율 유지하며 maxDim에 맞춤
           if (width > height && width > maxDim) {
             height = Math.round(height * maxDim / width);
             width = maxDim;
@@ -82,50 +82,42 @@ async function processImageFile(file: File): Promise<string> {
           canvas.width = width;
           canvas.height = height;
           const ctx = canvas.getContext('2d');
-          if (!ctx) return false;
-          // 투명 PNG → 흰 배경 (JPEG는 alpha 미지원)
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(0, 0, width, height);
-          ctx.drawImage(img, 0, 0, width, height);
-          // PNG 원본 알파가 있으면 PNG로, 없으면 JPEG로
-          const hasAlpha = file.type === 'image/png' || file.type === 'image/webp';
-          result = hasAlpha
-            ? canvas.toDataURL('image/png')
-            : canvas.toDataURL('image/jpeg', quality);
-          return true;
+          if (!ctx) throw new Error('canvas context 실패');
+          if (hasAlpha) {
+            // 투명 배경 유지 (흰 배경 칠하지 않음)
+            ctx.clearRect(0, 0, width, height);
+            ctx.drawImage(img, 0, 0, width, height);
+            result = canvas.toDataURL('image/png');
+          } else {
+            // 불투명 이미지: JPEG (용량 절감)
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, width, height);
+            ctx.drawImage(img, 0, 0, width, height);
+            result = canvas.toDataURL('image/jpeg', quality);
+          }
         };
 
-        // 첫 시도
-        if (!tryEncode()) { reject(new Error('canvas encode 실패')); return; }
+        try {
+          encode();
+        } catch (e) {
+          reject(e as Error);
+          return;
+        }
+
         const SAFE_MAX = 900_000; // 900KB 안전 한계
         let attempts = 0;
         while (result.length > SAFE_MAX && attempts < 8) {
           attempts++;
-          // 매번 크기를 75%로, 품질도 낮춤 (JPEG일 경우만)
-          maxDim = Math.round(maxDim * 0.75);
-          quality = Math.max(0.4, quality - 0.1);
-          // PNG라도 너무 크면 JPEG로 강제 전환
-          if (attempts >= 2 && result.startsWith('data:image/png')) {
-            // 강제 JPEG (알파 손실)
-            const canvas = document.createElement('canvas');
-            let w = img.width, h = img.height;
-            if (w > h && w > maxDim) { h = Math.round(h * maxDim / w); w = maxDim; }
-            else if (h > maxDim) { w = Math.round(w * maxDim / h); h = maxDim; }
-            canvas.width = w; canvas.height = h;
-            const ctx = canvas.getContext('2d')!;
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, w, h);
-            ctx.drawImage(img, 0, 0, w, h);
-            result = canvas.toDataURL('image/jpeg', quality);
-          } else {
-            tryEncode();
-          }
+          maxDim = Math.round(maxDim * 0.75); // 크기 축소
+          quality = Math.max(0.4, quality - 0.1); // JPEG 품질 축소 (PNG는 크기만 영향)
+          encode();
         }
+
         if (result.length > SAFE_MAX) {
-          reject(new Error(`이미지를 900KB 이하로 줄일 수 없음 (현재 ${(result.length / 1024).toFixed(0)}KB)`));
+          reject(new Error(`이미지를 900KB 이하로 줄일 수 없음 (현재 ${(result.length / 1024).toFixed(0)}KB). 더 작은 이미지를 사용해 주세요.`));
           return;
         }
-        console.log(`[CMS] 이미지 처리: ${(file.size / 1024).toFixed(0)}KB 원본 → ${(result.length / 1024).toFixed(0)}KB base64 (${attempts}회 압축)`);
+        console.log(`[CMS] 이미지 처리: ${(file.size / 1024).toFixed(0)}KB 원본 → ${(result.length / 1024).toFixed(0)}KB ${hasAlpha ? 'PNG(투명유지)' : 'JPEG'} (${attempts}회 압축)`);
         resolve(result);
       };
       img.onerror = () => reject(new Error('이미지 디코드 실패'));
@@ -193,7 +185,10 @@ export default function CmsEditOverlay() {
   }, [loginId, loginPw]);
 
   const handleLogout = useCallback(async () => {
+    try { sessionStorage.removeItem('ts_cms_edit'); } catch (e) { /* noop */ }
     try { await signOut(auth); } catch (e) { /* noop */ }
+    // 편집 모드 완전 종료 후 홈으로
+    try { window.location.href = '/'; } catch (e) { /* noop */ }
   }, []);
 
   const [chatPanelOpen, setChatPanelOpen] = useState(false);
@@ -275,7 +270,9 @@ export default function CmsEditOverlay() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('edit') !== '1') return;
+    let _persisted = false;
+    try { _persisted = sessionStorage.getItem('ts_cms_edit') === '1'; } catch { /* noop */ }
+    if (params.get('edit') !== '1' && !_persisted) return;
     if (!canEdit) return;
 
     let textReverse: Record<string, string[]> = {};
@@ -468,7 +465,14 @@ export default function CmsEditOverlay() {
     };
   }, [canEdit]);
 
-  const _editParam = new URLSearchParams(window.location.search).get('edit') === '1';
+  // 편집 모드: URL ?edit=1 진입 시 sessionStorage에 저장 → SPA 내 페이지 이동(인증현황/제품소개 등) 후에도 유지
+  const _queryEdit = new URLSearchParams(window.location.search).get('edit') === '1';
+  if (typeof window !== 'undefined') {
+    if (_queryEdit) {
+      try { sessionStorage.setItem('ts_cms_edit', '1'); } catch { /* noop */ }
+    }
+  }
+  const _editParam = _queryEdit || (typeof window !== 'undefined' && (() => { try { return sessionStorage.getItem('ts_cms_edit') === '1'; } catch { return false; } })());
 
   if (_editParam && authResolved && !canEdit && !loginDismissed) {
     return (
