@@ -60,9 +60,9 @@ export default function ProductsPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             {[
-              { tt: t('nav.embedded'), dd: '시스템의 두뇌. 고성능 임베디드 제어.', link: '/main-controller', img: _catEmbedded },
-              { tt: t('nav.hmi'), dd: '터치 디스플레이 + UI 펌웨어 통합 공급.', link: '/display', img: _catHmi },
-              { tt: t('nav.custom'), dd: '정밀 온도 제어 · 특수 산업 장비.', link: '/others', img: _catCustom },
+              { tt: t('nav.embedded'), dd: '시스템의 두뇌. 고성능 임베디드 제어.', link: '/main-controller', img: _catEmbedded, imgKey: 'productsCat.embedded.img' },
+              { tt: t('nav.hmi'), dd: '터치 디스플레이 + UI 펌웨어 통합 공급.', link: '/display', img: _catHmi, imgKey: 'productsCat.hmi.img' },
+              { tt: t('nav.custom'), dd: '정밀 온도 제어 · 특수 산업 장비.', link: '/others', img: _catCustom, imgKey: 'productsCat.custom.img' },
             ].map((c, i) => (
               <motion.a
                 key={c.link}
@@ -74,7 +74,7 @@ export default function ProductsPage() {
                 viewport={{ once: true, margin: '300px 0px' }}
                 transition={{ duration: 0.6, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
               >
-                <img src={c.img} alt={c.tt} className="absolute inset-0 w-full h-full object-cover opacity-85 transition-all duration-700 group-hover:scale-105 group-hover:opacity-100" loading="eager" />
+                <img src={c.img} data-cms-img-key={c.imgKey} alt={c.tt} className="absolute inset-0 w-full h-full object-cover opacity-85 transition-all duration-700 group-hover:scale-105 group-hover:opacity-100" loading="eager" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
                 <div className="relative z-10 flex flex-col justify-end h-full p-8">
                   <div className="text-[11px] uppercase tracking-[0.2em] text-gray-400 mb-3">{String(i + 1).padStart(2, '0')}</div>
@@ -93,7 +93,7 @@ export default function ProductsPage() {
             viewport={{ once: true, margin: '300px 0px' }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
-            <img src={_catProcess} alt="제조공정" className="absolute inset-0 w-full h-full object-cover opacity-75 transition-all duration-[1200ms] group-hover:scale-105 group-hover:opacity-90" loading="eager" />
+            <img src={_catProcess} data-cms-img-key="productsCat.process.img" alt="제조공정" className="absolute inset-0 w-full h-full object-cover opacity-75 transition-all duration-[1200ms] group-hover:scale-105 group-hover:opacity-90" loading="eager" />
             <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent" />
             <div className="relative z-10 flex flex-col justify-center h-full max-w-2xl px-10 md:px-16">
               <div className="text-[11px] uppercase tracking-[0.25em] text-gray-400 mb-5">04 · Manufacturing Process</div>
