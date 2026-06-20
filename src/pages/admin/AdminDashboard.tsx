@@ -143,7 +143,7 @@ export default function AdminDashboard() {
     : chatEntries.filter((e) => e.keywords.trim() || e.answer.trim()).length;
 
   // ── AI 자동 고도화 (브라우저에서 Gemini REST 직접 호출 — 서버/배포 불필요) ──
-  const GEMINI_MODEL = 'gemini-2.0-flash';
+  const GEMINI_MODEL = 'gemini-2.5-flash';
   const ENHANCE_SYSTEM_PROMPT = [
     '너는 태승전자(주)의 고객 상담 챗봇 답변을 다듬는 전문 에디터다.',
     '아래 규칙을 반드시 지켜라:',
