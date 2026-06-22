@@ -42,10 +42,30 @@ export function useText(key: string, fallback: string): string {
   return text[key] ?? fallback;
 }
 
+/**
+ * v20 (성능): 한국 방문자 대상 이미지 로딩 가속.
+ *   - Firebase Storage 버킷이 미국 리전(REGIONAL)이라 콜드 캐시 시 태평양 왕복(~1s) 발생.
+ *   - 프로덕션에서만 Vercel 서울 엣지의 이미지 최적화(/_vercel/image)로 우회:
+ *     · 엣지에서 WebP/AVIF 자동 변환 + 리사이즈(원본보다 클 때만) → 용량 감소
+ *     · 서울 엣지 캐시 → 첫 로드 이후 지연 제거
+ *   - w=1920은 업스케일 안 함(원본이 작으면 원본 크기 유지) → 화질 손실 없음.
+ *   - 로컬 개발(import.meta.env.PROD=false)에서는 원본 URL 그대로 사용.
+ */
+function optimizeImg(url: string, w = 1920): string {
+  if (
+    import.meta.env.PROD &&
+    typeof url === 'string' &&
+    url.includes('firebasestorage.googleapis.com')
+  ) {
+    return `/_vercel/image?url=${encodeURIComponent(url)}&w=${w}&q=75`;
+  }
+  return url;
+}
+
 export function useImage(key: string, fallback: string): string {
   const { images, loaded } = useSiteContent();
-  if (!loaded) return fallback;
-  return images[key] ?? fallback;
+  if (!loaded) return optimizeImg(fallback);
+  return optimizeImg(images[key] ?? fallback);
 }
 
 export function useVideo(key: string, fallback: string): string {
