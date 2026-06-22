@@ -4,11 +4,28 @@
 
 @theme {
   --font-sans: "Pretendard", ui-sans-serif, system-ui, sans-serif;
+  /* 작은 본문 폰트 +20% 가독성 향상 (text-xs, text-sm). text-base 이상은 유지 */
+  --text-xs: 0.9rem;   /* 0.75rem × 1.2 */
+  --text-sm: 1.05rem;  /* 0.875rem × 1.2 */
 }
 
 /* 전체 텍스트 누적 +10% 가독성 향상 — Tailwind의 rem 기반 모든 클래스 자동 확대 */
 html {
   font-size: 17.64px;
+}
+
+/* 고정 px 임의값 폰트 +20% 보정 — text-[Npx]는 rem이 아니라 절대 px라
+   위의 html font-size 스케일을 따라오지 않아 따로 키워준다.
+   (@layer 밖 커스텀 규칙이므로 Tailwind 유틸리티보다 우선 적용) */
+.text-\[9px\]  { font-size: 11px; }   /* 9 ×1.2 */
+.text-\[10px\] { font-size: 12px; }   /* 10 ×1.2 */
+.text-\[11px\] { font-size: 13px; }   /* 11 ×1.2 */
+.text-\[12px\] { font-size: 14px; }   /* 12 ×1.2 */
+.text-\[13px\] { font-size: 16px; }   /* 13 ×1.2 */
+.text-\[15px\] { font-size: 18px; }   /* 15 ×1.2 */
+@media (min-width: 48rem) {
+  .md\:text-\[11px\] { font-size: 13px; }
+  .md\:text-\[15px\] { font-size: 18px; }
 }
 
 body {
