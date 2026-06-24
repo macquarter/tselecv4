@@ -417,15 +417,37 @@ export default function AdminDashboard() {
           ))}
         </nav>
 
-        <a
-          href="/?edit=1"
-          target="_blank"
-          rel="noreferrer"
-          className="flex items-center gap-3 px-4 py-3 mt-auto rounded-xl bg-white/5 border border-white/10 text-gray-200 hover:bg-white/10 hover:text-white transition-colors"
-        >
-          <Edit2 size={18} />
-          <span className="text-sm leading-tight">사이트 편집<br /><span className="text-[11px] text-gray-500">이미지·텍스트·로고</span></span>
-        </a>
+        <div className="mt-auto">
+          <div className="px-1 pb-2 text-[11px] uppercase tracking-wider text-gray-600">라이브 편집 (페이지별)</div>
+          <a
+            href="/?edit=1"
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-gray-200 hover:bg-white/10 hover:text-white transition-colors"
+          >
+            <Edit2 size={18} />
+            <span className="text-sm leading-tight">홈 · 전체 편집<br /><span className="text-[11px] text-gray-500">이미지·텍스트·로고</span></span>
+          </a>
+          <div className="grid grid-cols-2 gap-2 mt-2">
+            {[
+              { href: '/process?edit=1', label: '제조공정' },
+              { href: '/business?edit=1', label: '사업영역' },
+              { href: '/products?edit=1', label: '제품소개' },
+              { href: '/display?edit=1', label: 'HMI 솔루션' },
+            ].map((lnk) => (
+              <a
+                key={lnk.href}
+                href={lnk.href}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center justify-center gap-1.5 px-2 py-2 rounded-lg bg-white/5 border border-white/10 text-[12px] text-gray-300 hover:bg-white/10 hover:text-white transition-colors"
+              >
+                <Edit2 size={13} />
+                {lnk.label}
+              </a>
+            ))}
+          </div>
+        </div>
 
         <button
           onClick={handleLogout}
