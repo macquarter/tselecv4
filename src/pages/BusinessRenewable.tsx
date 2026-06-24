@@ -10,8 +10,6 @@ interface Feature {
   key: string;
   image: string;
   fallback?: string;
-  solutions: string[];
-  boards: string[];
 }
 
 const STOCK = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=80`;
@@ -21,49 +19,21 @@ const features: Feature[] = [
     key: 'f0',
     image: '/images/products/fuel-cell-pbu.jpg',
     fallback: STOCK('photo-1518709268805-4e9042af2176'),
-    solutions: [
-      '스택 전압·전류·온도 멀티 채널 모니터링',
-      '수소·공기 공급계 BOP 시퀀스 제어',
-      '비상 정지·누설 감지 안전 인터록',
-      'CAN / Modbus 기반 상위 EMS 연동',
-    ],
-    boards: ['Main PCB', 'POWER PCB', 'SMPS', '무선모듈 (옵션)'],
   },
   {
     key: 'f1',
     image: '/images/products/hydrogen.jpg',
     fallback: STOCK('photo-1473968512647-3e447244af8f'),
-    solutions: [
-      '연료전지 ↔ 비행 컨트롤러 인터페이스',
-      '전력 분배·DC/DC 변환 제어',
-      '스택 상태·잔류 수소·온도 텔레메트리',
-      '무선 모니터링·OTA 펌웨어 업데이트',
-    ],
-    boards: ['Main PCB', 'POWER PCB', '무선모듈'],
   },
   {
     key: 'f2',
     image: '/images/products/lithium-charger.jpg',
     fallback: STOCK('photo-1620714223084-8fcacc6dfd8d'),
-    solutions: [
-      'CC-CV 충전 프로파일·다단 충전 제어',
-      'BMS 통신(CAN/UART) 및 셀 모니터링',
-      '과전압·과전류·과열·역전 보호',
-      '충전 상태 표시 UI / 원격 모니터링 옵션',
-    ],
-    boards: ['Main PCB', 'POWER PCB', 'SMPS', 'Display (HMI)'],
   },
   {
     key: 'f3',
     image: '/images/products/solar-panel.jpg',
     fallback: STOCK('photo-1509391366360-2e959784a276'),
-    solutions: [
-      'MPPT 알고리즘 기반 발전 최적화 제어',
-      '전압·전류·온도 멀티 채널 모니터링',
-      '인버터·ESS·EMS 시스템 통신 연동',
-      '이상 진단·원격 모니터링 옵션',
-    ],
-    boards: ['Main PCB', 'POWER PCB', '무선모듈'],
   },
 ];
 
@@ -165,9 +135,9 @@ export default function BusinessRenewable() {
               <p className="text-gray-400 text-sm font-light leading-relaxed mb-8">{t(`bizRenewable.${selected.key}d`)}</p>
 
               <div className="mb-8">
-                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">태승전자가 제공하는 솔루션</h3>
+                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">{t('business.solutionsLabel')}</h3>
                 <ul className="space-y-2">
-                  {selected.solutions.map((s, i) => (
+                  {(t(`bizRenewable.${selected.key}.solutions`, { returnObjects: true }) as unknown as string[]).map((s, i) => (
                     <li key={i} className="flex items-start gap-3 text-sm text-gray-300 leading-relaxed">
                       <span className="mt-2 w-1 h-1 rounded-full bg-gray-500 shrink-0" />
                       <span>{s}</span>
@@ -177,9 +147,9 @@ export default function BusinessRenewable() {
               </div>
 
               <div>
-                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">적용 보드 / 모듈</h3>
+                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">{t('business.boardsLabel')}</h3>
                 <div className="flex flex-wrap gap-2">
-                  {selected.boards.map((b, i) => (
+                  {(t(`bizRenewable.${selected.key}.boards`, { returnObjects: true }) as unknown as string[]).map((b, i) => (
                     <span key={i} className="text-xs px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-gray-300">{b}</span>
                   ))}
                 </div>
