@@ -12,6 +12,8 @@
 /* 전체 텍스트 누적 +10% 가독성 향상 — Tailwind의 rem 기반 모든 클래스 자동 확대 */
 html {
   font-size: 17.64px;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 /* 고정 px 임의값 폰트 +20% 보정 — text-[Npx]는 rem이 아니라 절대 px라
@@ -32,7 +34,10 @@ body {
   background-color: #000;
   color: #f5f5f7;
   font-family: "Pretendard", sans-serif;
+  /* 글씨 선명도 향상: macOS 회색조 안티앨리어싱 + 자형 최적화 렌더링 */
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   /* overflow-x: hidden 는 body를 스크롤 컨테이너로 만들어 position:sticky 를 깨뜨림(모바일 검은 빈화면).
      clip 은 가로 오버플로를 동일하게 잘라내면서 sticky 를 정상 동작시킴. */
   overflow-x: clip;
