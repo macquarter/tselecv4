@@ -36,81 +36,29 @@ export default function Process() {
   const [selectedStep, setSelectedStep] = useState<ProcessStep | null>(null);
   const [autoIndex, setAutoIndex] = useState(0);
 
-  const steps: ProcessStep[] = [
-    {
-      num: '01', title: '회로·PCB설계', eng: 'Circuit & PCB Engineering',
-      desc: '임베디드 회로 · PCB 아트워크',
-      detail: '임베디드 회로 설계, PCB 아트워크, 펌웨어 개발 및 시제품 평가와 신뢰성 검사를 진행합니다. 고객 요구사양 분석부터 회로도(Schematic) 설계, 다층 PCB 아트워크, 시뮬레이션 검증까지 전 과정을 자체 수행합니다.',
-      equipment: ['OrCAD / Altium Designer', 'SPICE 시뮬레이션', '4~8층 PCB 설계', '3D 모델링 검증'],
-      icon: <CircuitBoard size={20} />,
-    },
-    {
-      num: '02', title: '자재입고·IQC', eng: 'Incoming Inspection',
-      desc: '입고 부품 전수 수입검사',
-      detail: '입고되는 모든 자재에 대해 엄격한 수입검사(IQC)를 실시합니다. BOM 매칭, 로트 추적관리, 전수 외관검사 및 전기적 특성 샘플링 테스트를 통해 불량 부품의 라인 투입을 원천 차단합니다.',
-      equipment: ['LCR 미터', '디지털 마이크로스코프', 'BOM 자동 매칭 시스템', '로트 추적 관리 (MES)'],
-      qcTag: 'QC ①',
-      icon: <Eye size={20} />,
-    },
-    {
-      num: '03', title: 'SMT 실장', eng: 'Surface Mount Technology',
-      desc: 'SPI · 칩마운터 · 리플로우',
-      detail: 'SPI(Solder Paste Inspection)로 크림납 인쇄 품질을 검사하고, 고속 칩마운터로 부품을 실장한 후 리플로우 오븐에서 납땜합니다. AOI(자동광학검사)로 실장 상태를 100% 인라인 검사합니다.',
-      equipment: ['고속 칩마운터 3대', 'SPI 검사기', '10존 리플로우 오븐', 'AOI 자동광학검사기'],
-      icon: <Microchip size={20} />,
-    },
-    {
-      num: '04', title: '자삽 (자동삽입)', eng: 'Auto Insertion',
-      desc: '액시얼·래디얼 자동삽입',
-      detail: '액시얼(Axial) 및 래디얼(Radial) 부품을 자동삽입기로 정확하게 삽입한 후, 웨이브 솔더링으로 안정적인 납땜을 완성합니다. DIP 부품의 정밀한 위치 정렬과 균일한 납땜 품질을 보장합니다.',
-      equipment: ['액시얼 자동삽입기', '래디얼 자동삽입기', '웨이브 솔더링 머신', '질소 분위기 납땜'],
-      icon: <Factory size={20} />,
-    },
-    {
-      num: '05', title: '메인 조립', eng: 'Main Assembly',
-      desc: '수삽 · 하니스 결선',
-      detail: '수삽입(Manual Insertion), 하니스(Harness) 결선, 케이스 및 하우징 조립을 수행하여 최종 제품 형태를 완성합니다. 숙련된 작업자와 지그(Jig) 기반 조립으로 일관된 품질을 유지합니다.',
-      equipment: ['전용 조립 지그', '토크 드라이버', '정전기 방지 작업대', '작업 표준서(SOP)'],
-      icon: <Wrench size={20} />,
-    },
-    {
-      num: '06', title: '펌웨어 다운로드', eng: 'Firmware Loading',
-      desc: '펌웨어 라이팅 · 부트로더',
-      detail: '자체 개발 펌웨어를 MCU에 다운로드하고, 부트로더 설정 및 초기 파라미터 셋업을 진행합니다. 시리얼 넘버 부여와 함께 펌웨어 버전 관리 시스템으로 이력을 추적합니다.',
-      equipment: ['ISP/JTAG 라이터', '자동 프로그래밍 지그', '펌웨어 버전 관리 시스템', '시리얼 넘버 자동 부여'],
-      icon: <Cpu size={20} />,
-    },
-    {
-      num: '07', title: '기능검사 (ICT)', eng: 'Functional & ICT Test',
-      desc: '도통·전압·회로 100% 검증',
-      detail: '자동 ICT(In-Circuit Test)로 도통, 저항, 전압, 전류를 측정하고, 기능검사(Functional Test)로 실제 동작 시퀀스를 100% 검증합니다. 불량 보드의 출하를 완벽하게 차단하는 핵심 품질 관문입니다.',
-      equipment: ['ICT 테스터', '기능검사 전용 지그', '오실로스코프', '데이터 로거'],
-      qcTag: 'QC ②',
-      icon: <Zap size={20} />,
-    },
-    {
-      num: '08', title: '최종 QC', eng: 'Final Quality Check',
-      desc: '외관·라벨·시리얼 점검',
-      detail: '최종 출하 전 외관 검사, 라벨 부착 상태, 시리얼 넘버 확인, 포장 상태를 종합 점검합니다. AQL(Acceptable Quality Level) 기준에 따른 샘플링 검사와 전수 육안 검사를 병행합니다.',
-      equipment: ['AQL 샘플링 검사', '외관 검사 (3배율)', '라벨 스캐너', '출하 판정 체크시트'],
-      qcTag: 'QC ③',
-      icon: <CheckCircle2 size={20} />,
-    },
-    {
-      num: '09', title: '포장', eng: 'Packaging',
-      desc: 'ESD 정전기방지 포장',
-      detail: 'ESD 정전기방지 포장재로 제품을 보호하고, 거래선별 라벨링 및 박싱을 진행합니다. 수분 방지를 위한 방습 포장과 충격 보호 완충재를 적용하여 운송 중 제품 손상을 방지합니다.',
-      equipment: ['ESD 포장재', '방습 포장(실리카겔)', '완충 포장재', '바코드 라벨 프린터'],
-      icon: <Package size={20} />,
-    },
-    {
-      num: '10', title: '출하', eng: 'Shipping',
-      desc: '납기 기반 출하 스케줄',
-      detail: '납기 기반 출하 스케줄에 따라 거래선 인도 및 운송 관리를 수행합니다. MES 시스템과 연동된 출하 관리로 실시간 재고 현황 파악과 배송 추적이 가능합니다.',
-      equipment: ['MES 출하 관리', '실시간 재고 관리', '배송 추적 시스템', '납기준수율 99% 관리'],
-      icon: <Truck size={20} />,
-    },
+  // 구조(번호/아이콘/QC뱃지)는 코드에 고정, 텍스트는 i18n(process.steps.*)에서 → CMS 인라인 편집 가능
+  const STEP_META: { num: string; qcTag?: string; icon: React.ReactNode }[] = [
+    { num: '01', icon: <CircuitBoard size={20} /> },
+    { num: '02', qcTag: 'QC ①', icon: <Eye size={20} /> },
+    { num: '03', icon: <Microchip size={20} /> },
+    { num: '04', icon: <Factory size={20} /> },
+    { num: '05', icon: <Wrench size={20} /> },
+    { num: '06', icon: <Cpu size={20} /> },
+    { num: '07', qcTag: 'QC ②', icon: <Zap size={20} /> },
+    { num: '08', qcTag: 'QC ③', icon: <CheckCircle2 size={20} /> },
+    { num: '09', icon: <Package size={20} /> },
+    { num: '10', icon: <Truck size={20} /> },
   ];
+  const steps: ProcessStep[] = STEP_META.map((m, i) => ({
+    num: m.num,
+    qcTag: m.qcTag,
+    icon: m.icon,
+    title: t(`process.steps.${i}.title`),
+    eng: t(`process.steps.${i}.eng`),
+    desc: t(`process.steps.${i}.desc`),
+    detail: t(`process.steps.${i}.detail`),
+    equipment: t(`process.steps.${i}.equipment`, { returnObjects: true }) as unknown as string[],
+  }));
 
   // 10단계 경로 자동 순회 애니메이션 (1.2초 간격, hover 시 멈춤)
   useEffect(() => {
@@ -420,27 +368,9 @@ export default function Process() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {[
-                {
-                  stage: 'QC ①',
-                  title: '입고검사 (IQC)',
-                  subtitle: 'Incoming Quality Control',
-                  desc: '전 자재 수입검사를 통해 불량 부품의 라인 투입을 원천 차단합니다. BOM 매칭과 로트 추적으로 자재 이력을 100% 관리합니다.',
-                  items: ['전수 외관검사', 'LCR 전기적 측정', 'BOM 자동 매칭', '로트 추적 관리'],
-                },
-                {
-                  stage: 'QC ②',
-                  title: '기능검사 (ICT)',
-                  subtitle: 'In-Circuit & Functional Test',
-                  desc: 'ICT 자동 테스트와 기능검사를 통해 모든 보드의 전기적 특성과 동작 시퀀스를 100% 검증합니다.',
-                  items: ['도통·저항·전압 측정', '동작 시퀀스 검증', '오실로스코프 파형 확인', '데이터 로깅'],
-                },
-                {
-                  stage: 'QC ③',
-                  title: '출하검사 (OQC)',
-                  subtitle: 'Outgoing Quality Control',
-                  desc: '출하 전 최종 외관·기능·포장 상태를 종합 점검합니다. AQL 기준 샘플링과 전수 육안 검사를 병행합니다.',
-                  items: ['AQL 샘플링 검사', '외관 3배율 검사', '라벨·시리얼 확인', '출하 판정 체크시트'],
-                },
+                { stage: 'QC ①', title: t('process.qc.0.title'), subtitle: t('process.qc.0.subtitle'), desc: t('process.qc.0.desc'), items: t('process.qc.0.items', { returnObjects: true }) as unknown as string[] },
+                { stage: 'QC ②', title: t('process.qc.1.title'), subtitle: t('process.qc.1.subtitle'), desc: t('process.qc.1.desc'), items: t('process.qc.1.items', { returnObjects: true }) as unknown as string[] },
+                { stage: 'QC ③', title: t('process.qc.2.title'), subtitle: t('process.qc.2.subtitle'), desc: t('process.qc.2.desc'), items: t('process.qc.2.items', { returnObjects: true }) as unknown as string[] },
               ].map((qc, i) => (
                 <motion.div
                   key={i}
@@ -486,11 +416,11 @@ export default function Process() {
               </div>
               <div className="space-y-3">
                 {[
-                  { label: '회로 설계', desc: 'OrCAD / Altium 기반 다층 PCB 설계' },
-                  { label: '펌웨어 개발', desc: 'ARM Cortex-M 기반 임베디드 SW 자체 개발' },
-                  { label: '신뢰성 검증', desc: '온도·습도·진동 등 환경시험 대응' },
-                  { label: '양산 조립', desc: '3개 SMT 라인, 월 50만대+ 생산체제' },
-                  { label: '출하 품질관리', desc: '3-Stage QC, 100PPM 이하 불량률' },
+                  { label: t('process.cap.0.label'), desc: t('process.cap.0.desc') },
+                  { label: t('process.cap.1.label'), desc: t('process.cap.1.desc') },
+                  { label: t('process.cap.2.label'), desc: t('process.cap.2.desc') },
+                  { label: t('process.cap.3.label'), desc: t('process.cap.3.desc') },
+                  { label: t('process.cap.4.label'), desc: t('process.cap.4.desc') },
                 ].map((cap, i) => (
                   <motion.div
                     key={i}
@@ -525,21 +455,9 @@ export default function Process() {
               </div>
               <div className="space-y-4">
                 {[
-                  {
-                    title: '임베디드 컨트롤러',
-                    desc: '가전·산업용 MCU 제어보드 설계 및 양산',
-                    tags: ['ARM Cortex-M', '8/16/32bit MCU', 'RTOS'],
-                  },
-                  {
-                    title: 'HMI 솔루션',
-                    desc: '디스플레이 패널 및 터치 인터페이스 개발',
-                    tags: ['LCD/OLED', 'Touch Panel', 'GUI 개발'],
-                  },
-                  {
-                    title: '커스텀 ODM/OEM',
-                    desc: '고객 요구에 맞춘 맞춤형 제어보드 턴키 개발',
-                    tags: ['회로설계', '펌웨어', '인증 지원'],
-                  },
+                  { title: t('process.cat.0.title'), desc: t('process.cat.0.desc'), tags: t('process.cat.0.tags', { returnObjects: true }) as unknown as string[] },
+                  { title: t('process.cat.1.title'), desc: t('process.cat.1.desc'), tags: t('process.cat.1.tags', { returnObjects: true }) as unknown as string[] },
+                  { title: t('process.cat.2.title'), desc: t('process.cat.2.desc'), tags: t('process.cat.2.tags', { returnObjects: true }) as unknown as string[] },
                 ].map((cat, i) => (
                   <motion.div
                     key={i}
