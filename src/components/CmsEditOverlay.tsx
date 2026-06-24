@@ -26,7 +26,7 @@ function flatten(obj: any, prefix = ''): Record<string, string> {
   for (const [k, v] of Object.entries(obj)) {
     const key = prefix ? `${prefix}.${k}` : k;
     if (typeof v === 'string') out[key] = v;
-    else if (typeof v === 'object' && v !== null && !Array.isArray(v)) Object.assign(out, flatten(v, key));
+    else if (typeof v === 'object' && v !== null) Object.assign(out, flatten(v, key)); // 배열(스펙/칩 목록)도 평탄화하여 인라인 편집 가능하게 (v25)
   }
   return out;
 }
