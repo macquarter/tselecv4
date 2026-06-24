@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { X } from 'lucide-react';
 import { Product } from '../types';
+import { useTranslation } from 'react-i18next';
 
 interface ProductModalProps {
   product: Product;
@@ -10,6 +11,7 @@ interface ProductModalProps {
 }
 
 export default function ProductModal({ product, onClose }: ProductModalProps) {
+  const { t } = useTranslation();
   return (
     <motion.div 
       className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center sm:p-6"
@@ -61,7 +63,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
           >
-            <h4 className="text-sm font-bold tracking-widest text-gray-400 uppercase mb-6">주요 기능 및 특징</h4>
+            <h4 className="text-sm font-bold tracking-widest text-gray-400 uppercase mb-6">{t('productModal.featuresLabel')}</h4>
             <ul className="space-y-4">
               {product.details?.map((detail, idx) => (
                 <li key={idx} className="flex items-start gap-4 p-4 rounded-2xl bg-[#111] border border-white/5">
@@ -76,7 +78,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
                 onClick={() => { onClose(); setTimeout(() => { document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); }, 350); }}
                 className="w-full py-4 bg-white text-black font-medium rounded-xl hover:bg-gray-200 transition-colors"
               >
-                상담 문의하기
+                {t('productModal.contactBtn')}
               </button>
             </div>
           </motion.div>
