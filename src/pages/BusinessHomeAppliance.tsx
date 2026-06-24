@@ -10,8 +10,6 @@ interface Feature {
   key: string;
   image: string;
   fallback?: string;
-  solutions: string[];
-  boards: string[];
 }
 
 const STOCK = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=80`;
@@ -21,49 +19,21 @@ const features: Feature[] = [
     key: 'f0',
     image: '/images/products/refrigerator-main.jpg',
     fallback: STOCK('photo-1571175443880-49e1d25b2bc5'),
-    solutions: [
-      '인버터 컴프레서 구동 및 정온 제어 알고리즘',
-      '냉장·냉동·특냉실 멀티존 온도 제어',
-      '도어 알람·자동 제상·에너지 절약 로직',
-      '터치 디스플레이 기반 UI / 다국어 메뉴',
-    ],
-    boards: ['Main PCB', 'POWER PCB', 'Display (HMI)'],
   },
   {
     key: 'f1',
     image: '/images/products/water-purifier-main.jpg',
     fallback: STOCK('photo-1610822546219-c100ce40f7a3'),
-    solutions: [
-      '냉수·온수·얼음 모듈 통합 제어',
-      '유량 센서 기반 추출량 정밀 제어',
-      '필터 교체 알림·자가 위생 사이클',
-      '터치 UI / 음성 안내·다국어 메뉴 지원',
-    ],
-    boards: ['Main PCB', 'POWER PCB', 'Display (HMI)', '무선모듈 (옵션)'],
   },
   {
     key: 'f2',
     image: '/images/products/range-hood.jpg',
     fallback: STOCK('photo-1556909114-f6e7ad7d3136'),
-    solutions: [
-      'BLDC 모터 다단 풍량 제어',
-      '가스·연기 센서 연동 자동 운전',
-      'LED 조명 디밍 / 타이머 / 필터 알림',
-      '정전식 터치 UI · 슬림 디스플레이',
-    ],
-    boards: ['Main PCB', 'POWER PCB', 'Display (HMI)'],
   },
   {
     key: 'f3',
     image: '/images/products/air-purifier-main.jpg',
     fallback: STOCK('photo-1585771724684-38269d6639fd'),
-    solutions: [
-      'PM2.5·VOC·온습도 멀티 센서 신호 처리',
-      'BLDC 팬 정밀 풍량 / 저소음 제어',
-      '자동 모드·취침 모드·필터 수명 알림',
-      'Wi-Fi / BLE 기반 모바일 앱 연동 (옵션)',
-    ],
-    boards: ['Main PCB', 'POWER PCB', 'Display (HMI)', '무선모듈'],
   },
 ];
 
@@ -165,9 +135,9 @@ export default function BusinessHomeAppliance() {
               <p className="text-gray-400 text-sm font-light leading-relaxed mb-8">{t(`bizHome.${selected.key}d`)}</p>
 
               <div className="mb-8">
-                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">태승전자가 제공하는 솔루션</h3>
+                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">{t('business.solutionsLabel')}</h3>
                 <ul className="space-y-2">
-                  {selected.solutions.map((s, i) => (
+                  {(t(`bizHome.${selected.key}.solutions`, { returnObjects: true }) as unknown as string[]).map((s, i) => (
                     <li key={i} className="flex items-start gap-3 text-sm text-gray-300 leading-relaxed">
                       <span className="mt-2 w-1 h-1 rounded-full bg-gray-500 shrink-0" />
                       <span>{s}</span>
@@ -177,9 +147,9 @@ export default function BusinessHomeAppliance() {
               </div>
 
               <div>
-                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">적용 보드 / 모듈</h3>
+                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">{t('business.boardsLabel')}</h3>
                 <div className="flex flex-wrap gap-2">
-                  {selected.boards.map((b, i) => (
+                  {(t(`bizHome.${selected.key}.boards`, { returnObjects: true }) as unknown as string[]).map((b, i) => (
                     <span key={i} className="text-xs px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-gray-300">{b}</span>
                   ))}
                 </div>
