@@ -20,15 +20,7 @@ interface DownloadItem {
 }
 
 // Static fallback data
-const staticDownloads: DownloadItem[] = [
-  { id: 'd1', cat: '카탈로그', title: '2026 종합 카탈로그', content: '태승전자 2026년 종합 카탈로그입니다.\n\n제품 라인업, 사양, 적용 분야 등 상세 정보를 확인하실 수 있습니다.', date: '2026.03.01', views: 340, file: '카탈로그_2026.pdf' },
-  { id: 'd2', cat: '데이터시트', title: 'MC-200 메인 컨트롤러 데이터시트', content: 'MC-200 메인 컨트롤러의 전기적 사양, 핀 배치, 동작 조건 등 기술 데이터시트입니다.', date: '2026.02.15', views: 178, file: 'MC-200_Datasheet.pdf' },
-  { id: 'd3', cat: '인증서', title: 'ISO 9001:2015 품질경영시스템 인증서', content: 'ISO 9001:2015 국제 품질경영시스템 인증서 사본입니다.', date: '2025.12.20', views: 95, file: 'ISO9001_Certificate.pdf' },
-  { id: 'd4', cat: '매뉴얼', title: 'MC-200 사용자 매뉴얼 v2.1', content: 'MC-200 메인 컨트롤러 설치 및 운용 매뉴얼입니다.\n\n설치 가이드, 배선도, 프로그래밍 방법, 트러블슈팅 가이드를 포함합니다.', date: '2025.11.10', views: 256, file: 'MC-200_Manual_v2.1.pdf' },
-  { id: 'd5', cat: '데이터시트', title: 'DP-100 디스플레이 패널 데이터시트', content: 'DP-100 터치형 LED 디스플레이 패널의 기술 데이터시트입니다.', date: '2025.10.05', views: 134, file: 'DP-100_Datasheet.pdf' },
-  { id: 'd6', cat: '카탈로그', title: '태양광 인버터 제어기 제품 카탈로그', content: 'MPPT 기반 태양광 인버터 제어기 라인업 카탈로그입니다.', date: '2025.09.18', views: 89, file: 'Solar_Inverter_Catalog.pdf' },
-  { id: 'd7', cat: '소프트웨어', title: 'TSELEC 모니터링 소프트웨어 v3.0', content: '태승전자 제품 원격 모니터링 소프트웨어 최신 버전입니다.\n\n시스템 요구사항: Windows 10 이상', date: '2025.08.25', views: 312, file: 'TSELEC_Monitor_v3.0.zip' },
-];
+const staticDownloads: DownloadItem[] = [];
 
 const CAT_KEYS = ['전체', '카탈로그', '기술자료', '기타자료'];
 const CAT_LABEL: Record<string, string> = { '전체': 'catAll', '카탈로그': 'catCat', '기술자료': 'catTech', '기타자료': 'catEtc' };
