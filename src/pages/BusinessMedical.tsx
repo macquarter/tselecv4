@@ -82,6 +82,7 @@ export default function BusinessMedical() {
               >
                 <img
                   src={_imgMap[feature.image] || feature.image}
+                  data-cms-img-key={`biz.med.${feature.key}.img`}
                   alt={t(`bizMedical.${feature.key}n`)}
                   className="absolute inset-0 w-full h-full object-cover opacity-85 transition-all duration-700 group-hover:scale-105 group-hover:opacity-100"
                   loading="eager" fetchPriority="high" decoding="async"
@@ -116,6 +117,7 @@ export default function BusinessMedical() {
               <div className="mb-6 rounded-2xl overflow-hidden aspect-video bg-[#111] border border-white/5">
                 <img
                   src={_imgMap[selected.image] || selected.image}
+                  data-cms-img-key={`biz.med.${selected.key}.img`}
                   alt={t(`bizMedical.${selected.key}n`)}
                   className="w-full h-full object-cover"
                   onError={(e) => {
