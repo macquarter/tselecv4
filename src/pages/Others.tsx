@@ -5,37 +5,11 @@ import Footer from '../components/Footer';
 import ProductNav from '../components/ProductNav';
 import ModuleCatalog, { CatalogCard } from '../components/ModuleCatalog';
 
-const PERIPHERAL_CARDS: CatalogCard[] = [
-  {
-    tag: 'PERIPHERAL · POWER SUPPLY',
-    name: 'SMPS',
-    lede: 'Switching Mode Power Supply. 입력 AC를 안정적인 DC로 변환·공급하는 전원 장치로, 제품 요구 전압·전류와 효율 등급에 맞춰 설계합니다.',
-    specs: [
-      { k: '입력', v: 'AC 100~240V (제품 사양별)' },
-      { k: '출력', v: 'DC 5V · 12V · 24V 등 다중 출력' },
-      { k: '보호 기능', v: '과전압 · 과전류 · 단락 · 과열' },
-      { k: '설계 방식', v: '표준품 + 요구사양 맞춤 설계' },
-    ],
-    chips: ['고효율 설계', '다중 출력', 'EMC 대응', '소형 폼팩터'],
-    accent: 'from-emerald-500/15 to-emerald-700/5',
-  },
-  {
-    tag: 'PERIPHERAL · WIRELESS',
-    name: '무선모듈',
-    lede: 'Wi-Fi · Bluetooth · 저전력 무선 통신 모듈. 컨트롤 보드에 통합하거나 별도 모듈로 공급하여 IoT·원격 제어·모니터링 기능을 구현합니다.',
-    specs: [
-      { k: '통신 규격', v: 'Wi-Fi · BLE · Zigbee 등 (사양별)' },
-      { k: '연동', v: '메인 PCB · 클라우드 · 모바일 앱' },
-      { k: '활용', v: '원격 제어 · 상태 모니터링 · 펌웨어 OTA' },
-      { k: '설계 방식', v: '모듈 단품 + 메인 보드 통합 옵션' },
-    ],
-    chips: ['IoT 연동', '원격 제어', 'OTA 업데이트', '저전력 설계'],
-    accent: 'from-purple-500/15 to-purple-700/5',
-  },
-];
 
 export default function Others() {
   const { t } = useTranslation();
+  const catAccents = ['from-emerald-500/15 to-emerald-700/5', 'from-purple-500/15 to-purple-700/5'];
+  const peripheralCards: CatalogCard[] = (t('othersPage.cat', { returnObjects: true }) as unknown as Omit<CatalogCard, 'accent'>[]).map((c, i) => ({ ...c, accent: catAccents[i] }));
 
   const specs = Array.from({ length: 6 }, (_, i) => ({
     label: t(`othersPage.s${i}l`),
@@ -163,10 +137,10 @@ export default function Others() {
 
         <ModuleCatalog
           badge="Peripheral Modules"
-          title1="주변기기 라인업"
-          title2="상세 사양."
-          sub="SMPS 전원 장치와 무선 통신 모듈을 표준품/맞춤 설계로 공급합니다."
-          cards={PERIPHERAL_CARDS}
+          title1={t('othersPage.catTitle1')}
+          title2={t('othersPage.catTitle2')}
+          sub={t('othersPage.catSub')}
+          cards={peripheralCards}
         />
       </main>
 
