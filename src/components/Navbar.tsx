@@ -72,7 +72,7 @@ export default function Navbar() {
       dropdown: [
         { name: t('nav.news'), href: '/news' },
         { name: t('nav.downloads'), href: '/downloads' },
-        { name: t('nav.contact'), href: '/#contact' },
+        { name: t('nav.contact'), href: '/contact' },
       ]
     },
   ];
@@ -159,14 +159,8 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-3">
             <LanguageSwitcher />
             <Link
-              to="/#contact"
+              to="/contact"
               className="px-5 py-2.5 bg-white hover:bg-gray-200 text-black text-sm font-medium rounded-lg transition-all"
-              onClick={(e) => {
-                if (location.pathname === '/') {
-                  e.preventDefault();
-                  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
             >
               {t('nav.contact')}
             </Link>
@@ -270,16 +264,10 @@ export default function Navbar() {
               {/* Contact Button */}
               <div className="mt-8">
                 <Link
-                  to="/#contact"
-                  onClick={(e) => {
+                  to="/contact"
+                  onClick={() => {
                     setMobileMenuOpen(false);
                     setMobileExpanded(null);
-                    if (location.pathname === '/') {
-                      e.preventDefault();
-                      setTimeout(() => {
-                        document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                      }, 100);
-                    }
                   }}
                   className="block w-full text-center bg-white text-black font-semibold py-4 rounded-xl text-base"
                 >
