@@ -12,10 +12,10 @@ export default function BusinessOverview() {
   const imgRen = useImage('biz.ren.f0.img', PRE + 'biz.ren.f0.img.jpg?alt=media&token=5877c91c-a038-4f5b-b85b-fa69fa89f0be');
 
   const areas = [
-    { tt: t('bizOverview.c0t'), dd: t('bizOverview.c0d'), link: '/business/home-appliance', img: imgHome },
-    { tt: t('bizOverview.c1t'), dd: t('bizOverview.c1d'), link: '/business/industrial', img: imgInd },
-    { tt: t('bizOverview.c2t'), dd: t('bizOverview.c2d'), link: '/business/medical', img: imgMed },
-    { tt: t('bizOverview.c3t'), dd: t('bizOverview.c3d'), link: '/business/renewable', img: imgRen },
+    { tt: t('bizOverview.c0t'), dd: t('bizOverview.c0d'), link: '/business/home-appliance', img: imgHome, imgKey: 'biz.home.f0.img' },
+    { tt: t('bizOverview.c1t'), dd: t('bizOverview.c1d'), link: '/business/industrial', img: imgInd, imgKey: 'biz.ind.f0.img' },
+    { tt: t('bizOverview.c2t'), dd: t('bizOverview.c2d'), link: '/business/medical', img: imgMed, imgKey: 'biz.med.f0.img' },
+    { tt: t('bizOverview.c3t'), dd: t('bizOverview.c3d'), link: '/business/renewable', img: imgRen, imgKey: 'biz.ren.f0.img' },
   ];
 
   return (
@@ -36,7 +36,7 @@ export default function BusinessOverview() {
             viewport={{ once: true, margin: '300px 0px' }}
             transition={{ duration: 0.6, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
           >
-            <img src={c.img} alt={c.tt} className="absolute inset-0 w-full h-full object-cover opacity-85 transition-all duration-700 group-hover:scale-105 group-hover:opacity-100" loading="eager" fetchPriority="high" decoding="async" />
+            <img src={c.img} data-cms-img-key={c.imgKey} alt={c.tt} className="absolute inset-0 w-full h-full object-cover opacity-85 transition-all duration-700 group-hover:scale-105 group-hover:opacity-100" loading="eager" fetchPriority="high" decoding="async" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
             <div className="relative z-10 flex flex-col justify-end h-full p-7">
               <h3 className="text-xl md:text-2xl font-bold tracking-tight text-white ts-card-title">{c.tt}</h3>
