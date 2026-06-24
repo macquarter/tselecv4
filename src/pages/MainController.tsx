@@ -5,37 +5,11 @@ import Footer from '../components/Footer';
 import ProductNav from '../components/ProductNav';
 import ModuleCatalog, { CatalogCard } from '../components/ModuleCatalog';
 
-const EMBEDDED_CARDS: CatalogCard[] = [
-  {
-    tag: 'EMBEDDED · MAIN BOARD',
-    name: 'Main PCB',
-    lede: '제품의 전체 동작을 제어하는 메인 컨트롤 보드. MCU·센서 인터페이스·통신·전원 관리를 통합 설계하여 가전부터 산업기기까지 대응합니다.',
-    specs: [
-      { k: 'MCU 아키텍처', v: '8/16/32-bit (요구사양별)' },
-      { k: '통신 인터페이스', v: 'UART · I²C · SPI · CAN · RS-485' },
-      { k: '설계 방식', v: '표준 라인업 + ODM/맞춤 설계' },
-      { k: '대응 환경', v: '가전 · 산업 · 의료 · 신재생에너지' },
-    ],
-    chips: ['제어 알고리즘', '센서 연동', '통신 모듈 통합', 'EMC 대응 설계'],
-    accent: 'from-blue-500/15 to-blue-700/5',
-  },
-  {
-    tag: 'EMBEDDED · POWER BOARD',
-    name: 'POWER PCB',
-    lede: '제품 내 전력 변환·분배를 담당하는 전원 제어 보드. 안정적인 전압·전류 공급과 보호 회로 설계를 통해 메인 PCB와 부하단을 분리·보호합니다.',
-    specs: [
-      { k: '전력 변환', v: 'AC/DC · DC/DC 변환 설계' },
-      { k: '보호 기능', v: '과전압 · 과전류 · 단락 · 과열 보호' },
-      { k: '설계 방식', v: '제품별 부하 사양 맞춤 설계' },
-      { k: '적용 영역', v: '가전 모터 · 산업 액추에이터 · 의료 전원부' },
-    ],
-    chips: ['고효율 전원 설계', '보호 회로', '노이즈 대응', '발열 설계'],
-    accent: 'from-amber-500/15 to-amber-700/5',
-  },
-];
 
 export default function MainController() {
   const { t } = useTranslation();
+  const catAccents = ['from-blue-500/15 to-blue-700/5', 'from-amber-500/15 to-amber-700/5'];
+  const embeddedCards: CatalogCard[] = (t('mainCtrl.cat', { returnObjects: true }) as unknown as Omit<CatalogCard, 'accent'>[]).map((c, i) => ({ ...c, accent: catAccents[i] }));
   const specs = [
     { key: 's0', value: '32/16/8-bit MCU' },
     { key: 's1', value: '5V ~ 24V DC' },
@@ -117,10 +91,10 @@ export default function MainController() {
 
         <ModuleCatalog
           badge="Embedded Modules"
-          title1="임베디드 모듈"
-          title2="라인업 상세."
-          sub="메인 컨트롤 보드와 전원 제어 보드를 각각 설계·공급합니다."
-          cards={EMBEDDED_CARDS}
+          title1={t('mainCtrl.catTitle1')}
+          title2={t('mainCtrl.catTitle2')}
+          sub={t('mainCtrl.catSub')}
+          cards={embeddedCards}
         />
       </main>
 
