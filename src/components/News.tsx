@@ -15,11 +15,8 @@ interface NewsItem {
   isNew: boolean;
 }
 
-const staticItems: NewsItem[] = [
-  { id: '1', category: '공지사항', title: '2026년 상반기 신제품 라인업 출시 안내', date: '2026.03.15', isNew: true },
-  { id: '2', category: '보도자료', title: '태승전자, 스마트팩토리 고도화 프로젝트 성공적 완료', date: '2026.02.28', isNew: false },
-  { id: '3', category: '공지사항', title: 'ISO 14001 환경경영시스템 인증 갱신', date: '2026.01.10', isNew: false },
-];
+// 샘플 공지 하드코딩 제거: 홈 공지 섹션도 어드민(Firestore)에 등록된 글만 노출. (태승 수정: 공지 내용 전체 삭제)
+const staticItems: NewsItem[] = [];
 
 export default function News() {
   const { t } = useTranslation();
@@ -93,6 +90,9 @@ export default function News() {
         </div>
 
         <div className="flex flex-col gap-4">
+          {newsItems.length === 0 && (
+            <div className="py-16 text-center text-gray-500 text-sm">{t('news.empty')}</div>
+          )}
           {newsItems.map((item, i) => (
             <motion.div
               key={item.id}
