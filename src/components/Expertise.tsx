@@ -31,16 +31,16 @@ export default function Expertise() {
   const c4Y = useTransform(scrollYProgress, [0.5, 0.75], ["150%", "0%"]);
 
   const data = [
-    { sub: 'HOME APPLIANCE', tt: t('expertise.x0t'), dd: t('expertise.x0d'), img: imgHome },
-    { sub: 'INDUSTRIAL', tt: t('expertise.x1t'), dd: t('expertise.x1d'), img: imgInd },
-    { sub: 'MEDICAL DEVICE', tt: t('expertise.x2t'), dd: t('expertise.x2d'), img: imgMed },
-    { sub: 'RENEWABLE ENERGY', tt: t('expertise.x3t'), dd: t('expertise.x3d'), img: imgRen },
+    { sub: 'HOME APPLIANCE', tt: t('expertise.x0t'), dd: t('expertise.x0d'), img: imgHome, imgKey: 'biz.home.f0.img' },
+    { sub: 'INDUSTRIAL', tt: t('expertise.x1t'), dd: t('expertise.x1d'), img: imgInd, imgKey: 'biz.ind.f3.img' },
+    { sub: 'MEDICAL DEVICE', tt: t('expertise.x2t'), dd: t('expertise.x2d'), img: imgMed, imgKey: 'biz.med.f0.img' },
+    { sub: 'RENEWABLE ENERGY', tt: t('expertise.x3t'), dd: t('expertise.x3d'), img: imgRen, imgKey: 'biz.ren.f3.img' },
   ];
 
   const renderCard = (d: typeof data[0]) => (
     <>
       <div className="w-full md:w-1/2 h-48 md:h-full">
-        <img src={d.img} alt={d.tt} loading="eager" fetchPriority="high" decoding="async" className="w-full h-full object-cover opacity-90" />
+        <img src={d.img} data-cms-img-key={d.imgKey} alt={d.tt} loading="eager" fetchPriority="high" decoding="async" className="w-full h-full object-cover opacity-90" />
       </div>
       <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center relative">
         <div className="absolute inset-0 bg-gradient-to-r from-white/[0.02] to-transparent pointer-events-none" />
