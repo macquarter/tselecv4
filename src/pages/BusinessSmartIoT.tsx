@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { useImage } from '../contexts/SiteContentContext';
 import BusinessNav from '../components/BusinessNav';
 
 interface Feature {
@@ -39,6 +40,11 @@ const features: Feature[] = [
 export default function BusinessSmartIoT() {
   const { t } = useTranslation();
   const [selected, setSelected] = useState<Feature | null>(null);
+  const _img0 = useImage('biz.iot.f0.img', STOCK('photo-1518770660439-4636190af475'));
+  const _img1 = useImage('biz.iot.f1.img', STOCK('photo-1551808525-051f4baf7cba'));
+  const _img2 = useImage('biz.iot.f2.img', STOCK('photo-1573164713988-8665fc963095'));
+  const _img3 = useImage('biz.iot.f3.img', STOCK('photo-1581091226825-a6a2a5aee158'));
+  const _imgMap: Record<string,string> = {[STOCK('photo-1518770660439-4636190af475')]: _img0, [STOCK('photo-1551808525-051f4baf7cba')]: _img1, [STOCK('photo-1573164713988-8665fc963095')]: _img2, [STOCK('photo-1581091226825-a6a2a5aee158')]: _img3};
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -81,7 +87,8 @@ export default function BusinessSmartIoT() {
                 onClick={() => setSelected(feature)}
               >
                 <img
-                  src={feature.image}
+                  src={_imgMap[feature.image] || feature.image}
+                  data-cms-img-key={`biz.iot.${feature.key}.img`}
                   alt={t(`bizSmartIot.${feature.key}n`)}
                   className="absolute inset-0 w-full h-full object-cover opacity-85 transition-all duration-700 group-hover:scale-105 group-hover:opacity-100"
                   loading="eager"
@@ -115,7 +122,8 @@ export default function BusinessSmartIoT() {
 
               <div className="mb-6 rounded-2xl overflow-hidden aspect-video bg-[#111] border border-white/5">
                 <img
-                  src={selected.image}
+                  src={_imgMap[selected.image] || selected.image}
+                  data-cms-img-key={`biz.iot.${selected.key}.img`}
                   alt={t(`bizSmartIot.${selected.key}n`)}
                   className="w-full h-full object-cover"
                   onError={(e) => {
