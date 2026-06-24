@@ -9,8 +9,6 @@ interface Feature {
   key: string;
   image: string;
   fallback?: string;
-  solutions: string[];
-  boards: string[];
 }
 
 const STOCK = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=80`;
@@ -20,49 +18,21 @@ const features: Feature[] = [
     key: 'f0',
     image: STOCK('photo-1518770660439-4636190af475'),
     fallback: STOCK('photo-1558494949-ef010cbdcc31'),
-    solutions: [
-      '아날로그·디지털 센서 신호 수집 및 필터링',
-      '다채널 센서 인터페이스 (I²C · SPI · UART · ADC)',
-      '노이즈 보정 및 신호 정규화 처리',
-      '이벤트 기반 임계값 감지 로직',
-    ],
-    boards: ['Main PCB', 'Sensor Module', 'POWER PCB'],
   },
   {
     key: 'f1',
     image: STOCK('photo-1551808525-051f4baf7cba'),
     fallback: STOCK('photo-1581092160562-40aa08e78837'),
-    solutions: [
-      'Wi-Fi · BLE · LoRa 등 무선 통신 모듈 연동',
-      '상위 시스템 · 클라우드 게이트웨이 연결',
-      'OTA 펌웨어 업데이트 지원',
-      '통신 보안 및 자동 재접속 로직',
-    ],
-    boards: ['Main PCB', 'Wireless Module', 'POWER PCB'],
   },
   {
     key: 'f2',
     image: STOCK('photo-1573164713988-8665fc963095'),
     fallback: STOCK('photo-1581094794326-c0a7060a4b48'),
-    solutions: [
-      '실시간 상태 모니터링 및 데이터 로깅',
-      '이상 감지 시 알림 · 경보 출력',
-      '디스플레이 · HMI 연동 상태 표시',
-      '원격 모니터링 (옵션)',
-    ],
-    boards: ['Main PCB', 'Display (HMI)', 'Wireless Module'],
   },
   {
     key: 'f3',
     image: STOCK('photo-1581091226825-a6a2a5aee158'),
     fallback: STOCK('photo-1518770660439-4636190af475'),
-    solutions: [
-      '고객 요구사항 기반 맞춤형 제어 로직 설계',
-      '센서 · 통신 · 디스플레이 통합 제어보드',
-      '시제품 제작부터 양산까지 일괄 대응',
-      '전력 설계 및 안전 회로 포함',
-    ],
-    boards: ['Main PCB', 'Sensor Module', 'Display (HMI)', 'Wireless Module', 'POWER PCB'],
   },
 ];
 
@@ -159,9 +129,9 @@ export default function BusinessSmartIoT() {
               <p className="text-gray-400 text-sm font-light leading-relaxed mb-8">{t(`bizSmartIot.${selected.key}d`)}</p>
 
               <div className="mb-8">
-                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">태승전자가 제공하는 솔루션</h3>
+                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">{t('business.solutionsLabel')}</h3>
                 <ul className="space-y-2">
-                  {selected.solutions.map((s, i) => (
+                  {(t(`bizSmartIot.${selected.key}.solutions`, { returnObjects: true }) as unknown as string[]).map((s, i) => (
                     <li key={i} className="flex items-start gap-3 text-sm text-gray-300 leading-relaxed">
                       <span className="mt-2 w-1 h-1 rounded-full bg-gray-500 shrink-0" />
                       <span>{s}</span>
@@ -171,9 +141,9 @@ export default function BusinessSmartIoT() {
               </div>
 
               <div>
-                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">적용 보드 / 모듈</h3>
+                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">{t('business.boardsLabel')}</h3>
                 <div className="flex flex-wrap gap-2">
-                  {selected.boards.map((b, i) => (
+                  {(t(`bizSmartIot.${selected.key}.boards`, { returnObjects: true }) as unknown as string[]).map((b, i) => (
                     <span key={i} className="text-xs px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-gray-300">{b}</span>
                   ))}
                 </div>
