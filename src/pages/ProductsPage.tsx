@@ -55,14 +55,14 @@ export default function ProductsPage() {
 
         <section className="max-w-7xl mx-auto px-6 mb-24">
           <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-4xl font-bold tracking-tight text-white">제품 카테고리</h2>
-            <p className="text-gray-400 font-light mt-3">필요한 제품군을 선택하세요.</p>
+            <h2 className="text-2xl md:text-4xl font-bold tracking-tight text-white">{t('productsPage.catTitle')}</h2>
+            <p className="text-gray-400 font-light mt-3">{t('productsPage.catSub')}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             {[
-              { tt: t('nav.embedded'), dd: '시스템의 두뇌. 고성능 임베디드 제어.', link: '/main-controller', img: _catEmbedded, imgKey: 'productsCat.embedded.img' },
-              { tt: t('nav.hmi'), dd: '터치 디스플레이 + UI 펌웨어 통합 공급.', link: '/display', img: _catHmi, imgKey: 'productsCat.hmi.img' },
-              { tt: t('nav.custom'), dd: '정밀 온도 제어 · 특수 산업 장비.', link: '/others', img: _catCustom, imgKey: 'productsCat.custom.img' },
+              { tt: t('nav.embedded'), dd: t('productsPage.catEmbeddedDesc'), link: '/main-controller', img: _catEmbedded, imgKey: 'productsCat.embedded.img' },
+              { tt: t('nav.hmi'), dd: t('productsPage.catHmiDesc'), link: '/display', img: _catHmi, imgKey: 'productsCat.hmi.img' },
+              { tt: t('nav.custom'), dd: t('productsPage.catCustomDesc'), link: '/others', img: _catCustom, imgKey: 'productsCat.custom.img' },
             ].map((c, i) => (
               <motion.a
                 key={c.link}
@@ -97,10 +97,10 @@ export default function ProductsPage() {
             <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent" />
             <div className="relative z-10 flex flex-col justify-center h-full max-w-2xl px-10 md:px-16">
               <div className="text-[11px] uppercase tracking-[0.25em] text-gray-400 mb-5">04 · Manufacturing Process</div>
-              <h3 className="text-4xl md:text-6xl font-bold tracking-tighter text-white mb-4 ts-card-title">제조공정</h3>
-              <p className="text-gray-300 font-light text-base md:text-lg leading-relaxed mb-7">설계부터 출하까지, 10단계 정밀 제조 공정으로 무결점 품질을 구현합니다.</p>
+              <h3 className="text-4xl md:text-6xl font-bold tracking-tighter text-white mb-4 ts-card-title">{t('productsPage.processTitle')}</h3>
+              <p className="text-gray-300 font-light text-base md:text-lg leading-relaxed mb-7">{t('productsPage.processDesc')}</p>
               <span className="inline-flex items-center text-sm text-white border-b border-white/40 pb-1 w-fit group-hover:border-white transition-colors">
-                제조공정 자세히 보기
+                {t('productsPage.processMore')}
                 <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" /></svg>
               </span>
             </div>
