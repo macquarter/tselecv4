@@ -24,7 +24,7 @@ export default function Products({ onSelectProduct }: ProductsProps) {
       img: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=1200&q=80',
       colSpan: 'md:col-span-2',
       rowSpan: 'md:row-span-2',
-      details: ['인버터 압축기 BLDC 모터 구동 제어', '멀티 존 독립 온도 제어', '자동 제상 알고리즘 내장', '이상 과열·전류 초과 시 자동 안전 차단'],
+      details: t('homeProducts.p0.details', { returnObjects: true }) as unknown as string[],
     },
     {
       id: 'dish',
@@ -33,7 +33,7 @@ export default function Products({ onSelectProduct }: ProductsProps) {
       img: 'https://images.unsplash.com/photo-1585659722983-3a675dabf23d?auto=format&fit=crop&w=800&q=80',
       colSpan: 'md:col-span-1',
       rowSpan: 'md:row-span-1',
-      details: ['PTC 히터 PWM 정밀 온도 제어', '다중 건조 모드 (쾌속/표준/절전)', '차일드락 안전 기능', '도어 스위치 인터록 안전장치'],
+      details: t('homeProducts.p1.details', { returnObjects: true }) as unknown as string[],
     },
     {
       id: 'vent',
@@ -42,7 +42,7 @@ export default function Products({ onSelectProduct }: ProductsProps) {
       img: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=800&q=80',
       colSpan: 'md:col-span-1',
       rowSpan: 'md:row-span-1',
-      details: ['BLDC 팬 정밀 속도 제어', 'CO2/습도 센서 자동 연동', '필터 상태 경고 알림', 'IoT 연동 (Wi-Fi/BLE)'],
+      details: t('homeProducts.p2.details', { returnObjects: true }) as unknown as string[],
     },
     {
       id: 'med',
@@ -51,7 +51,7 @@ export default function Products({ onSelectProduct }: ProductsProps) {
       img: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=800&q=80',
       colSpan: 'md:col-span-1',
       rowSpan: 'md:row-span-1',
-      details: ['고정밀 ADC 16bit+ 센서 인터페이스', '이중 안전 회로 (Fail-safe)', 'IEC 60601 의료등급 설계', 'EMC 인증 완료'],
+      details: t('homeProducts.p3.details', { returnObjects: true }) as unknown as string[],
     },
     {
       id: 'solar',
@@ -60,7 +60,7 @@ export default function Products({ onSelectProduct }: ProductsProps) {
       img: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80',
       colSpan: 'md:col-span-1',
       rowSpan: 'md:row-span-1',
-      details: ['MPPT 효율 99% 이상', '계통연계 / 독립형 모드 전환', '역전력 방지 (Anti-islanding)', '원격 모니터링 연동'],
+      details: t('homeProducts.p4.details', { returnObjects: true }) as unknown as string[],
     },
   ];
 
