@@ -20,6 +20,7 @@ import Others from './pages/Others';
 import Process from './pages/Process';
 import Downloads from './pages/Downloads';
 import NewsPage from './pages/NewsPage';
+import ContactPage from './pages/ContactPage';
 import BusinessPage from './pages/BusinessPage';
 import BusinessHomeAppliance from './pages/BusinessHomeAppliance';
 import BusinessIndustrial from './pages/BusinessIndustrial';
@@ -57,6 +58,7 @@ export default function App() {
           <Route path="/process" element={<Process />} />
           <Route path="/downloads" element={<Downloads />} />
           <Route path="/news" element={<NewsPage />} />
+          <Route path="/contact" element={<ContactPage />} />
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
         </Routes>
