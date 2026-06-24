@@ -10,8 +10,6 @@ interface Feature {
   key: string;
   image: string;
   fallback?: string;
-  solutions: string[];
-  boards: string[];
 }
 
 const STOCK = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=80`;
@@ -21,74 +19,31 @@ const features: Feature[] = [
     key: 'f4',
     image: '/images/products/temp-controller.jpg',
     fallback: STOCK('photo-1581094289810-adf5d25690e3'),
-    solutions: [
-      'PT100·열전대(K/J/T 타입) 등 다채널 센서 입력',
-      'PID 오토튜닝 / 다단 프로파일(램프·소크) 제어',
-      '알람·인터록·과열 방지 안전 시퀀스',
-      '데이터 로깅·이력 관리 / RS-485·Modbus 통신',
-    ],
-    boards: ['Main PCB', 'POWER PCB', 'Display (HMI)'],
   },
   {
     key: 'f5',
     image: '/images/products/smart-iot.jpg',
     fallback: STOCK('photo-1558494949-ef010cbdcc31'),
-    solutions: [
-      '센서 신호 처리',
-      '디스플레이·HMI 연동',
-      '무선 통신 모듈 연동',
-      '상태 감지 및 알림 로직',
-      '고객 요구사항 기반 커스텀 제어보드 설계',
-    ],
-    boards: ['Main PCB', 'Sensor Module', 'Display (HMI)', 'Wireless Module', 'POWER PCB'],
   },
   {
     key: 'f0',
     image: '/images/products/dishwasher.jpg',
     fallback: STOCK('photo-1581622558663-b2e33377dfb2'),
-    solutions: [
-      '세척·헹굼·건조 사이클 시퀀스 제어',
-      '히터/펌프/솔레노이드 통합 제어',
-      '도어 인터록·과부하 보호 안전 회로',
-      '방수 사양 디스플레이·다국어 UI',
-    ],
-    boards: ['Main PCB', 'POWER PCB', 'Display (HMI)'],
   },
   {
     key: 'f1',
     image: '/images/products/chungho-ice-550.jpg',
     fallback: STOCK('photo-1499636136210-6f4ee915583e'),
-    solutions: [
-      '컴프레서·핫가스 밸브 자동 사이클 제어',
-      '저수조 수위·증발기 온도 센서 처리',
-      '위생 모드·잔수 배수·세척 알림',
-      '고장 진단 로그 / 원격 모니터링 (옵션)',
-    ],
-    boards: ['Main PCB', 'POWER PCB', 'Display (HMI)', '무선모듈 (옵션)'],
   },
   {
     key: 'f2',
     image: '/images/products/pump.jpg',
     fallback: STOCK('photo-1581094794326-c0a7060a4b48'),
-    solutions: [
-      'BLDC / 인버터 모터 구동 제어',
-      '압력·유량 센서 피드백 PID 제어',
-      '건운전·과부하·과열 보호 시퀀스',
-      'RS-485 / Modbus 통신으로 상위 시스템 연동',
-    ],
-    boards: ['Main PCB', 'POWER PCB', 'SMPS'],
   },
   {
     key: 'f3',
     image: '/images/products/smart-booth.jpg',
     fallback: STOCK('photo-1497366216548-37526070297c'),
-    solutions: [
-      '환기팬·조명·공조 통합 자동 제어',
-      'CO₂·온습도 센서 기반 자동 환기',
-      '터치 패널 UI · 예약/사용 상태 표시',
-      '네트워크 연동 시설 통합 관제(옵션)',
-    ],
-    boards: ['Main PCB', 'POWER PCB', 'Display (HMI)', '무선모듈'],
   },
 ];
 
@@ -192,9 +147,9 @@ export default function BusinessIndustrial() {
               <p className="text-gray-400 text-sm font-light leading-relaxed mb-8">{t(`bizIndustrial.${selected.key}d`)}</p>
 
               <div className="mb-8">
-                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">태승전자가 제공하는 솔루션</h3>
+                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">{t('business.solutionsLabel')}</h3>
                 <ul className="space-y-2">
-                  {selected.solutions.map((s, i) => (
+                  {(t(`bizIndustrial.${selected.key}.solutions`, { returnObjects: true }) as unknown as string[]).map((s, i) => (
                     <li key={i} className="flex items-start gap-3 text-sm text-gray-300 leading-relaxed">
                       <span className="mt-2 w-1 h-1 rounded-full bg-gray-500 shrink-0" />
                       <span>{s}</span>
@@ -204,9 +159,9 @@ export default function BusinessIndustrial() {
               </div>
 
               <div>
-                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">적용 보드 / 모듈</h3>
+                <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">{t('business.boardsLabel')}</h3>
                 <div className="flex flex-wrap gap-2">
-                  {selected.boards.map((b, i) => (
+                  {(t(`bizIndustrial.${selected.key}.boards`, { returnObjects: true }) as unknown as string[]).map((b, i) => (
                     <span key={i} className="text-xs px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-gray-300">{b}</span>
                   ))}
                 </div>
