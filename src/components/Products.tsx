@@ -69,7 +69,7 @@ export default function Products({ onSelectProduct }: ProductsProps) {
       <div className="max-w-7xl mx-auto px-6">
         <div className="mb-10 md:mb-20">
           <motion.h2
-            className="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-white"
+            className="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-white break-keep"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -99,6 +99,7 @@ export default function Products({ onSelectProduct }: ProductsProps) {
                 <motion.img
                   layoutId={`img-${product.id}`}
                   src={_imgMap[product.img] || product.img}
+                  data-cms-img-key={`homeProducts.p${i}.img`}
                   alt={product.name}
                   className="absolute inset-0 w-full h-full object-cover opacity-60"
                   variants={{ hover: { scale: 1.05, opacity: 0.8 } }}
@@ -107,7 +108,7 @@ export default function Products({ onSelectProduct }: ProductsProps) {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none"></div>
                 <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="absolute bottom-0 left-0 p-5 md:p-8 z-20 pointer-events-none">
-                  <motion.h3 layoutId={`title-${product.id}`} className="text-lg md:text-2xl font-bold mb-1 md:mb-2 text-white tracking-tight">{product.name}</motion.h3>
+                  <motion.h3 layoutId={`title-${product.id}`} className="text-lg md:text-2xl font-bold mb-1 md:mb-2 text-white tracking-tight break-keep">{product.name}</motion.h3>
                   <motion.p layoutId={`desc-${product.id}`} className="text-sm md:text-base text-gray-400 font-light">{product.desc}</motion.p>
                 </div>
               </motion.div>
