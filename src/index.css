@@ -73,3 +73,14 @@ body {
   transform-origin: left center;
 }
 .ts-card:hover .ts-card-title { transform: scale(1.04); }
+
+/* 모바일(≤767px) 히어로 헤드라인만 20% 축소: text-4xl(2.25rem) → 1.8rem.
+   text-4xl 과 md:text-7xl 을 동시에 가진 요소 = 히어로 h1 전용
+   (섹션 h2 는 md:text-6xl 이므로 제외). 데스크톱(≥768px)은 md:text-7xl 유지.
+   break-keep 와 함께 한글 단어 줄바꿈 억제. */
+@media (max-width: 767px) {
+  [class~="text-4xl"][class~="md:text-7xl"] {
+    font-size: 1.8rem;
+    line-height: 1.2;
+  }
+}
