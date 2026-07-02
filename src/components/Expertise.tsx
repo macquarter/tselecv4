@@ -45,7 +45,7 @@ export default function Expertise() {
       <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center relative">
         <div className="absolute inset-0 bg-gradient-to-r from-white/[0.02] to-transparent pointer-events-none" />
         <div className="text-xs font-semibold tracking-widest text-gray-300 mb-3 uppercase relative z-10">{d.sub}</div>
-        <h3 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight relative z-10">{d.tt}</h3>
+        <h3 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight relative z-10 break-keep">{d.tt}</h3>
         <p className="text-base md:text-lg text-gray-200 leading-relaxed font-light relative z-10">{d.dd}</p>
       </div>
     </>
@@ -63,7 +63,7 @@ export default function Expertise() {
           <div className="text-[10px] md:text-[11px] font-bold tracking-widest text-gray-400 uppercase mb-3">
             {t('home.expertiseTag')}
           </div>
-          <h2 className="text-2xl md:text-5xl font-bold tracking-tighter text-white leading-tight">
+          <h2 className="text-2xl md:text-5xl font-bold tracking-tighter text-white leading-tight break-keep">
             {t('expertise.t1')}<br />
             {t('expertise.t2')}
           </h2>
