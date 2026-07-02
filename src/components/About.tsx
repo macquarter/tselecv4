@@ -24,7 +24,7 @@ export default function About() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center">
           <div className="order-2 lg:order-1">
             <motion.h2
-              className="text-4xl md:text-6xl font-bold tracking-tighter mb-8 leading-tight text-white"
+              className="text-4xl md:text-6xl font-bold tracking-tighter mb-8 leading-tight text-white break-keep"
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
