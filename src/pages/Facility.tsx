@@ -26,7 +26,7 @@ export default function Facility() {
       <main className="pt-32 pb-20">
         <section className="relative flex flex-col items-center justify-center text-center px-6 mb-32">
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }} className="inline-block mb-6 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-sm font-medium text-gray-300">{t('facility.badge')}</motion.div>
-          <motion.h1 className="text-5xl md:text-7xl font-bold mb-8 tracking-tighter" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}>
+          <motion.h1 className="text-4xl md:text-7xl font-bold mb-8 tracking-tighter break-keep" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}>
             {t('facility.t1')}<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-600">{t('facility.t2')}</span>
           </motion.h1>
