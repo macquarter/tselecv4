@@ -92,7 +92,7 @@ export default function Navbar() {
             <img src={logoSrc} alt={logo1+logo2} className="h-12 w-auto object-contain" />
           </Link>
 
-          <div className="hidden md:flex items-center gap-6 text-[10px] font-medium text-gray-300 tracking-wide">
+          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300 tracking-wide">
             {navLinks.map((link) => (
               <div
                 key={link.name}
@@ -116,7 +116,7 @@ export default function Navbar() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute top-16 left-1/2 -translate-x-1/2 min-w-[180px] bg-[#0a0a0a]/95 backdrop-blur-xl border border-white/10 rounded-xl p-2 shadow-2xl"
+                        className="absolute top-16 left-1/2 -translate-x-1/2 min-w-[150px] bg-[#0a0a0a]/95 backdrop-blur-xl border border-white/10 rounded-xl p-1.5 shadow-2xl"
                       >
                         {link.dropdown.map((dropLink) => (
                           dropLink.href.includes('#') ? (
@@ -130,7 +130,7 @@ export default function Navbar() {
                                   document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' });
                                 }
                               }}
-                              className="block px-4 py-2.5 text-sm rounded-lg transition-all text-gray-400 hover:bg-white/5 hover:text-white hover:pl-5"
+                              className="block px-3 py-2 text-[0.84rem] whitespace-nowrap rounded-lg transition-all text-gray-400 hover:bg-white/5 hover:text-white hover:pl-5"
                             >
                               {dropLink.name}
                             </Link>
@@ -138,7 +138,7 @@ export default function Navbar() {
                             <Link
                               key={dropLink.name}
                               to={dropLink.href}
-                              className={`block px-4 py-2.5 text-sm rounded-lg transition-all ${
+                              className={`block px-3 py-2 text-[0.84rem] whitespace-nowrap rounded-lg transition-all ${
                                 location.pathname === dropLink.href
                                   ? 'bg-white/10 text-white font-semibold'
                                   : 'text-gray-400 hover:bg-white/5 hover:text-white hover:pl-5'
