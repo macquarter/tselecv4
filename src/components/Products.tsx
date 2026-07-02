@@ -92,7 +92,7 @@ export default function Products({ onSelectProduct }: ProductsProps) {
             >
               <motion.div
                 layoutId={`card-${product.id}`}
-                onClick={() => onSelectProduct(product)}
+                onClick={() => onSelectProduct({ ...product, img: _imgMap[product.img] || product.img })}
                 whileHover="hover"
                 className="relative w-full h-full rounded-[2rem] overflow-hidden bg-[#0a0a0a] border border-white/5 cursor-pointer group"
               >
