@@ -55,7 +55,7 @@ export default function News() {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div>
             <motion.h2
-              className="text-3xl md:text-5xl font-bold tracking-tighter mb-4 text-white"
+              className="text-3xl md:text-5xl font-bold tracking-tighter mb-4 text-white break-keep"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
