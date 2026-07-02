@@ -18,7 +18,7 @@ export default function FAQ() {
     <section id="faq" className="py-32 bg-[#0a0a0a]">
       <div className="max-w-3xl mx-auto px-6">
         <motion.h2
-          className="text-4xl md:text-6xl font-bold tracking-tighter mb-4 text-center text-white"
+          className="text-4xl md:text-6xl font-bold tracking-tighter mb-4 text-center text-white break-keep"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
