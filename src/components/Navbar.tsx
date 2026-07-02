@@ -92,7 +92,7 @@ export default function Navbar() {
             <img src={logoSrc} alt={logo1+logo2} className="h-12 w-auto object-contain" />
           </Link>
 
-          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300 tracking-wide">
+          <div className="hidden md:flex items-center gap-6 text-[10px] font-medium text-gray-300 tracking-wide">
             {navLinks.map((link) => (
               <div
                 key={link.name}
