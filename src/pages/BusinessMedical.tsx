@@ -50,7 +50,7 @@ export default function BusinessMedical() {
             <span className="inline-block px-4 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs tracking-widest text-gray-400 uppercase mb-8">
               {t('business.medicalTag')}
             </span>
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] mb-6">
+            <h1 className="text-4xl md:text-7xl font-bold tracking-tight leading-[1.1] mb-6 break-keep">
               {t('business.medicalTitle1')}
               <br />
               <span className="bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent">
