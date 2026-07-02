@@ -117,7 +117,7 @@ export default function KpiStats() {
           <span className="inline-block text-xs tracking-[0.25em] text-gray-500 uppercase mb-6">
             {t('kpiStats.badge', { defaultValue: 'Quality Performance' })}
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 leading-tight text-white">
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 leading-tight text-white break-keep">
             {t('kpiStats.t1', { defaultValue: '숫자로 증명하는' })}
             <br />
             {t('kpiStats.t2', { defaultValue: '핵심 품질 성과.' })}
