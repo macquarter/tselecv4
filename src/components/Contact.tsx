@@ -49,7 +49,7 @@ export default function Contact() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20">
           <div>
             <motion.h2
-              className="text-4xl md:text-6xl font-bold tracking-tighter mb-8 text-white"
+              className="text-4xl md:text-6xl font-bold tracking-tighter mb-8 text-white break-keep"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
