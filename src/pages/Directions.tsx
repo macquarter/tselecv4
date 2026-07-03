@@ -125,7 +125,7 @@ export default function Directions() {
               transition={{ duration: 0.8 }}
             >
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3156.6969169629487!2d126.57119!3d37.60477!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357b4d1f2f2f2f2f%3A0x2f2f2f2f2f2f2f2f!2sRobot%20Land-ro%2C%20Seo-gu%2C%20Incheon!5e0!3m2!1sen!2skr!4v"
+                src="https://maps.google.com/maps?q=%EC%9D%B8%EC%B2%9C%EA%B4%91%EC%97%AD%EC%8B%9C%20%EB%A1%9C%EB%B4%87%EB%9E%9C%EB%93%9C%EB%A1%9C249%EB%B2%88%EA%B8%B8%2062-8&t=&z=17&ie=UTF8&iwloc=&output=embed"
                 className="w-full h-full border-0 filter invert-[90%] hue-rotate-180 brightness-75 contrast-125"
                 allowFullScreen={false}
                 loading="lazy"
