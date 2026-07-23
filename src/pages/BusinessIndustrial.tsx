@@ -151,7 +151,7 @@ export default function BusinessIndustrial() {
               <div className="mb-8">
                 <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">{t('business.solutionsLabel')}</h3>
                 <ul className="space-y-2">
-                  {(t(`bizIndustrial.${selected.key}.solutions`, { returnObjects: true }) as unknown as string[]).map((s, i) => (
+                  {(t(`bizIndustrial.${selected.key}.solutions`, { returnObjects: true }) as unknown as string[]).filter((s) => typeof s === 'string' && s.trim() !== '').map((s, i) => (
                     <li key={i} className="flex items-start gap-3 text-sm text-gray-300 leading-relaxed">
                       <span className="mt-2 w-1 h-1 rounded-full bg-gray-500 shrink-0" />
                       <span>{s}</span>
@@ -163,7 +163,7 @@ export default function BusinessIndustrial() {
               <div>
                 <h3 className="text-xs tracking-widest text-gray-500 uppercase mb-4">{t('business.boardsLabel')}</h3>
                 <div className="flex flex-wrap gap-2">
-                  {(t(`bizIndustrial.${selected.key}.boards`, { returnObjects: true }) as unknown as string[]).map((b, i) => (
+                  {(t(`bizIndustrial.${selected.key}.boards`, { returnObjects: true }) as unknown as string[]).filter((b) => typeof b === 'string' && b.trim() !== '').map((b, i) => (
                     <span key={i} className="text-xs px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-gray-300">{b}</span>
                   ))}
                 </div>
