@@ -5,7 +5,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'public/favicon.svg'
+      - 'src/assets/tsLogo.ts'
       - 'scripts/build_favicons.py'
       - '.github/workflows/generate-favicons.yml'
 
@@ -26,22 +26,20 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libcairo2
           python -m pip install --upgrade pip
-          pip install cairosvg pillow
+          pip install pillow
 
-      - name: Build favicons from svg
+      - name: Build favicons from the real logo
         run: python3 scripts/build_favicons.py
 
       - name: Commit regenerated favicons
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/favicon.ico public/favicon-32.png public/apple-touch-icon.png public/icon-192.png public/icon-512.png
+          git add public/favicon.ico public/favicon.svg public/favicon-32.png public/apple-touch-icon.png public/icon-192.png public/icon-512.png
           if git diff --staged --quiet; then
             echo "No favicon changes to commit."
           else
-            git commit -m "chore(favicon): auto-generate padded favicon set from svg"
+            git commit -m "chore(favicon): regenerate favicon set from real logo [skip ci]"
             git push
           fi
