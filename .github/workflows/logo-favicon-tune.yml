@@ -1,0 +1,104 @@
+name: Logo Favicon Tune
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/logo-favicon-tune.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Pillow
+        run: pip install pillow
+      - name: Resize logos + regenerate transparent favicons
+        run: |
+          python3 - <<'PYEOF'
+          import re, base64, io, os
+          from PIL import Image
+
+          # ---------- 1) Navbar: top logo +10% (h-[1.8rem] -> h-[1.98rem]) ----------
+          nav="src/components/Navbar.tsx"
+          s=open(nav,encoding="utf-8").read(); o=s
+          s=s.replace("h-[1.8rem] w-auto object-contain","h-[1.98rem] w-auto object-contain")
+          assert s.count("h-[1.98rem] w-auto object-contain")==2, "navbar logo count != 2"
+          assert "h-[1.8rem] w-auto object-contain" not in s, "navbar still has old size"
+          assert s!=o, "navbar unchanged"
+          open(nav,"w",encoding="utf-8").write(s)
+          print("Navbar top logo -> h-[1.98rem] (x2) OK")
+
+          # ---------- 2) Footer: bottom logo -10% (h-8 -> h-[1.8rem]) ----------
+          ft="src/components/Footer.tsx"
+          s=open(ft,encoding="utf-8").read(); o=s
+          s=s.replace('className="h-8 w-auto object-contain"','className="h-[1.8rem] w-auto object-contain"')
+          assert 'className="h-[1.8rem] w-auto object-contain"' in s, "footer new size missing"
+          assert 'className="h-8 w-auto object-contain"' not in s, "footer still has h-8"
+          assert s!=o, "footer unchanged"
+          open(ft,"w",encoding="utf-8").write(s)
+          print("Footer bottom logo h-8 -> h-[1.8rem] OK")
+
+          # ---------- 3) Favicon: transparent PNGs from the bundled transparent logo ----------
+          src_ts="src/assets/tsLogo.ts"
+          t=open(src_ts,encoding="utf-8").read()
+          m=re.search(r'data:image/[a-zA-Z0-9.+-]+;base64,([^"\'`)\s]+)', t)
+          assert m, "no data URI base64 found in tsLogo.ts"
+          b64=re.sub(r'[^A-Za-z0-9+/=]', '', m.group(1))
+          raw=base64.b64decode(b64)
+          logo=Image.open(io.BytesIO(raw)).convert("RGBA")
+          # confirm the source really is transparent (not a white square)
+          amin=logo.getchannel("A").getextrema()[0]
+          assert amin < 255, f"source logo has no transparency (alpha min={amin})"
+          bbox=logo.getbbox()
+          if bbox: logo=logo.crop(bbox)
+          print("source logo:", logo.size, "cropped, transparent OK")
+
+          os.makedirs("public", exist_ok=True)
+          def make(size, pad_ratio=0.10):
+              canvas=Image.new("RGBA",(size,size),(0,0,0,0))
+              inner=int(size*(1-2*pad_ratio))
+              w,h=logo.size
+              scale=min(inner/w, inner/h)
+              nw,nh=max(1,int(round(w*scale))),max(1,int(round(h*scale)))
+              r=logo.resize((nw,nh),Image.LANCZOS)
+              canvas.paste(r,((size-nw)//2,(size-nh)//2),r)
+              return canvas
+          for fn,sz in [("favicon-32.png",32),("favicon.png",64),
+                        ("apple-touch-icon.png",180),("icon-192.png",192),("icon-512.png",512)]:
+              img=make(sz)
+              assert img.getchannel("A").getextrema()[0]==0, "generated favicon not transparent: "+fn
+              img.save("public/"+fn)
+              print("wrote public/"+fn, sz)
+
+          # ---------- 4) favicon.svg: remove white background rect ----------
+          sp="public/favicon.svg"
+          sv=open(sp,encoding="utf-8").read(); ov=sv
+          sv=re.sub(r'<rect[^>]*fill="#[Ff]{6}"[^>]*/>','',sv)
+          assert sv!=ov, "white rect not removed from favicon.svg"
+          open(sp,"w",encoding="utf-8").write(sv)
+          print("favicon.svg white rect removed OK")
+
+          # ---------- 5) index.html: point icon to transparent PNG ----------
+          ih="index.html"
+          h=open(ih,encoding="utf-8").read(); oh=h
+          old='<link rel="icon" type="image/svg+xml" href="/favicon.svg" />'
+          new=('<link rel="icon" type="image/png" href="/favicon.png" />\n'
+               '    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />\n'
+               '    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />')
+          assert old in h, "index.html icon link not found"
+          h=h.replace(old,new)
+          assert h!=oh, "index.html unchanged"
+          open(ih,"w",encoding="utf-8").write(h)
+          print("index.html icon -> transparent PNG OK")
+          PYEOF
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "style(logo): top +10% / bottom -10%; favicon transparent PNG (no white bg) [skip ci]" || echo "no changes"
+          git push
