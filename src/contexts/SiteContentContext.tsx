@@ -233,31 +233,8 @@ export function SiteContentProvider({ children }: { children: ReactNode }) {
     }
     load();
   }, []);
-
-  if (!content.loaded) {
-    return (
-      <div style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: '#000',
-      }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{
-            width: 40,
-            height: 40,
-            border: '3px solid rgba(255,255,255,0.1)',
-            borderTopColor: '#fff',
-            borderRadius: '50%',
-            animation: 'spin 0.8s linear infinite',
-            margin: '0 auto 16px',
-          }} />
-          <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
-        </div>
-      </div>
-    );
-  }
+  // 렌더 블로킹 제거: Firestore 로딩을 기다리지 않고 번들 기본값으로 즉시 렌더.
+  // (useText/useImage/useVideo 훅이 loaded=false 시 fallback을 반환하고, 로드 완료 후 자동 재렌더)
 
   const contextValue: SiteContent = {
     ...content,
