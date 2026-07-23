@@ -1,0 +1,51 @@
+name: Smart IoT Thumbnail Fix
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/smart-iot-fix.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Add bundled smart-iot fallback asset + fix f5 fallbacks
+        run: |
+          python3 - <<'PYEOF'
+          import hashlib, os, urllib.request
+          URL=("https://firebasestorage.googleapis.com/v0/b/"
+               "gen-lang-client-0276589179.firebasestorage.app/o/"
+               "cms%2Fbiz.ind.f5.img.jpg?alt=media&token=478e70a1-e52e-4246-b243-720eb9482138")
+          EXPECT="fd22176eaa57fac668458d11d869b382fcd48667a335af66919a46ed8233a418"
+          # 1) fetch the exact current CMS smart-IoT image from Storage and verify bytes
+          raw=urllib.request.urlopen(URL, timeout=60).read()
+          got=hashlib.sha256(raw).hexdigest()
+          assert got==EXPECT, f"SHA MISMATCH {got} != {EXPECT}"
+          os.makedirs("public/images/products", exist_ok=True)
+          open("public/images/products/smart-iot.jpg","wb").write(raw)
+          print("smart-iot.jpg written:", len(raw), "bytes; sha OK")
+          # 2) fix BusinessIndustrial.tsx f5 fallbacks: unrelated Unsplash -> bundled asset
+          p="src/pages/BusinessIndustrial.tsx"
+          s=open(p,encoding="utf-8").read()
+          orig=s
+          s=s.replace("STOCK('photo-1518770660439-4636190af475')", "'/images/products/smart-iot.jpg'")
+          s=s.replace("STOCK('photo-1558494949-ef010cbdcc31')", "'/images/products/smart-iot.jpg'")
+          assert "photo-1518770660439-4636190af475" not in s, "img5 fallback not replaced"
+          assert "photo-1558494949-ef010cbdcc31" not in s, "features f5 fallback not replaced"
+          assert s.count("/images/products/smart-iot.jpg")>=4, "expected asset path in features+map+2 fallbacks"
+          assert s!=orig, "no tsx change"
+          open(p,"w",encoding="utf-8").write(s)
+          print("BusinessIndustrial.tsx f5 fallbacks patched OK")
+          PYEOF
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/images/products/smart-iot.jpg src/pages/BusinessIndustrial.tsx
+          git commit -m "fix(smart-iot): add bundled fallback asset + point f5 fallbacks to real product image [skip ci]" || echo "no changes"
+          git push
