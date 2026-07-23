@@ -115,7 +115,7 @@ export default function BusinessMedical() {
               </button>
 
               <div className="mb-6 rounded-2xl overflow-hidden aspect-video bg-[#111] border border-white/5">
-                <img
+                <img loading="lazy" decoding="async"
                   src={_imgMap[selected.image] || selected.image}
                   data-cms-img-key={`biz.med.${selected.key}.img`}
                   alt={t(`bizMedical.${selected.key}n`)}
