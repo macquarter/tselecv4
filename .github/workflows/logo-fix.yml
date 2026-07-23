@@ -1,0 +1,58 @@
+name: Logo Fix
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/logo-fix.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Apply exact customer logo (fallback asset + navbar wiring)
+        run: |
+          python3 - <<'PYEOF'
+          import base64, hashlib, json, urllib.request, re
+          API="AIzaSyDmgOBu3kPUGzff_CyR647kIbN4F91seJE"
+          BASE="https://firestore.googleapis.com/v1/projects/gen-lang-client-0276589179/databases/ai-studio-e97c649f-c50c-4cd5-8952-6640d34f2444/documents"
+          EXPECT="6c9db20238e628bbdfac4ff4f1eec1a65d854a9c799e5033ca630e0f705d7fe6"
+          # 1) fetch the exact customer logo from Firestore (public read) and verify bytes
+          r=urllib.request.urlopen(f"{BASE}/siteContent/media?key={API}", timeout=60)
+          d=json.load(r)
+          uri=d['fields']['images']['mapValue']['fields']['logo-img']['stringValue']
+          raw=base64.b64decode(uri.split(',',1)[1])
+          got=hashlib.sha256(raw).hexdigest()
+          assert got==EXPECT, f"SHA MISMATCH {got} != {EXPECT}"
+          # 2) bundled fallback = exact full logo (instant, no flash, byte-exact, no redraw)
+          ts=("// 태승전자 공식 로고 (고객 제공 원본 PNG, 무수정 그대로 임베드)\n"
+              "// 320x69 투명배경. 아트워크 변경/재작성 없음 - 원본 바이트 그대로 base64.\n"
+              "// sha256(원본): %s\n"
+              "const tsLogo = '%s';\n\nexport default tsLogo;\n") % (EXPECT, uri)
+          open("src/assets/tsLogo.ts","w",encoding="utf-8").write(ts)
+          print("tsLogo.ts written; png", len(raw), "bytes; sha OK")
+          # 3) navbar wiring: accept data: URIs + drop duplicate company-name span
+          p="src/components/Navbar.tsx"
+          s=open(p,encoding="utf-8").read()
+          orig=s
+          s=s.replace("/^https?:\\/\\//.test(cmsLogo)", "/^(https?:\\/\\/|data:image\\/)/.test(cmsLogo)")
+          s=re.sub(r"\n\s*const logoName = useText\('logo-name'[^\n]*\n", "\n", s)
+          s=re.sub(r"\s*<span[^>]*>\{logoName\}</span>", "", s)
+          assert "data:image" in s, "regex patch failed"
+          assert "{logoName}" not in s, "span removal failed"
+          assert "const logoName" not in s, "logoName decl still present"
+          assert s!=orig, "no navbar change"
+          open(p,"w",encoding="utf-8").write(s)
+          print("Navbar.tsx patched OK")
+          PYEOF
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/assets/tsLogo.ts src/components/Navbar.tsx
+          git commit -m "fix(logo): show exact customer full logo (bundled fallback + data-URI CMS), drop dup name span [skip ci]" || echo "no changes"
+          git push
