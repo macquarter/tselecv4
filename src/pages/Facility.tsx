@@ -39,7 +39,7 @@ export default function Facility() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {images.map((img, i) => (
               <motion.div key={i} className="group relative rounded-[2rem] overflow-hidden aspect-[4/3] bg-[#0a0a0a] border border-white/5" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}>
-                <img src={img.src} alt={t(`facility.${img.tKey}t`)} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100" />
+                <img loading="lazy" decoding="async" src={img.src} alt={t(`facility.${img.tKey}t`)} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-10">
                   <h3 className="text-3xl font-bold mb-2 tracking-tight">{t(`facility.${img.tKey}t`)}</h3>
                   <p className="text-gray-400 font-light">{t(`facility.${img.tKey}d`)}</p>
