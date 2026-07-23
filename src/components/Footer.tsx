@@ -17,13 +17,13 @@ export default function Footer({ pageBadge }: FooterProps) {
   const ftB3 = useText('ft-b3', 'KC');
 
   return (
-    <footer className="bg-black border-t border-white/10 pt-12 md:pt-20 pb-10">
+    <footer className="bg-black border-t border-white/10 pt-12 md:pt-20 pb-10 font-sans">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8 mb-12 md:mb-16">
           <div className="col-span-2">
             <Link to="/" className="inline-block mb-6" data-cms-img-key="logo-img">
               {logoImg ? (
-                <img src={logoImg} alt={logo1+logo2} className="h-10 w-auto object-contain" />
+                <img src={logoImg} alt={logo1+logo2} className="h-8 w-auto object-contain" />
               ) : (
                 <div className="flex flex-col leading-[0.85] font-black text-[20px] tracking-[-0.12em] uppercase text-white">
                   <span>{logo1}</span>
@@ -82,7 +82,7 @@ export default function Footer({ pageBadge }: FooterProps) {
             {pageBadge && (
               <>
                 <span className="hidden md:inline text-gray-700">·</span>
-                <span className="text-gray-500 font-mono tracking-wide">{pageBadge}</span>
+                <span className="text-gray-500 font-sans tracking-wide">{pageBadge}</span>
               </>
             )}
           </div>
