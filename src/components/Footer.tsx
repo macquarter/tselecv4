@@ -23,7 +23,7 @@ export default function Footer({ pageBadge }: FooterProps) {
           <div className="col-span-2">
             <Link to="/" className="inline-block mb-6" data-cms-img-key="logo-img">
               {logoImg ? (
-                <img src={logoImg} alt={logo1+logo2} className="h-8 w-auto object-contain" />
+                <img src={logoImg} alt={logo1+logo2} className="h-[1.8rem] w-auto object-contain" />
               ) : (
                 <div className="flex flex-col leading-[0.85] font-black text-[20px] tracking-[-0.12em] uppercase text-white">
                   <span>{logo1}</span>
