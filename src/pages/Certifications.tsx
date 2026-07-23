@@ -432,7 +432,7 @@ export default function Certifications() {
               >
                 {/* Patent Thumbnail */}
                 <div className="h-64 bg-[#1a1a1a] border-b border-white/5 overflow-hidden relative">
-                  <img
+                  <img loading="lazy" decoding="async"
                     src={patent.img}
                     data-cms-img-key={`cert.patent.${i}.img`}
                     alt={`특허 제${patent.number}호`}
