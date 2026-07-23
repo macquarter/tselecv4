@@ -18,6 +18,7 @@ export default function Navbar() {
   const logo1 = useText('logo-1', 'TSE');
   const logo2 = useText('logo-2', 'LEC');
   const cmsLogo = useImage('logo-img', '');
+  const logoName = useText('logo-name', '태승전자㈜');
   // 실제 업로드(Storage http URL)일 때만 CMS 값 사용, 그 외엔 번들된 투명 로고(흰 배경 제거본)
   const logoSrc = /^https?:\/\//.test(cmsLogo) ? cmsLogo : tsLogo;
 
@@ -90,6 +91,7 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2" data-cms-img-key="logo-img">
             <img src={logoSrc} alt={logo1+logo2} className="h-12 w-auto object-contain" />
+            <span className="text-white font-bold text-base md:text-lg tracking-tight whitespace-nowrap">{logoName}</span>
           </Link>
 
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300 tracking-wide">
@@ -185,6 +187,7 @@ export default function Navbar() {
             <div className="flex items-center justify-between px-6 h-16 shrink-0">
               <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2" data-cms-img-key="logo-img">
                 <img src={logoSrc} alt={logo1+logo2} className="h-12 w-auto object-contain" />
+                <span className="text-white font-bold text-base md:text-lg tracking-tight whitespace-nowrap">{logoName}</span>
               </Link>
               <div className="flex items-center gap-2">
                 <LanguageSwitcher />
