@@ -65,7 +65,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
           >
             <h4 className="text-sm font-bold tracking-widest text-gray-400 uppercase mb-6">{t('productModal.featuresLabel')}</h4>
             <ul className="space-y-4">
-              {product.details?.map((detail, idx) => (
+              {product.details?.filter((detail) => typeof detail === 'string' && detail.trim() !== '').map((detail, idx) => (
                 <li key={idx} className="flex items-start gap-4 p-4 rounded-2xl bg-[#111] border border-white/5">
                   <div className="w-1.5 h-1.5 rounded-full bg-white mt-2 shrink-0" />
                   <span className="text-gray-300 leading-relaxed font-light">{detail}</span>
