@@ -1,0 +1,50 @@
+name: Logo Size and Footer Font
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/logo-size-font.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Resize logos + footer Pretendard
+        run: |
+          python3 - <<'PYEOF'
+          # --- Navbar: top logo -40% (h-12=3rem -> h-[1.8rem]=1.8rem), both desktop+mobile ---
+          pn="src/components/Navbar.tsx"
+          n=open(pn,encoding="utf-8").read(); no=n
+          n=n.replace('className="h-12 w-auto object-contain"',
+                      'className="h-[1.8rem] w-auto object-contain"')
+          assert n.count('h-[1.8rem] w-auto object-contain')==2, "expected 2 navbar logo imgs resized"
+          assert 'h-12 w-auto object-contain' not in n, "old navbar logo size remains"
+          assert n!=no, "no navbar change"
+          open(pn,"w",encoding="utf-8").write(n)
+          print("Navbar top logo -40% OK")
+
+          # --- Footer: bottom logo -20% (h-10=2.5rem -> h-8=2rem) + entire footer Pretendard ---
+          pf="src/components/Footer.tsx"
+          f=open(pf,encoding="utf-8").read(); fo=f
+          f=f.replace('<img src={logoImg} alt={logo1+logo2} className="h-10 w-auto object-contain" />',
+                      '<img src={logoImg} alt={logo1+logo2} className="h-8 w-auto object-contain" />')
+          assert 'className="h-8 w-auto object-contain"' in f, "footer logo not resized"
+          f=f.replace('<footer className="bg-black border-t border-white/10 pt-12 md:pt-20 pb-10">',
+                      '<footer className="bg-black border-t border-white/10 pt-12 md:pt-20 pb-10 font-sans">')
+          assert 'pb-10 font-sans"' in f, "footer root font-sans not added"
+          f=f.replace('text-gray-500 font-mono tracking-wide',
+                      'text-gray-500 font-sans tracking-wide')
+          assert 'font-mono' not in f, "font-mono still present in footer"
+          assert f!=fo, "no footer change"
+          open(pf,"w",encoding="utf-8").write(f)
+          print("Footer bottom logo -20% + Pretendard OK")
+          PYEOF
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/components/Navbar.tsx src/components/Footer.tsx
+          git commit -m "style(logo): top logo -40%, footer logo -20%, footer font Pretendard (drop font-mono) [skip ci]" || echo "no changes"
+          git push
