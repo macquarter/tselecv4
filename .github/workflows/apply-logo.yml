@@ -1,0 +1,41 @@
+name: Apply Logo
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/apply-logo.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Write tsLogo.ts from sha-verified base64
+        run: |
+          python3 - <<'PYEOF'
+          import base64, hashlib
+          B64 = "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"
+          EXPECT = "6c9db20238e628bbdfac4ff4f1eec1a65d854a9c799e5033ca630e0f705d7fe6"
+          raw = base64.b64decode(B64)
+          got = hashlib.sha256(raw).hexdigest()
+          assert got == EXPECT, f"SHA MISMATCH {got} != {EXPECT}"
+          content = (
+              "// 태승전자 공식 로고 (고객 제공 원본 PNG, 무수정 그대로 임베드)\n"
+              "// 320x69 투명 배경 RGBA. 아트워크 변경/재작성 없음 — 원본 바이트 그대로 base64.\n"
+              "// sha256(원본): %s\n"
+              "const tsLogo = 'data:image/png;base64,%s';\n\nexport default tsLogo;\n"
+          ) % (EXPECT, B64)
+          open("src/assets/tsLogo.ts","w",encoding="utf-8").write(content)
+          print("wrote src/assets/tsLogo.ts", len(content), "chars; png", len(raw), "bytes; sha OK")
+          PYEOF
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/assets/tsLogo.ts
+          git commit -m "fix(logo): embed exact customer full logo PNG, byte-exact no redraw [skip ci]" || echo "no changes"
+          git push
