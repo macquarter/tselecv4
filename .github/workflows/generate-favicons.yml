@@ -1,0 +1,47 @@
+name: Generate Favicons
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'public/favicon.svg'
+      - 'scripts/build_favicons.py'
+      - '.github/workflows/generate-favicons.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libcairo2
+          python -m pip install --upgrade pip
+          pip install cairosvg pillow
+
+      - name: Build favicons from svg
+        run: python3 scripts/build_favicons.py
+
+      - name: Commit regenerated favicons
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/favicon.ico public/favicon-32.png public/apple-touch-icon.png public/icon-192.png public/icon-512.png
+          if git diff --staged --quiet; then
+            echo "No favicon changes to commit."
+          else
+            git commit -m "chore(favicon): auto-generate padded favicon set from svg"
+            git push
+          fi
