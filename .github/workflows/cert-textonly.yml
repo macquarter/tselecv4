@@ -1,0 +1,76 @@
+name: cert-textonly
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/cert-textonly.yml'
+permissions:
+  contents: write
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Transform Certifications.tsx
+        run: |
+          python3 - <<'PYEOF'
+          import re
+          p="src/pages/Certifications.tsx"
+          s=open(p,encoding="utf-8").read()
+          orig=s
+          s2=re.sub(r'\{/\* Certification Detail Modal \*/\}.*?</AnimatePresence>\s*','',s,flags=re.S)
+          assert s2!=s and 'Certification Detail Modal' not in s2,"modal not removed"
+          s=s2
+          s=s.replace("import { motion, AnimatePresence } from 'motion/react';","import { motion } from 'motion/react';")
+          assert 'AnimatePresence' not in s,"AnimatePresence remains"
+          assert 'selectedCert' in s
+          s2=re.sub(r'\n\s*<div className="mb-6 h-48 rounded-xl[^"]*">\s*<img.*?/>\s*</div>','',s,flags=re.S)
+          assert s2!=s and 'mb-6 h-48 rounded-xl' not in s2,"card image not removed"
+          s=s2
+          assert s.count('overflow-hidden cursor-pointer"')==1
+          s=s.replace('overflow-hidden cursor-pointer"','overflow-hidden"')
+          s2=re.sub(r'\n\s*onClick=\{\(\) => setSelectedCert\(cert\)\}','',s)
+          assert s2!=s,"onClick not removed"
+          s=s2
+          assert s.count('mt-12 pt-6 border-t border-white/10 flex items-center justify-between')==1
+          s=s.replace('mt-12 pt-6 border-t border-white/10 flex items-center justify-between','mt-12 pt-6 border-t border-white/10')
+          s2=re.sub(r'\n\s*<div className="w-8 h-8 rounded-full bg-white/10.*?</svg>\s*</div>','',s,flags=re.S)
+          assert s2!=s and 'M5 12h14M12 5l7 7-7 7' not in s2,"arrow not removed"
+          s=s2
+          assert len(re.findall(r"const ceImg\d = useImage\('ce-img\d',",s))==6
+          s=re.sub(r"\n\s*const ceImg\d = useImage\('ce-img\d',[^\n]*\);",'',s)
+          assert "useImage('ce-img" not in s
+          assert len(re.findall(r"img: ceImg\d, imgKey: 'ce-img\d',",s))==6
+          s=re.sub(r"\n\s*img: ceImg\d, imgKey: 'ce-img\d',",'',s)
+          assert 'ceImg' not in s
+          assert len(re.findall(r"\n\s*detail: \{",s))==6
+          s=re.sub(r"\n\s*detail: \{.*?\n      \},",'',s,flags=re.S)
+          assert 'detail: {' not in s
+          s=re.sub(r"interface CertDetail \{[^}]*\}\n\n",'',s)
+          assert 'CertDetail {' not in s
+          s=s.replace("  img: string;\n  imgKey?: string;\n","")
+          s=s.replace("\n  detail: CertDetail;","")
+          assert 'CertDetail' not in s
+          s=re.sub(r"\n\s*const \[selectedCert, setSelectedCert\] = useState<Cert \| null>\(null\);",'',s)
+          s=s.replace("import { useState } from 'react';\n","")
+          assert 'useState' not in s and 'selectedCert' not in s
+          assert 'patImg0' in s and "useImage('cert.patent.0.img'" in s
+          assert 'import { motion } from' in s
+          assert 'data-cms-img-key={cert.imgKey}' not in s
+          open(p,'w',encoding="utf-8").write(s)
+          print("OK",len(orig),"->",len(s))
+          PYEOF
+      - name: Build verify
+        run: |
+          npm ci || npm install
+          npm run build
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/pages/Certifications.tsx
+          git commit -m "certs: remove card photos + modal depth, text-only branding cards [skip ci]" || echo "no-op"
+          git push
