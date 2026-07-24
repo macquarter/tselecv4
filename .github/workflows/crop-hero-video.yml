@@ -1,0 +1,37 @@
+name: crop-hero-video
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/crop-hero-video.yml'
+permissions:
+  contents: write
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Crop hero drone video (remove parking lot)
+        run: |
+          set -e
+          if [ -f public/.hero-reframed ]; then echo "already reframed, skipping"; exit 0; fi
+          command -v ffmpeg >/dev/null || (sudo apt-get update && sudo apt-get install -y ffmpeg)
+          ffmpeg -version | head -1
+          IN=public/about-video.mp4
+          test -f "$IN"
+          echo "source dims:"
+          ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 "$IN"
+          ffmpeg -y -i "$IN" -vf "crop=1280:374:0:0,scale=1280:720" -c:v libx264 -profile:v high -pix_fmt yuv420p -crf 23 -an -movflags +faststart /tmp/cropped.mp4
+          DIM=$(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 /tmp/cropped.mp4)
+          echo "cropped dims: $DIM"
+          test "$DIM" = "1280,720"
+          mv /tmp/cropped.mp4 "$IN"
+          touch public/.hero-reframed
+          ls -l "$IN"
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/about-video.mp4 public/.hero-reframed
+          git commit -m "about: reframe hero drone video to remove parking lot [skip ci]" || echo "no-op"
+          git push
