@@ -9,6 +9,7 @@ interface Cert {
   year: string;
   desc: string;
   category: string;
+  points?: string[];
 }
 
 export default function Certifications() {
@@ -25,6 +26,7 @@ export default function Certifications() {
       year: '2018년 인증 (NTQ-3898)',
       desc: '마이크로 콘트롤러의 개발·제조에 대한 품질경영시스템 인증. 유효기간 2024.03.02~2027.03.01',
       category: 'cert',
+      points: ['제품 품질의 일관성과 신뢰성 보장', '글로벌 시장 진출 필수 자격 요건 충족', '국내외 대기업 납품 기본 요구 인증'],
     },
     {
       name: 'ISO 14001:2015',
@@ -32,6 +34,7 @@ export default function Certifications() {
       year: '2006년 인증',
       desc: '환경 보호 및 지속 가능한 경영',
       category: 'cert',
+      points: ['환경 규제 준수로 법적 리스크 최소화', '에너지·자원 효율화로 비용 절감', 'ESG 경영 대응 및 친환경 이미지 구축'],
     },
     {
       name: 'CE Marking',
@@ -39,6 +42,7 @@ export default function Certifications() {
       year: '안전적합인증',
       desc: '유럽연합 기술 표준 준수 확인',
       category: 'cert',
+      points: ['EU 및 EEA 시장 진출 필수 인증', '전기안전(LVD)·전자파(EMC) 기준 충족', '유럽 수출 통관·유통 장벽 해소'],
     },
     {
       name: 'KC Certification',
@@ -46,6 +50,7 @@ export default function Certifications() {
       year: '안전인증',
       desc: '한국 전자제품 안전 기준 준수',
       category: 'cert',
+      points: ['국내 유통 위한 법적 필수 인증', '전기안전·전자파(EMC)·에너지효율 기준 충족', '국내 대기업 납품 기본 요구사항 충족'],
     },
     {
       name: '기업부설연구소',
@@ -53,6 +58,7 @@ export default function Certifications() {
       year: '2000년 인증',
       desc: '독자 기술 개발 능력 보유',
       category: 'cert',
+      points: ['R&D 세액공제 혜택 적용', '정부 R&D 과제 신청 자격 확보', '독자 기술 개발 역량 공식 인증'],
     },
     {
       name: 'RoHS Compliance',
@@ -60,6 +66,7 @@ export default function Certifications() {
       year: '유해물질제한',
       desc: '환경 친화 제조 공정',
       category: 'cert',
+      points: ['유해물질 10종 사용 제한 준수', 'EU·글로벌 시장 수출 필수 요건 충족', '친환경 제조로 작업자·소비자 안전 확보'],
     },
   ];
 
@@ -158,6 +165,16 @@ export default function Certifications() {
                     <h3 className="text-3xl font-bold mb-2 tracking-tight">{cert.name}</h3>
                     <p className="text-gray-400 font-medium mb-6">{cert.krName}</p>
                     <p className="text-gray-500 text-sm leading-relaxed font-light">{cert.desc}</p>
+                    {cert.points && (
+                      <ul className="mt-6 space-y-1.5">
+                        {cert.points.map((pt, pi) => (
+                          <li key={pi} className="flex items-start text-xs text-gray-500 font-light leading-relaxed">
+                            <span className="mr-2 mt-[6px] h-1 w-1 rounded-full bg-gray-600 shrink-0" />
+                            <span>{pt}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
 
                   <div className="mt-12 pt-6 border-t border-white/10">

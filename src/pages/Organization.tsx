@@ -73,21 +73,6 @@ export default function Organization() {
           </motion.p>
         </section>
 
-        {/* CEO Section */}
-        <section className="max-w-7xl mx-auto px-6 mb-24 text-center">
-          <motion.div
-            className="inline-block bg-[#0a0a0a] border border-white/5 rounded-[2rem] p-12 md:p-20 shadow-2xl relative overflow-hidden group"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <p className="text-gray-400 font-medium tracking-widest mb-4 uppercase text-sm relative z-10">{t('orgPage.ceoLabel')}</p>
-            <h2 className="text-5xl md:text-6xl font-bold tracking-tight relative z-10">{t('orgPage.ceoName')}</h2>
-          </motion.div>
-        </section>
-
         {/* Departments Grid */}
         <section className="max-w-7xl mx-auto px-6 mb-32">
           <motion.div
