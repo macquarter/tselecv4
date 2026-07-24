@@ -9,6 +9,10 @@ import { useTranslation } from 'react-i18next';
  */
 export default function About() {
   const _aboutVid = useVideo('about.video', '/about-video.mp4');
+  // Cache-buster: the reframed hero video ships at the same static path
+  // (/about-video.mp4), so append a version query to force clients + Vercel CDN
+  // to fetch the newly-cropped file instead of a stale cached copy.
+  const aboutVidSrc = _aboutVid.includes('?') ? _aboutVid : `${_aboutVid}?v=drone20260724`;
   const { t } = useTranslation();
 
   const stats = [
@@ -68,7 +72,7 @@ export default function About() {
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           >
             <video
-              src={_aboutVid}
+              src={aboutVidSrc}
               autoPlay
               loop
               muted
