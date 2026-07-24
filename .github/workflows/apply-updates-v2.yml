@@ -1,0 +1,98 @@
+name: apply-updates-v2
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/apply-updates-v2.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Ensure ffmpeg
+        run: ffmpeg -version >/dev/null 2>&1 || (sudo apt-get update && sudo apt-get install -y ffmpeg)
+      - name: Transform source files
+        run: |
+          python3 - <<'PYEOF'
+          import re
+          # ===== Certifications.tsx: add curated points + render =====
+          p = 'src/pages/Certifications.tsx'
+          s = open(p, encoding='utf-8').read()
+          points = {
+            'ISO 9001:2015': ['제품 품질의 일관성과 신뢰성 보장','글로벌 시장 진출 시 필수 자격 요건 충족','국내외 대기업 납품 시 기본 요구 인증'],
+            'ISO 14001:2015': ['환경 규제 준수 체계 구축으로 법적 리스크 최소화','에너지·자원 사용 효율화로 비용 절감','친환경 기업 이미지 구축으로 ESG 경영 대응'],
+            'CE Marking': ['EU 28개국 + EEA 시장 진출 필수 인증','전기안전(LVD)·전자파 적합성(EMC) 기준 충족 입증','유럽 수출 시 통관 및 유통 장벽 해소'],
+            'KC Certification': ['국내 시장 유통을 위한 법적 필수 인증','전기안전·전자파(EMC)·에너지효율 기준 충족','국내 대기업 납품 시 기본 요구사항 충족'],
+            '기업부설연구소': ['연구개발(R&D) 세액공제 혜택 적용','정부 R&D 과제 신청 자격 확보','독자적 기술 개발 역량 공식 인증'],
+            'RoHS Compliance': ['유해물질 10종 사용 제한 기준 준수','EU 및 글로벌 시장 수출 필수 요건 충족','친환경 제조 공정으로 작업자·소비자 안전 확보'],
+          }
+          lines = s.split('\n'); out=[]; cur=None
+          for ln in lines:
+            m = re.match(r"\s*name: '(.+?)',\s*$", ln)
+            if m and m.group(1) in points: cur = m.group(1)
+            out.append(ln)
+            if ln.strip() == "category: 'cert'," and cur in points:
+              ind = ln[:len(ln)-len(ln.lstrip())]
+              body = ',\n'.join(ind+"  '"+x+"'" for x in points[cur])
+              out.append(ind+"points: [\n"+body+",\n"+ind+"],")
+              cur=None
+          s = '\n'.join(out)
+          s = s.replace("  desc: string;\n  category: string;\n}", "  desc: string;\n  category: string;\n  points?: string[];\n}")
+          desc = '                    <p className="text-gray-500 text-sm leading-relaxed font-light">{cert.desc}</p>'
+          assert desc in s, "desc line missing"
+          s = s.replace(desc, desc + '''
+
+                    {cert.points && (
+                      <ul className="mt-6 space-y-2">
+                        {cert.points.map((pt, pi) => (
+                          <li key={pi} className="flex items-start text-sm text-gray-400 font-light leading-relaxed">
+                            <span className="mr-2 mt-[7px] h-1 w-1 rounded-full bg-gray-500 shrink-0" />
+                            <span>{pt}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}''')
+          assert s.count("points: [") == 6, s.count("points: [")
+          assert "cert.points.map" in s
+          assert "points?: string[];" in s
+          open(p,'w',encoding='utf-8').write(s)
+          # ===== Organization.tsx: remove CEO section =====
+          q = 'src/pages/Organization.tsx'
+          o = open(q, encoding='utf-8').read()
+          pat = re.compile(r"\n\s*\{/\* CEO Section \*/\}\s*\n\s*<section[^\n]*\n.*?</section>\n", re.DOTALL)
+          o2, n = pat.subn("\n", o)
+          assert n == 1, ("CEO section count", n)
+          assert "ceoName" not in o2
+          open(q,'w',encoding='utf-8').write(o2)
+          print("transform OK")
+          PYEOF
+      - name: Crop hero drone video (remove parking lot)
+        run: |
+          if [ -f public/.about-video-cropped ]; then
+            echo "already cropped, skipping"
+          else
+            ffmpeg -y -v error -i public/about-video.mp4 -vf "crop=1280:374:0:0,scale=1280:720" -c:v libx264 -profile:v high -pix_fmt yuv420p -crf 23 -an -movflags +faststart public/about-video.cropped.mp4
+            W=$(ffprobe -v error -select_streams v:0 -show_entries stream=width -of csv=p=0 public/about-video.cropped.mp4)
+            H=$(ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=p=0 public/about-video.cropped.mp4)
+            test "$W" = "1280" && test "$H" = "720"
+            mv public/about-video.cropped.mp4 public/about-video.mp4
+            date -u +%FT%TZ > public/.about-video-cropped
+          fi
+      - name: Build gate
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/pages/Certifications.tsx src/pages/Organization.tsx public/about-video.mp4 public/.about-video-cropped
+          if git diff --cached --quiet; then echo "no changes"; else git commit -m "feat: cert curated points + remove CEO section + crop hero video (parking lot) [skip ci]"; git push origin main; fi
