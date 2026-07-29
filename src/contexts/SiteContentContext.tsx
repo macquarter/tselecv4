@@ -129,8 +129,48 @@ function detectMimeFromDataURI(dataURI: string): string {
   return m ? m[1] : 'image/png';
 }
 
+// ── 사이트 콘텐츠 로컬 캐시 (이미지·영상 깜빡임 방지) ──────────────────────────
+// 첫 페인트에서 스톡 fallback 대신 지난번 Firestore 값을 즉시 사용하여
+// '스톡 이미지 → 실제 CMS 이미지' 교체로 인한 깜빡임을 제거한다.
+// Firestore 응답이 오면 최신값으로 조용히 갱신한다.
+const SITE_CACHE_KEY = 'ts_site_cache_v2';
+
+function readSiteCache(): { text?: any; images?: any; videos?: any; clients?: any; boardOpt?: any } | null {
+  try {
+    const raw = localStorage.getItem(SITE_CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' ? parsed : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function writeSiteCache(data: { text: any; images: any; videos: any; clients: any; boardOpt: any }): void {
+  try {
+    localStorage.setItem(SITE_CACHE_KEY, JSON.stringify(data));
+  } catch (e) {
+    // 용량 초과 등은 무시 (캐시는 최적화일 뿐, 실패해도 기능엔 영향 없음)
+  }
+}
+
 export function SiteContentProvider({ children }: { children: ReactNode }) {
-  const [content, setContent] = useState<SiteContent>(defaultContent);
+  const [content, setContent] = useState<SiteContent>(() => {
+    // 캐시가 있으면 즉시 loaded 처리 → 훅이 스톡 fallback 대신 실제 이미지를 반환하여 깜빡임 없음
+    const cached = readSiteCache();
+    if (cached && (cached.images || cached.videos)) {
+      return {
+        ...defaultContent,
+        text: cached.text ?? defaultContent.text,
+        images: cached.images ?? defaultContent.images,
+        videos: cached.videos ?? defaultContent.videos,
+        clients: cached.clients ?? defaultContent.clients,
+        boardOpt: cached.boardOpt ?? defaultContent.boardOpt,
+        loaded: true,
+      };
+    }
+    return defaultContent;
+  });
 
   const updateText = useCallback(async (key: string, value: string): Promise<boolean> => {
     try {
@@ -225,6 +265,7 @@ export function SiteContentProvider({ children }: { children: ReactNode }) {
         mergeIntoI18n(text);
 
         setContent({ text, images, videos, clients, boardOpt, loaded: true });
+        writeSiteCache({ text, images, videos, clients, boardOpt });
         console.log('✅ SiteContent loaded from Firestore');
       } catch (err) {
         console.warn('Firestore load failed, using defaults:', err);
