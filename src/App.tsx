@@ -35,11 +35,24 @@ const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
 
 export default function App() {
+  // 편집 오버레이(저장버튼·편집모드·로그인 등)는 관리자 앱(tselecadmin) 또는 로컬 개발에서만 마운트한다.
+  // 공개 사이트(tselecv4 / tselec.co.kr)에서는 ?edit=1 을 붙여도 편집 UI가 전혀 노출되지 않는다.
+  const showCmsOverlay = (() => {
+    try {
+      const h = window.location.hostname || '';
+      const onAdminOrigin = /tselecadmin/i.test(h) || h === 'localhost' || h === '127.0.0.1';
+      const inAdminFrame = window.self !== window.top && /tselecadmin/i.test(document.referrer || '');
+      return onAdminOrigin || inAdminFrame;
+    } catch (e) {
+      return false;
+    }
+  })();
+
   return (
     <SiteContentProvider>
       <Router>
         <Suspense fallback={null}>
-          <CmsEditOverlay />
+          {showCmsOverlay && <CmsEditOverlay />}
           <ChatBot />
         </Suspense>
         <Suspense fallback={null}>
