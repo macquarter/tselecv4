@@ -1,18 +1,54 @@
 {
   "images": {
     "remotePatterns": [
-      { "protocol": "https", "hostname": "firebasestorage.googleapis.com" }
+      {
+        "protocol": "https",
+        "hostname": "firebasestorage.googleapis.com"
+      }
     ],
-    "sizes": [640, 750, 828, 1080, 1200, 1920],
-    "formats": ["image/avif", "image/webp"],
+    "sizes": [
+      640,
+      750,
+      828,
+      1080,
+      1200,
+      1920
+    ],
+    "formats": [
+      "image/avif",
+      "image/webp"
+    ],
     "minimumCacheTTL": 31536000
   },
   "redirects": [
-    { "source": "/3d", "destination": "/3d/", "permanent": true }
+    {
+      "source": "/showroom",
+      "destination": "/showroom/",
+      "permanent": true
+    },
+    {
+      "source": "/3d",
+      "destination": "/showroom/",
+      "permanent": false
+    },
+    {
+      "source": "/3d/:path*",
+      "destination": "/showroom/:path*",
+      "permanent": false
+    }
   ],
   "rewrites": [
-    { "source": "/3d/", "destination": "https://tselec-site.vercel.app/" },
-    { "source": "/3d/:path*", "destination": "https://tselec-site.vercel.app/:path*" },
-    { "source": "/((?!_vercel/).*)", "destination": "/index.html" }
+    {
+      "source": "/showroom/",
+      "destination": "https://tselec-site.vercel.app/"
+    },
+    {
+      "source": "/showroom/:path*",
+      "destination": "https://tselec-site.vercel.app/:path*"
+    },
+    {
+      "source": "/((?!_vercel/).*)",
+      "destination": "/index.html"
+    }
   ]
 }
