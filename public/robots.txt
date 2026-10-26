@@ -1,5 +1,2 @@
 User-agent: *
 Allow: /
-# 영업용 내부 쇼룸은 검색엔진 수집 제외
-Disallow: /showroom/
-Disallow: /3d
